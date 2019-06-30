@@ -2,3 +2,4 @@ monitor
 a.out
 settings.json
 *.o
+build/*
