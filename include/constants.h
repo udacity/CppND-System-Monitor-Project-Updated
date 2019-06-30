@@ -18,13 +18,13 @@ enum class CPUStates {
 
 class Path {
  public:
-  inline static std::string base_path{"/proc/"};
-  inline static const std::string cmdline{"cmdline"};
-  // static std::string StatusPath() { return "/status"; }
-  inline static const std::string stat{"stat"};
-  inline static const std::string uptime{"uptime"};
-  inline static const std::string meminfo{"meminfo"};
-  inline static const std::string version{"version"};
+  inline static const std::string base_path{"/proc/"};
+  inline static const std::string cmdline{"/cmdline"};
+  inline static const std::string status_path{"/status"};
+  inline static const std::string stat{"/stat"};
+  inline static const std::string uptime{"/uptime"};
+  inline static const std::string meminfo{"/meminfo"};
+  inline static const std::string version{"/version"};
 };
 
 #endif
