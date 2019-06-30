@@ -9,7 +9,7 @@
 #include <thread>
 #include <vector>
 #include "ProcessContainer.h"
-#include "ProcessParser.h"
+#include "process_parser.h"
 #include "SysInfo.h"
 #include "util.h"
 

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "ProcessParser.h"
+#include "process_parser.h"
 class SysInfo {
  public:
   SysInfo() {
@@ -59,7 +59,7 @@ void SysInfo::getOtherCores(int _size) {
   }
 }
 void SysInfo::setLastCpuMeasures() {
-  this->lastCpuStats = ProcessParser::getSysCpuPercent();
+  this->lastCpuStats = ProcessParser::getSysCpuPercent("");
 }
 void SysInfo::setCpuCoresStats() {
   // Getting data from files (previous data is required)
@@ -82,7 +82,7 @@ void SysInfo::setAttributes() {
   this->totalProc = ProcessParser::getTotalNumberOfProcesses();
   this->runningProc = ProcessParser::getNumberOfRunningProcesses();
   this->threads = ProcessParser::getTotalThreads();
-  this->currentCpuStats = ProcessParser::getSysCpuPercent();
+  this->currentCpuStats = ProcessParser::getSysCpuPercent("");
   this->cpuPercent =
       ProcessParser::PrintCpuStats(this->lastCpuStats, this->currentCpuStats);
   this->lastCpuStats = this->currentCpuStats;

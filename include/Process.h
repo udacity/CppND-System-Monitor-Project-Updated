@@ -2,7 +2,7 @@
 #define PROCESS_H
 
 #include <string>
-#include "ProcessParser.h"
+#include "process_parser.h"
 
 using namespace std;
 /*
