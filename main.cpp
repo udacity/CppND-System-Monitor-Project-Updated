@@ -1,25 +1,24 @@
 
+#include <ncurses.h>
+#include <time.h>
+#include <chrono>
+#include <iomanip>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <thread>
+#include <vector>
 #include "ProcessContainer.h"
 #include "ProcessParser.h"
 #include "SysInfo.h"
 #include "util.h"
-#include <chrono>
-#include <iomanip>
-#include <iostream>
-#include <ncurses.h>
-#include <sstream>
-#include <string>
-#include <thread>
-#include <time.h>
-#include <vector>
-
-using namespace std;
 
 char *getCString(std::string str) {
   char *cstr = new char[str.length() + 1];
   std::strcpy(cstr, str.c_str());
   return cstr;
 }
+
 void writeSysInfoToConsole(SysInfo sys, WINDOW *sys_win) {
   sys.setAttributes();
 
@@ -51,7 +50,6 @@ void writeSysInfoToConsole(SysInfo sys, WINDOW *sys_win) {
 }
 
 void getProcessListToConsole(std::vector<string> processes, WINDOW *win) {
-
   wattron(win, COLOR_PAIR(2));
   mvwprintw(win, 1, 2, "PID:");
   mvwprintw(win, 1, 9, "User:");
@@ -64,14 +62,15 @@ void getProcessListToConsole(std::vector<string> processes, WINDOW *win) {
     mvwprintw(win, 2 + i, 2, getCString(processes[i]));
   }
 }
+
 void printMain(SysInfo sys, ProcessContainer procs) {
-  initscr();     /* Start curses mode 		  */
-  noecho();      // not printing input values
-  cbreak();      // Terminating on classic ctrl + c
-  start_color(); // Enabling color change of text
+  initscr();      /* Start curses mode 		  */
+  noecho();       // not printing input values
+  cbreak();       // Terminating on classic ctrl + c
+  start_color();  // Enabling color change of text
   int yMax, xMax;
-  getmaxyx(stdscr, yMax, xMax); // getting size of window measured in lines and
-                                // columns(column one char length)
+  getmaxyx(stdscr, yMax, xMax);  // getting size of window measured in lines and
+                                 // columns(column one char length)
   WINDOW *sys_win = newwin(17, xMax - 1, 0, 0);
   WINDOW *proc_win = newwin(15, xMax - 1, 18, 0);
 
@@ -97,7 +96,8 @@ void printMain(SysInfo sys, ProcessContainer procs) {
   }
   endwin();
 }
-int main(int argc, char *argv[]) {
+
+int main() {
   // Object which contains list of current processes, Container for Process
   // Class
   ProcessContainer procs;

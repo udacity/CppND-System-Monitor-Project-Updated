@@ -1,9 +1,9 @@
-#include "ProcessParser.h"
 #include <iostream>
 #include <string>
 #include <vector>
+#include "ProcessParser.h"
 class SysInfo {
-public:
+ public:
   SysInfo() {
     /*
     Getting initial info about system
@@ -30,7 +30,7 @@ public:
   void setCpuCoresStats();
   std::vector<std::string> getCoresStats() const;
 
-private:
+ private:
   std::vector<std::string> lastCpuStats;
   std::vector<std::string> currentCpuStats;
   std::vector<std::string> coresStats;
@@ -94,8 +94,7 @@ std::vector<std::string> SysInfo::getCoresStats() const {
   for (int i = 0; i < this->coresStats.size(); i++) {
     std::string temp = ("cpu" + to_string(i) + ": ");
     float check;
-    if (!this->coresStats[i].empty())
-      check = stof(this->coresStats[i]);
+    if (!this->coresStats[i].empty()) check = stof(this->coresStats[i]);
     if (!check || this->coresStats[i] == "nan") {
       return std::vector<std::string>();
     }
