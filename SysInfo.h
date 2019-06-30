@@ -98,7 +98,7 @@ std::vector<std::string> SysInfo::getCoresStats() const {
     if (!check || this->coresStats[i] == "nan") {
       return std::vector<std::string>();
     }
-    temp += Util::getProgressBar(this->coresStats[i]);
+    temp += Util::GetProgressBar(this->coresStats[i]);
     result.push_back(temp);
   }
   return result;

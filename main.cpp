@@ -27,7 +27,7 @@ void writeSysInfoToConsole(SysInfo sys, WINDOW *sys_win) {
             getCString(("Kernel version: " + sys.getKernelVersion())));
   mvwprintw(sys_win, 4, 2, getCString("CPU: "));
   wattron(sys_win, COLOR_PAIR(1));
-  wprintw(sys_win, getCString(Util::getProgressBar(sys.getCpuPercent())));
+  wprintw(sys_win, getCString(Util::GetProgressBar(sys.getCpuPercent())));
   wattroff(sys_win, COLOR_PAIR(1));
   mvwprintw(sys_win, 5, 2, getCString(("Other cores:")));
   wattron(sys_win, COLOR_PAIR(1));
@@ -38,14 +38,14 @@ void writeSysInfoToConsole(SysInfo sys, WINDOW *sys_win) {
   wattroff(sys_win, COLOR_PAIR(1));
   mvwprintw(sys_win, 10, 2, getCString(("Memory: ")));
   wattron(sys_win, COLOR_PAIR(1));
-  wprintw(sys_win, getCString(Util::getProgressBar(sys.getMemPercent())));
+  wprintw(sys_win, getCString(Util::GetProgressBar(sys.getMemPercent())));
   wattroff(sys_win, COLOR_PAIR(1));
   mvwprintw(sys_win, 11, 2,
             getCString(("Total Processes:" + sys.getTotalProc())));
   mvwprintw(sys_win, 12, 2,
             getCString(("Running Processes:" + sys.getRunningProc())));
   mvwprintw(sys_win, 13, 2,
-            getCString(("Up Time: " + Util::convertToTime(sys.getUpTime()))));
+            getCString(("Up Time: " + Util::ConvertToTime(sys.getUpTime()))));
   wrefresh(sys_win);
 }
 
