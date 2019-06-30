@@ -14,7 +14,7 @@ std::string Util::FormatTime(long int input_seconds) {
 // 50 bars is uniformly streched 0 - 100 %
 // meaning: every 2% is one bar(|)
 std::string Util::GetProgressBar(std::string percent) {
-  std::string result {"0%%"};
+  std::string result {"0%"};
   int size {50};
   float boundaries {0};
   try {
@@ -31,7 +31,7 @@ std::string Util::GetProgressBar(std::string percent) {
     }
   }
 
-  return result + " " + percent.substr(0, 5) + " /100%%";
+  return result + " " + percent.substr(0, 5) + " /100%";
 }
 
 // wrapper for creating streams
