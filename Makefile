@@ -1,11 +1,9 @@
-monitor : main.o util.o
-	g++ -std="c++17" -o monitor main.o util.o -lncurses
+CXXFLAGS = -std=c++17
 
-main.o : main.cpp
-	cc -c main.cpp
+objects = main.o util.o
 
-util.o : util.cpp
-	cc -c util.cpp
+monitor : $(objects)
+	$(CXX) $(CXXFLAGS) -o monitor main.o util.o -lncurses
 
 clean :
-	rm monitor main.o util.o
+	rm monitor $(objects)
