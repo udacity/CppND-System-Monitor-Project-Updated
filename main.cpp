@@ -1,4 +1,8 @@
 
+#include "ProcessContainer.h"
+#include "ProcessParser.h"
+#include "SysInfo.h"
+#include "util.h"
 #include <chrono>
 #include <iomanip>
 #include <iostream>
@@ -8,10 +12,6 @@
 #include <thread>
 #include <time.h>
 #include <vector>
-#include "ProcessParser.h"
-#include "ProcessContainer.h"
-#include "SysInfo.h"
-#include "util.h"
 
 using namespace std;
 

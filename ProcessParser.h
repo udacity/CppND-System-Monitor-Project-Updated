@@ -42,7 +42,7 @@ public:
   static int getTotalThreads() { return 0; }
   static int getTotalNumberOfProcesses() { return 0; }
   static int getNumberOfRunningProcesses() { return 0; }
-  static string getOSName() { string(""); }
+  static string getOSName() { return string(""); }
   static std::string PrintCpuStats(std::vector<std::string> values1,
                                    std::vector<std::string> values2) { return string(""); }
   static bool isPidExisting(string pid) { return 0; }
