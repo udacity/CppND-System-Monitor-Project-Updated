@@ -13,7 +13,7 @@ git clone https://github.com/udacity/CppND-System-Monitor
 
 3. Install `ncurses` package
 ```
-sudo apt-get install libncurses5-dev libncursesw5-dev
+sudo apt install libncurses5-dev libncursesw5-dev
 ```
 4. Compile and run
 ```
