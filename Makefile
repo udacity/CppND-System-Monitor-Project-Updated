@@ -6,3 +6,6 @@ main.o : main.cpp
 
 util.o : util.cpp
 	cc -c util.cpp
+
+clean :
+	rm monitor main.o util.o
