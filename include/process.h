@@ -20,7 +20,7 @@ class Process {
   std::string getProcess();
 
  private:
-  std::string pid;
+  std::string pid_;
   std::string user;
   std::string cmd;
   std::string cpu;

@@ -1,9 +1,9 @@
 #include "process.h"
 #include <string>
 
-Process::Process(std::string pid) {
-  this->pid = pid;
-  this->user = ProcessParser::getProcUser(pid);
+Process::Process(std::string pid) : pid_(pid) {
+  // this->pid = pid;
+  // this->user = ProcessParser::getProcUser(pid);
   // TODOs:
   // complete for mem
   // complete for cmd
@@ -11,16 +11,16 @@ Process::Process(std::string pid) {
   // complete for cpu
 }
 
-void Process::setPid(int pid) { this->pid = pid; }
+void Process::setPid(int pid) { this->pid_ = pid; }
 
-std::string Process::getPid() const { return this->pid; }
+std::string Process::getPid() const { return this->pid_; }
 
 std::string Process::getProcess() {
-  if (!ProcessParser::isPidExisting(this->pid)) return "";
-  this->mem = ProcessParser::getVmSize(this->pid);
-  this->upTime = ProcessParser::getProcUpTime(this->pid);
-  this->cpu = ProcessParser::getCpuPercent(this->pid);
+  if (!ProcessParser::isPidExisting(this->pid_)) return "";
+  this->mem = ProcessParser::getVmSize(this->pid_);
+  this->upTime = ProcessParser::getProcUpTime(this->pid_);
+  this->cpu = ProcessParser::getCpuPercent(this->pid_);
 
-  return (this->pid + "   ");  // TODO: finish the string! this->user + "   "+
+  return (this->pid_ + "   ");  // TODO: finish the string! this->user + "   "+
                                // mem...cpu...upTime...;
 }

@@ -2,14 +2,13 @@
 #include <string>
 #include <vector>
 
-ProcessContainer::ProcessContainer() { this->refreshList(); }
+ProcessContainer::ProcessContainer() {}
 
 void ProcessContainer::refreshList() {
-  std::vector<std::string> pidList = ProcessParser::getPidList();
-  this->list_.clear();
-  for (int i = 0; i < pidList.size(); i++) {
-    Process proc(pidList[i]);
-    this->list_.push_back(proc);
+  std::vector<std::string> pidList{ProcessParser::getPidList()};
+  list_.clear();
+  for (auto& pid : pidList) {
+    list_.emplace_back(pid);
   }
 }
 

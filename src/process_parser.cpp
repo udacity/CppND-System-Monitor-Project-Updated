@@ -1,12 +1,30 @@
 #include "process_parser.h"
+#include <dirent.h>
 #include <cmath>
 #include <string>
 #include <vector>
 #include "util.h"
+#include <locale>
 
 std::string ProcessParser::getCmd(std::string pid) { return std::string(); }
+
+// BONUS: Upgrade this to use C++17 std::filesystem
 std::vector<std::string> ProcessParser::getPidList() {
-  return std::vector<std::string>{};
+  std::vector<std::string> list;
+  DIR* directory = opendir("/proc");
+  struct dirent* file;
+  while ((file = readdir(directory)) != nullptr) {
+    // is this a directory?
+    if (file->d_type == DT_DIR) {
+      // Is every character of the name a digit?
+      std::string filename(file->d_name);
+      if (std::all_of(filename.begin(), filename.end(), isdigit)) {
+        list.push_back(filename);
+      }
+    }
+  }
+  closedir(directory);
+  return list;
 }
 
 // TODO: Refactor
@@ -21,7 +39,7 @@ std::string ProcessParser::getVmSize(std::string pid) {
       std::istringstream buf(line);
       std::istream_iterator<std::string> beg(buf), end;
       std::vector<std::string> values(beg, end);
-      return std::to_string(stof(values[1]) / pow(1024,2));
+      return std::to_string(stof(values[1]) / pow(1024, 2));
     }
   }
 

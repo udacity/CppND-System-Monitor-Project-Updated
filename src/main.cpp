@@ -96,6 +96,7 @@ int main() {
   // Object which contains list of current processes, Container for Process
   // Class
   ProcessContainer procs;
+  procs.refreshList();
   // Object which containts relevant methods and attributes regarding system
   // details
   SysInfo sys;
