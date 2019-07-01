@@ -4,41 +4,22 @@
 
 ProcessContainer::ProcessContainer() {}
 
-void ProcessContainer::refreshList() {
+void ProcessContainer::Refresh() {
   std::vector<std::string> pidList{ProcessParser::getPidList()};
-  list_.clear();
+  processes_.clear();
   for (auto& pid : pidList) {
-    list_.emplace_back(pid);
+    processes_.emplace_back(pid);
   }
 }
 
-std::string ProcessContainer::printList() {
-  std::string result = "";
-  for (int i = 0; i < this->list_.size(); i++) {
-    result += this->list_[i].getProcess();
-  }
-  return result;
-}
+// std::string ProcessContainer::printList() {
+//   std::string result = "";
+//   for (int i = 0; i < this->processes_.size(); i++) {
+//     result += this->processes_[i].getProcess();
+//   }
+//   return result;
+// }
 
-std::vector<std::vector<std::string>> ProcessContainer::getList() {
-  std::vector<std::vector<std::string>> values;
-  std::vector<std::string> stringifiedList;
-  for (int i = 0; i < ProcessContainer::list_.size(); i++) {
-    stringifiedList.push_back(ProcessContainer::list_[i].getProcess());
-  }
-  int lastIndex = 0;
-  for (int i = 0; i < stringifiedList.size(); i++) {
-    if (i % 10 == 0 && i > 0) {
-      std::vector<std::string> sub(&stringifiedList[i - 10],
-                                   &stringifiedList[i]);
-      values.push_back(sub);
-      lastIndex = i;
-    }
-    if (i == (ProcessContainer::list_.size() - 1) && (i - lastIndex) < 10) {
-      std::vector<std::string> sub(&stringifiedList[lastIndex],
-                                   &stringifiedList[i + 1]);
-      values.push_back(sub);
-    }
-  }
-  return values;
+std::vector<Process> ProcessContainer::Processes() const {
+  return processes_;
 }

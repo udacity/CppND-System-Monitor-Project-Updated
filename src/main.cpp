@@ -48,7 +48,7 @@ void writeSysInfoToConsole(SysInfo sys, WINDOW *sys_win) {
   wrefresh(sys_win);
 }
 
-void getProcessListToConsole(std::vector<std::string> processes, WINDOW *win) {
+void getProcessListToConsole(ProcessContainer procs, WINDOW *win) {
   wattron(win, COLOR_PAIR(2));
   mvwprintw(win, 1, 2, "PID:");
   mvwprintw(win, 1, 9, "User:");
@@ -57,8 +57,14 @@ void getProcessListToConsole(std::vector<std::string> processes, WINDOW *win) {
   mvwprintw(win, 1, 35, "Uptime:");
   mvwprintw(win, 1, 44, "CMD:");
   wattroff(win, COLOR_PAIR(2));
-  for (int i = 0; i < processes.size(); i++) {
-    mvwprintw(win, 2 + i, 2, getCString(processes[i]));
+  auto processes = procs.Processes();
+  for (int i = 0; i < 10; i++) {
+    mvwprintw(win, 2 + i, 2, getCString(processes[i].Pid()));
+    // mvwprintw(win, 2 + i, 2, getCString(processes[i].User()));
+    // mvwprintw(win, 2 + i, 2, getCString(processes[i].CPU()));
+    // mvwprintw(win, 2 + i, 2, getCString(processes[i].RAM()));
+    // mvwprintw(win, 2 + i, 2, getCString(processes[i].UpTime()));
+    // mvwprintw(win, 2 + i, 2, getCString(processes[i].CMD()));
   }
 }
 
@@ -79,15 +85,13 @@ void printMain(SysInfo sys, ProcessContainer procs) {
   while (1) {
     box(sys_win, 0, 0);
     box(proc_win, 0, 0);
-    procs.refreshList();    
-    writeSysInfoToConsole(sys, sys_win);
-    for(auto& process : procs.getList()) {      
-      getProcessListToConsole(process, proc_win);
-      wrefresh(sys_win);
-      wrefresh(proc_win);
-      refresh();
-      sleep(1);
-    }
+    procs.Refresh();    
+    writeSysInfoToConsole(sys, sys_win);     
+    getProcessListToConsole(procs, proc_win);
+    wrefresh(sys_win);
+    wrefresh(proc_win);
+    refresh();
+    sleep(1);
   }
   endwin();
 }
@@ -96,7 +100,6 @@ int main() {
   // Object which contains list of current processes, Container for Process
   // Class
   ProcessContainer procs;
-  procs.refreshList();
   // Object which containts relevant methods and attributes regarding system
   // details
   SysInfo sys;

@@ -11,13 +11,13 @@ Process::Process(std::string pid) : pid_(pid) {
   // complete for cpu
 }
 
-void Process::setPid(int pid) { this->pid_ = pid; }
+void Process::Pid(int pid) { this->pid_ = pid; }
 
-std::string Process::getPid() const { return this->pid_; }
+std::string Process::Pid() const { return this->pid_; }
 
 std::string Process::getProcess() {
   if (!ProcessParser::isPidExisting(this->pid_)) return "";
-  this->mem = ProcessParser::getVmSize(this->pid_);
+  this->mem = ProcessParser::VmSize(this->pid_);
   this->upTime = ProcessParser::getProcUpTime(this->pid_);
   this->cpu = ProcessParser::getCpuPercent(this->pid_);
 

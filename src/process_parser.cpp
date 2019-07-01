@@ -28,7 +28,7 @@ std::vector<std::string> ProcessParser::getPidList() {
 }
 
 // TODO: Refactor
-std::string ProcessParser::getVmSize(std::string pid) {
+std::string ProcessParser::VmSize(std::string pid) {
   std::string line;
   std::string name{"VmData"};
 

@@ -10,8 +10,8 @@ It contains relevant attributes as shown below
 class Process {
  public:
   Process(std::string pid);
-  void setPid(int pid);
-  std::string getPid() const;
+  void Pid(int pid);
+  std::string Pid() const;
   std::string getUser() const;
   std::string getCmd() const;
   int getCpu() const;

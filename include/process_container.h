@@ -8,12 +8,12 @@
 class ProcessContainer {
  public:
   ProcessContainer();
-  void refreshList();
+  void Refresh();
   std::string printList();
-  std::vector<std::vector<std::string>> getList();
+  std::vector<Process> Processes() const;
 
  private:
-  std::vector<Process> list_;
+  std::vector<Process> processes_;
 };
 
 #endif
