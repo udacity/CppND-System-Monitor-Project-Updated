@@ -79,20 +79,14 @@ void printMain(SysInfo sys, ProcessContainer procs) {
   while (1) {
     box(sys_win, 0, 0);
     box(proc_win, 0, 0);
-    procs.refreshList();
-    std::vector<std::vector<std::string>> processes = procs.getList();
+    procs.refreshList();    
     writeSysInfoToConsole(sys, sys_win);
-    if (processes.size() > 0) {
-      getProcessListToConsole(processes[counter], proc_win);
+    for(auto& process : procs.getList()) {      
+      getProcessListToConsole(process, proc_win);
       wrefresh(sys_win);
       wrefresh(proc_win);
       refresh();
       sleep(1);
-      if (counter == (processes.size() - 1)) {
-        counter = 0;
-      } else {
-        counter++;
-      }
     }
   }
   endwin();
@@ -107,5 +101,4 @@ int main() {
   SysInfo sys;
   // std::string s = writeToConsole(sys);
   printMain(sys, procs);
-  return 0;
 }
