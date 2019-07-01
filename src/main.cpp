@@ -8,7 +8,7 @@
 #include <thread>
 #include <vector>
 #include "process_container.h"
-#include "SysInfo.h"
+#include "sys_info.h"
 #include "process_parser.h"
 #include "util.h"
 
