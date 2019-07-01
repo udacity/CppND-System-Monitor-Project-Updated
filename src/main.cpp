@@ -1,4 +1,3 @@
-
 #include <ncurses.h>
 #include <time.h>
 #include <chrono>
@@ -9,8 +8,8 @@
 #include <thread>
 #include <vector>
 #include "ProcessContainer.h"
-#include "process_parser.h"
 #include "SysInfo.h"
+#include "process_parser.h"
 #include "util.h"
 
 char *getCString(std::string str) {
@@ -83,15 +82,17 @@ void printMain(SysInfo sys, ProcessContainer procs) {
     procs.refreshList();
     std::vector<std::vector<std::string>> processes = procs.getList();
     writeSysInfoToConsole(sys, sys_win);
-    getProcessListToConsole(processes[counter], proc_win);
-    wrefresh(sys_win);
-    wrefresh(proc_win);
-    refresh();
-    sleep(1);
-    if (counter == (processes.size() - 1)) {
-      counter = 0;
-    } else {
-      counter++;
+    if (processes.size() > 0) {
+      getProcessListToConsole(processes[counter], proc_win);
+      wrefresh(sys_win);
+      wrefresh(proc_win);
+      refresh();
+      sleep(1);
+      if (counter == (processes.size() - 1)) {
+        counter = 0;
+      } else {
+        counter++;
+      }
     }
   }
   endwin();
