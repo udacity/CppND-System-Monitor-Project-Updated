@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "process_parser.h"
+
 class SysInfo {
  public:
   SysInfo() {
@@ -55,7 +56,8 @@ void SysInfo::getOtherCores(int _size) {
   this->currentCpuCoresStats = std::vector<std::vector<std::string>>();
   this->currentCpuCoresStats.resize(_size);
   for (int i = 0; i < _size; i++) {
-    this->lastCpuCoresStats[i] = ProcessParser::getSysCpuPercent(to_string(i));
+    this->lastCpuCoresStats[i] =
+        ProcessParser::getSysCpuPercent(std::to_string(i));
   }
 }
 void SysInfo::setLastCpuMeasures() {
@@ -65,7 +67,7 @@ void SysInfo::setCpuCoresStats() {
   // Getting data from files (previous data is required)
   for (int i = 0; i < this->currentCpuCoresStats.size(); i++) {
     this->currentCpuCoresStats[i] =
-        ProcessParser::getSysCpuPercent(to_string(i));
+        ProcessParser::getSysCpuPercent(std::to_string(i));
   }
   for (int i = 0; i < this->currentCpuCoresStats.size(); i++) {
     // after acquirement of data we are calculating every core percentage of
@@ -92,7 +94,7 @@ void SysInfo::setAttributes() {
 std::vector<std::string> SysInfo::getCoresStats() const {
   std::vector<std::string> result = std::vector<std::string>();
   for (int i = 0; i < this->coresStats.size(); i++) {
-    std::string temp = ("cpu" + to_string(i) + ": ");
+    std::string temp = ("cpu" + std::to_string(i) + ": ");
     float check;
     if (!this->coresStats[i].empty()) check = stof(this->coresStats[i]);
     if (!check || this->coresStats[i] == "nan") {
@@ -105,13 +107,17 @@ std::vector<std::string> SysInfo::getCoresStats() const {
 }
 std::string SysInfo::getCpuPercent() const { return this->cpuPercent; }
 std::string SysInfo::getMemPercent() const {
-  return to_string(this->memPercent);
+  return std::to_string(this->memPercent);
 }
 long SysInfo::getUpTime() const { return this->upTime; }
 std::string SysInfo::getKernelVersion() const { return this->kernelVer; }
-std::string SysInfo::getTotalProc() const { return to_string(this->totalProc); }
-std::string SysInfo::getRunningProc() const {
-  return to_string(this->runningProc);
+std::string SysInfo::getTotalProc() const {
+  return std::to_string(this->totalProc);
 }
-std::string SysInfo::getThreads() const { return to_string(this->threads); }
+std::string SysInfo::getRunningProc() const {
+  return std::to_string(this->runningProc);
+}
+std::string SysInfo::getThreads() const {
+  return std::to_string(this->threads);
+}
 std::string SysInfo::getOSName() const { return this->OSname; }

@@ -1,4 +1,5 @@
 #include "process_parser.h"
+#include <cmath>
 #include <string>
 #include <vector>
 #include "util.h"
@@ -12,8 +13,6 @@ std::vector<std::string> ProcessParser::getPidList() {
 std::string ProcessParser::getVmSize(std::string pid) {
   std::string line;
   std::string name{"VmData"};
-  std::string value;
-  float result;
 
   std::ifstream stream;
   Util::GetStream(Path::base_path + pid + Path::status_path, stream);
@@ -22,12 +21,11 @@ std::string ProcessParser::getVmSize(std::string pid) {
       std::istringstream buf(line);
       std::istream_iterator<std::string> beg(buf), end;
       std::vector<std::string> values(beg, end);
-      result = (stof(values[1]) / float(1024));
-      break;
+      return std::to_string(stof(values[1]) / pow(1024,2));
     }
   }
 
-  return std::to_string(result);
+  return std::string("");
 }
 
 std::string ProcessParser::getCpuPercent(std::string pid) {

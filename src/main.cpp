@@ -48,7 +48,7 @@ void writeSysInfoToConsole(SysInfo sys, WINDOW *sys_win) {
   wrefresh(sys_win);
 }
 
-void getProcessListToConsole(std::vector<string> processes, WINDOW *win) {
+void getProcessListToConsole(std::vector<std::string> processes, WINDOW *win) {
   wattron(win, COLOR_PAIR(2));
   mvwprintw(win, 1, 2, "PID:");
   mvwprintw(win, 1, 9, "User:");
