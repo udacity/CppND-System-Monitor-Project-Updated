@@ -20,6 +20,4 @@ void ProcessContainer::Refresh() {
 //   return result;
 // }
 
-std::vector<Process> ProcessContainer::Processes() const {
-  return processes_;
-}
+std::vector<Process> ProcessContainer::Processes() const { return processes_; }

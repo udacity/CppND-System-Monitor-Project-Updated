@@ -22,5 +22,5 @@ std::string Process::getProcess() {
   this->cpu = ProcessParser::getCpuPercent(this->pid_);
 
   return (this->pid_ + "   ");  // TODO: finish the string! this->user + "   "+
-                               // mem...cpu...upTime...;
+                                // mem...cpu...upTime...;
 }

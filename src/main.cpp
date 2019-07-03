@@ -8,8 +8,8 @@
 #include <thread>
 #include <vector>
 #include "process_container.h"
-#include "sys_info.h"
 #include "process_parser.h"
+#include "sys_info.h"
 #include "util.h"
 
 char *getCString(std::string str) {
@@ -85,8 +85,8 @@ void printMain(SysInfo sys, ProcessContainer procs) {
   while (1) {
     box(sys_win, 0, 0);
     box(proc_win, 0, 0);
-    procs.Refresh();    
-    writeSysInfoToConsole(sys, sys_win);     
+    procs.Refresh();
+    writeSysInfoToConsole(sys, sys_win);
     getProcessListToConsole(procs, proc_win);
     wrefresh(sys_win);
     wrefresh(proc_win);
