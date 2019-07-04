@@ -14,16 +14,16 @@ std::string Util::FormatTime(long int input_seconds) {
 // 50 bars is uniformly streched 0 - 100 %
 // meaning: every 2% is one bar(|)
 std::string Util::GetProgressBar(std::string percent) {
-  std::string result {"0%"};
-  int size {50};
-  float boundaries {0};
+  std::string result{"0%"};
+  int size{50};
+  float boundaries{0};
   try {
     boundaries = (stof(percent) / 100) * size;
   } catch (...) {
     boundaries = 0;
   }
 
-  for (auto i {0}; i < size; ++i) {
+  for (auto i{0}; i < size; ++i) {
     if (i <= boundaries) {
       result += "|";
     } else {

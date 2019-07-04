@@ -1,10 +1,10 @@
 #include "process_parser.h"
 #include <dirent.h>
 #include <cmath>
+#include <locale>
 #include <string>
 #include <vector>
 #include "util.h"
-#include <locale>
 
 std::string ProcessParser::getCmd(std::string pid) { return std::string(); }
 
