@@ -1,16 +1,20 @@
 #include <ncurses.h>
 #include <time.h>
 #include <chrono>
+#include <cstddef>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <thread>
 #include <vector>
+
 #include "process_container.h"
 #include "process_parser.h"
 #include "sys_info.h"
 #include "util.h"
+
+using std::size_t;
 
 char *getCString(std::string str) {
   char *cstr = new char[str.length() + 1];
@@ -31,7 +35,7 @@ void writeSysInfoToConsole(SysInfo sys, WINDOW *sys_win) {
   mvwprintw(sys_win, 5, 2, getCString(("Other cores:")));
   wattron(sys_win, COLOR_PAIR(1));
   std::vector<std::string> val = sys.getCoresStats();
-  for (int i = 0; i < val.size(); i++) {
+  for (size_t i = 0; i < val.size(); i++) {
     mvwprintw(sys_win, (6 + i), 2, getCString(val[i]));
   }
   wattroff(sys_win, COLOR_PAIR(1));
@@ -73,15 +77,13 @@ void printMain(SysInfo sys, ProcessContainer procs) {
   noecho();       // not printing input values
   cbreak();       // Terminating on classic ctrl + c
   start_color();  // Enabling color change of text
-  int yMax, xMax;
-  getmaxyx(stdscr, yMax, xMax);  // getting size of window measured in lines and
+  int xMax = getmaxx(stdscr);  // getting size of window measured in lines and
                                  // columns(column one char length)
   WINDOW *sys_win = newwin(17, xMax - 1, 0, 0);
   WINDOW *proc_win = newwin(15, xMax - 1, 18, 0);
 
   init_pair(1, COLOR_BLUE, COLOR_BLACK);
   init_pair(2, COLOR_GREEN, COLOR_BLACK);
-  int counter = 0;
   while (1) {
     box(sys_win, 0, 0);
     box(proc_win, 0, 0);
