@@ -28,19 +28,14 @@ vector<string> ProcessParser::getPidList() {
   return list;
 }
 
-// TODO: Refactor
 string ProcessParser::VmSize(string pid) {
-  string line;
-  string name{"VmData"};
-
+  string token;
   std::ifstream stream;
   Util::GetStream(Path::base_path + pid + Path::status_path, stream);
-  while (std::getline(stream, line)) {
-    if (line.compare(0, name.size(), name) == 0) {
-      std::istringstream buf(line);
-      std::istream_iterator<string> beg(buf), end;
-      vector<string> values(beg, end);
-      return std::to_string(stoi(values[1]) / 1024);
+  while(stream >> token) {
+    if(token == "VmSize:") {
+      stream >> token;
+      return token;
     }
   }
   return string("0");
