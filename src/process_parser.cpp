@@ -1,7 +1,7 @@
+#include <cctype>
 #include <dirent.h>
 #include <cmath>
 #include <fstream>
-#include <locale>
 #include <string>
 #include <vector>
 
@@ -13,22 +13,22 @@ using std::to_string;
 using std::vector;
 
 // BONUS: Upgrade this to use C++17 std::filesystem
-vector<string> ProcessParser::getPidList() {
-  vector<string> list;
+vector<string> ProcessParser::Pids() {
+  vector<string> pids;
   DIR* directory = opendir("/proc");
   struct dirent* file;
   while ((file = readdir(directory)) != nullptr) {
-    // is this a directory?
+    // Is this a directory?
     if (file->d_type == DT_DIR) {
       // Is every character of the name a digit?
       string filename(file->d_name);
       if (std::all_of(filename.begin(), filename.end(), isdigit)) {
-        list.push_back(filename);
+        pids.push_back(filename);
       }
     }
   }
   closedir(directory);
-  return list;
+  return pids;
 }
 
 string ProcessParser::VmSize(string pid) {

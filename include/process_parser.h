@@ -24,7 +24,7 @@
 class ProcessParser {
  public:
   static std::string Cmdline(std::string pid);
-  static std::vector<std::string> getPidList();
+  static std::vector<std::string> Pids();
   static std::string VmSize(std::string pid);
   static std::string Cpu(std::string pid);
   static long int getSysUpTime();

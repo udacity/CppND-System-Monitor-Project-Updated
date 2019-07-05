@@ -6,7 +6,7 @@ ProcessContainer::ProcessContainer() {}
 
 // TODO: Move into Process
 void ProcessContainer::Refresh() {
-  std::vector<std::string> pidList{ProcessParser::getPidList()};
+  std::vector<std::string> pidList{ProcessParser::Pids()};
   processes_.clear();
   for (auto& pid : pidList) {
     processes_.emplace_back(pid);
