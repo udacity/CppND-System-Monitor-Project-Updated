@@ -7,6 +7,7 @@
 #include "util.h"
 
 using std::string;
+using std::to_string;
 using std::vector;
 
 // BONUS: Upgrade this to use C++17 std::filesystem
@@ -30,12 +31,11 @@ vector<string> ProcessParser::getPidList() {
 
 string ProcessParser::VmSize(string pid) {
   string token;
-  std::ifstream stream(Path::base_path + pid + Path::status_path);
+  std::ifstream stream(Path::base + pid + Path::status);
   if (stream.is_open()) {
     while (stream >> token) {
       if (token == "VmSize:") {
-        stream >> token;
-        return std::to_string(stoi(token)/1024);
+        if (stream >> token) return std::to_string(stoi(token) / 1024);
       }
     }
   }
@@ -44,9 +44,28 @@ string ProcessParser::VmSize(string pid) {
 
 string ProcessParser::Cmd(string pid) { return "/" + pid; }
 
-string ProcessParser::Cpu(string pid) { return "0" + pid; }
+// TODO: Calculate CPU
+string ProcessParser::Cpu(string pid) {
+  string token;
+  std::ifstream stream(Path::base + pid + Path::stat);
+  if (stream.is_open()) {
+  }
+  return "NA" + pid;
+}
 
-string ProcessParser::UpTime(string pid) { return "0" + pid; }
+string ProcessParser::UpTime(string pid) {
+  string token;
+  std::ifstream stream(Path::base + pid + Path::stat);
+  if (stream.is_open()) {
+    for (int i = 0; stream >> token; ++i)
+      if (i == 13){
+        int time{stoi(token)};
+        time /= sysconf(_SC_CLK_TCK);
+        return to_string(time);
+      }
+  }
+  return "NA" + pid;
+}
 
 string ProcessParser::User(string pid) { return "0" + pid; }
 
