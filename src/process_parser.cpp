@@ -30,7 +30,7 @@ vector<string> ProcessParser::getPidList() {
   return list;
 }
 
-// TODO: Refacstd::size
+// TODO: Refactor
 string ProcessParser::VmSize(string pid) {
   string line;
   string name{"VmData"};
@@ -42,11 +42,11 @@ string ProcessParser::VmSize(string pid) {
       std::istringstream buf(line);
       std::istream_iterator<string> beg(buf), end;
       vector<string> values(beg, end);
-      return std::to_string(stof(values[1]) / pow(1024, 2));
+      return std::to_string(stoi(values[1]) / 1024);
     }
   }
 
-  return string("");
+  return string("0");
 }
 
 string ProcessParser::getCpuPercent(string pid) {

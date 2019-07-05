@@ -63,16 +63,17 @@ void getProcessListToConsole(ProcessContainer procs, WINDOW *win) {
   wattroff(win, COLOR_PAIR(2));
   auto processes = procs.Processes();
   for (int i = 0; i < 10; i++) {
-    mvwprintw(win, 2 + i, 2, getCString(processes[i].Pid()));
-    // mvwprintw(win, 2 + i, 2, getCString(processes[i].User()));
-    // mvwprintw(win, 2 + i, 2, getCString(processes[i].CPU()));
-    // mvwprintw(win, 2 + i, 2, getCString(processes[i].RAM()));
-    // mvwprintw(win, 2 + i, 2, getCString(processes[i].UpTime()));
-    // mvwprintw(win, 2 + i, 2, getCString(processes[i].CMD()));
+    processes[i].Refresh();
+    mvwprintw(win, 2 + i, 2, processes[i].Pid().c_str());
+    // mvwprintw(win, 2 + i, 9, getCString(processes[i].User()));
+    // mvwprintw(win, 2 + i, 16, getCString(processes[i].CPU()));
+    mvwprintw(win, 2 + i, 26, processes[i].Ram().c_str());
+    // mvwprintw(win, 2 + i, 35, getCString(processes[i].UpTime()));
+    // mvwprintw(win, 2 + i, 44, getCString(processes[i].CMD()));
   }
 }
 
-void printMain(SysInfo sys, ProcessContainer procs) {
+void PrintMain(SysInfo sys, ProcessContainer procs) {
   initscr();      /* Start curses mode 		  */
   noecho();       // not printing input values
   cbreak();       // Terminating on classic ctrl + c
@@ -101,10 +102,10 @@ void printMain(SysInfo sys, ProcessContainer procs) {
 int main() {
   // Object which contains list of current processes, Container for Process
   // Class
-  ProcessContainer procs;
+  ProcessContainer processes;
   // Object which containts relevant methods and attributes regarding system
   // details
   SysInfo sys;
   // std::string s = writeToConsole(sys);
-  printMain(sys, procs);
+  PrintMain(sys, processes);
 }

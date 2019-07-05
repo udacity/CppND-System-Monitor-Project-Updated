@@ -15,16 +15,16 @@ class Process {
   std::string getUser() const;
   std::string getCmd() const;
   int getCpu() const;
-  int getMem() const;
+  std::string Ram() const;
   std::string getUpTime() const;
-  std::string getProcess();
+  std::string Refresh();
 
  private:
   std::string pid_;
   std::string user;
   std::string cmd;
   std::string cpu;
-  std::string mem;
+  std::string ram_;
   std::string upTime;
 };
 
