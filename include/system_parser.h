@@ -48,8 +48,8 @@ std::string SystemParser::OperatingSystem() {
       std::replace(line.begin(), line.end(), '=', ' ');
       std::replace(line.begin(), line.end(), '"', ' ');
       std::istringstream stream(line);
-      while(stream >> key >> value) {
-        if(key == "PRETTY_NAME") {
+      while (stream >> key >> value) {
+        if (key == "PRETTY_NAME") {
           std::replace(value.begin(), value.end(), '_', ' ');
           return value;
         }

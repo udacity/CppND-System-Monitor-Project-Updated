@@ -102,4 +102,6 @@ std::string System::getThreads() const {
   return std::to_string(this->threads_);
 }
 
-std::string System::OperatingSystem() const { return SystemParser::OperatingSystem(); }
+std::string System::OperatingSystem() const {
+  return SystemParser::OperatingSystem();
+}
