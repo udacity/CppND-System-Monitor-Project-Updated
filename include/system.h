@@ -1,5 +1,5 @@
-#ifndef SYS_INFO_H
-#define SYS_INFO_H
+#ifndef SYSTEM_H
+#define SYSTEM_H
 
 #include <iostream>
 #include <string>
