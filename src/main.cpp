@@ -48,7 +48,7 @@ void writeSysInfoToConsole(SysInfo sys, WINDOW *sys_win) {
   mvwprintw(sys_win, 12, 2,
             getCString(("Running Processes:" + sys.getRunningProc())));
   mvwprintw(sys_win, 13, 2,
-            getCString(("Up Time: " + Util::FormatTime(sys.getUpTime()))));
+            getCString(("Up Time: " + Util::FormatTime(sys.UpTime()))));
   wrefresh(sys_win);
 }
 

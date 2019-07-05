@@ -43,7 +43,7 @@ class ProcessParser {
   static bool isPidExisting(std::string pid); // TODO: Rename Exists()
 
  private:
-  std::ifstream stream;
+  std::ifstream stream; // TODO: Remove
 };
 
 #endif

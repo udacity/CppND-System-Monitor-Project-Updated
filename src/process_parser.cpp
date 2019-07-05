@@ -1,9 +1,11 @@
-#include "process_parser.h"
 #include <dirent.h>
 #include <cmath>
+#include <fstream>
 #include <locale>
 #include <string>
 #include <vector>
+
+#include "process_parser.h"
 #include "util.h"
 
 using std::string;
@@ -58,7 +60,7 @@ string ProcessParser::UpTime(string pid) {
   std::ifstream stream(Path::base + pid + Path::stat);
   if (stream.is_open()) {
     for (int i = 0; stream >> token; ++i)
-      if (i == 13){
+      if (i == 13) {
         int time{stoi(token)};
         time /= sysconf(_SC_CLK_TCK);
         return to_string(time);

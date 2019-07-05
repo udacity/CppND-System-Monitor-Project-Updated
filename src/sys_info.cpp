@@ -1,4 +1,5 @@
 #include "sys_info.h"
+#include "system_parser.h"
 
 using std::size_t;
 
@@ -84,7 +85,7 @@ std::string SysInfo::getMemPercent() const {
   return std::to_string(this->memPercent);
 }
 
-long SysInfo::getUpTime() const { return this->up_time_; }
+long int SysInfo::UpTime() const { return SystemParser::UpTime(); }
 
 std::string SysInfo::getKernelVersion() const { return this->kernel_version_; }
 
