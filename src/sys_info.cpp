@@ -67,7 +67,7 @@ std::vector<std::string> SysInfo::getCoresStats() const {
   std::vector<std::string> result = std::vector<std::string>();
   for (size_t i = 0; i < this->coresStats.size(); i++) {
     std::string temp = ("cpu" + std::to_string(i) + ": ");
-    float check;
+    float check{0};
     if (!this->coresStats[i].empty()) check = stof(this->coresStats[i]);
     if (!check || this->coresStats[i] == "nan") {
       return std::vector<std::string>();
