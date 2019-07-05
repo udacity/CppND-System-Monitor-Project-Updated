@@ -2,6 +2,7 @@
 #define SYSTEM_PARSER_H
 
 #include <fstream>
+#include <regex>
 #include <string>
 
 #include "constants.h"
@@ -18,6 +19,7 @@ class SystemParser {
   static string Cpu(vector<string> time1, vector<string> time2);
   static float MemoryUtilization();
   static std::string Kernel();
+  static std::string OperatingSystem();
 
  private:
   static float Active(vector<string> cpu);
@@ -36,6 +38,26 @@ class SystemParser {
   };
   static CPUStates cpu_states_;
 };
+
+std::string SystemParser::OperatingSystem() {
+  string line, key, value;
+  std::ifstream stream("/etc/os-release");
+  if (stream.is_open()) {
+    while (std::getline(stream, line)) {
+      std::replace(line.begin(), line.end(), ' ', '_');
+      std::replace(line.begin(), line.end(), '=', ' ');
+      std::replace(line.begin(), line.end(), '"', ' ');
+      std::istringstream stream(line);
+      while(stream >> key >> value) {
+        if(key == "PRETTY_NAME") {
+          std::replace(value.begin(), value.end(), '_', ' ');
+          return value;
+        }
+      }
+    }
+  }
+  return "NA";
+}
 
 std::string SystemParser::Kernel() {
   string token{"NA"};

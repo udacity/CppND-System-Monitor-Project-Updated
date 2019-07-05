@@ -18,7 +18,7 @@ class System {
   std::string getTotalProc() const;
   std::string getRunningProc() const;
   std::string Kernel() const;
-  std::string getOSName() const;
+  std::string OperatingSystem() const;
   std::string Cpu() const;
   void getOtherCores(int size);
   void setCpuCoresStats();

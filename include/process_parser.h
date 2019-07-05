@@ -35,7 +35,6 @@ class ProcessParser {
   static int getTotalThreads();
   static int getTotalNumberOfProcesses();
   static int getNumberOfRunningProcesses();
-  static std::string getOSName();
   static bool isPidExisting(std::string pid);  // TODO: Rename Exists()
 
  private:

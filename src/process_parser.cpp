@@ -113,5 +113,4 @@ vector<string> ProcessParser::getSysCpuPercent(string coreNumber) {
 int ProcessParser::getTotalThreads() { return 0; }
 int ProcessParser::getTotalNumberOfProcesses() { return 0; }
 int ProcessParser::getNumberOfRunningProcesses() { return 0; }
-string ProcessParser::getOSName() { return string(""); }
 bool ProcessParser::isPidExisting(string pid) { return pid == pid; }

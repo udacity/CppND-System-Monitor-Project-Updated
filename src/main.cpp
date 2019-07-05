@@ -25,7 +25,7 @@ char *getCString(std::string str) {
 void writeSysInfoToConsole(System sys, WINDOW *sys_win) {
   sys.Refresh();
 
-  mvwprintw(sys_win, 2, 2, getCString(("OS: " + sys.getOSName())));
+  mvwprintw(sys_win, 2, 2, getCString(("OS: " + sys.OperatingSystem())));
   mvwprintw(sys_win, 3, 2,
             getCString(("Kernel: " + sys.Kernel())));
   mvwprintw(sys_win, 4, 2, getCString("CPU: "));
