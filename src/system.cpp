@@ -88,7 +88,7 @@ std::string System::MemoryUtilization() const {
 
 long int System::UpTime() const { return SystemParser::UpTime(); }
 
-std::string System::getKernelVersion() const { return this->kernel_version_; }
+std::string System::Kernel() const { return SystemParser::Kernel(); }
 
 std::string System::getTotalProc() const {
   return std::to_string(this->running_proc_);

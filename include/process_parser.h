@@ -32,7 +32,6 @@ class ProcessParser {
   static std::string Uid(std::string pid);
   static std::string User(std::string pid);
   static std::vector<std::string> getSysCpuPercent(std::string coreNumber);
-  static std::string getSysKernelVersion();
   static int getTotalThreads();
   static int getTotalNumberOfProcesses();
   static int getNumberOfRunningProcesses();

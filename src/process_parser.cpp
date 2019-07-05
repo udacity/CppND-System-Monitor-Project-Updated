@@ -110,7 +110,6 @@ long int ProcessParser::getSysUpTime() { return 0; }
 vector<string> ProcessParser::getSysCpuPercent(string coreNumber) {
   return vector<string>{coreNumber};
 }
-string ProcessParser::getSysKernelVersion() { return string(""); }
 int ProcessParser::getTotalThreads() { return 0; }
 int ProcessParser::getTotalNumberOfProcesses() { return 0; }
 int ProcessParser::getNumberOfRunningProcesses() { return 0; }

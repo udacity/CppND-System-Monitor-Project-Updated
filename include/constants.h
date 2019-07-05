@@ -3,19 +3,6 @@
 
 #include <string>
 
-enum class CPUStates {
-  kUser,
-  kNice,
-  kSystem,
-  kIdle,
-  kIOwait,
-  kIRQ,
-  kSoftIRQ,
-  kSteal,
-  kGuest,
-  kGuestNice
-};
-
 // TODO: Move this into ProcessParser
 class Path {
  public:

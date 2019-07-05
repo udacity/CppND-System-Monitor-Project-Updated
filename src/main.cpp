@@ -27,7 +27,7 @@ void writeSysInfoToConsole(System sys, WINDOW *sys_win) {
 
   mvwprintw(sys_win, 2, 2, getCString(("OS: " + sys.getOSName())));
   mvwprintw(sys_win, 3, 2,
-            getCString(("Kernel version: " + sys.getKernelVersion())));
+            getCString(("Kernel: " + sys.Kernel())));
   mvwprintw(sys_win, 4, 2, getCString("CPU: "));
   wattron(sys_win, COLOR_PAIR(1));
   wprintw(sys_win, getCString(Util::GetProgressBar(sys.Cpu())));

@@ -17,6 +17,7 @@ class SystemParser {
   static int CpuCores();
   static string Cpu(vector<string> time1, vector<string> time2);
   static float MemoryUtilization();
+  static std::string Kernel();
 
  private:
   static float Active(vector<string> cpu);
@@ -35,6 +36,17 @@ class SystemParser {
   };
   static CPUStates cpu_states_;
 };
+
+std::string SystemParser::Kernel() {
+  string token{"NA"};
+  std::ifstream stream(Path::base + Path::version);
+  if (stream.is_open()) {
+    for (int i = 0; i <= 2; ++i) {
+      stream >> token;
+    }
+  }
+  return token;
+}
 
 // TODO: Refactor to use a map
 float SystemParser::MemoryUtilization() {
