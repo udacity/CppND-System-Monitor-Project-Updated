@@ -16,8 +16,6 @@ System::System() {
   // this->kernel_version_ = ProcessParser::getSysKernelVersion();
 }
 
-
-
 void System::getOtherCores(int size) {
   // when number of cores is detected, vectors are modified to fit incoming data
   this->coresStats = std::vector<std::string>();
@@ -36,33 +34,34 @@ void System::setLastCpuMeasures() {
   this->lastCpuStats = ProcessParser::getSysCpuPercent("");
 }
 
-void System::setCpuCoresStats() {
-  // Getting data from files (previous data is required)
-  for (size_t i = 0; i < this->currentCpuCoresStats.size(); i++) {
-    this->currentCpuCoresStats[i] =
-        ProcessParser::getSysCpuPercent(std::to_string(i));
-  }
-  for (size_t i = 0; i < this->currentCpuCoresStats.size(); i++) {
-    // after acquirement of data we are calculating every core percentage of
-    // usage
-    this->coresStats[i] = ProcessParser::PrintCpuStats(
-        this->lastCpuCoresStats[i], this->currentCpuCoresStats[i]);
-  }
-  this->lastCpuCoresStats = this->currentCpuCoresStats;
-}
+// void System::setCpuCoresStats() {
+//   // Getting data from files (previous data is required)
+//   for (size_t i = 0; i < this->currentCpuCoresStats.size(); i++) {
+//     this->currentCpuCoresStats[i] =
+//         ProcessParser::getSysCpuPercent(std::to_string(i));
+//   }
+//   for (size_t i = 0; i < this->currentCpuCoresStats.size(); i++) {
+//     // after acquirement of data we are calculating every core percentage of
+//     // usage
+//     this->coresStats[i] = ProcessParser::PrintCpuStats(
+//         this->lastCpuCoresStats[i], this->currentCpuCoresStats[i]);
+//   }
+//   this->lastCpuCoresStats = this->currentCpuCoresStats;
+// }
 
-void System::setAttributes() {
+void System::Refresh() {
   // getting parsed data
-  this->memPercent = ProcessParser::getSysRamPercent();
-  this->up_time_ = ProcessParser::getSysUpTime();
-  this->total_procs_ = ProcessParser::getTotalNumberOfProcesses();
-  this->running_proc_ = ProcessParser::getNumberOfRunningProcesses();
-  this->threads_ = ProcessParser::getTotalThreads();
-  this->currentCpuStats = ProcessParser::getSysCpuPercent("");
-  this->cpuPercent =
-      ProcessParser::PrintCpuStats(this->lastCpuStats, this->currentCpuStats);
-  this->lastCpuStats = this->currentCpuStats;
-  this->setCpuCoresStats();
+  // this->memPercent = ProcessParser::getSysRamPercent();
+  // this->up_time_ = ProcessParser::getSysUpTime();
+  // this->total_procs_ = ProcessParser::getTotalNumberOfProcesses();
+  // this->running_proc_ = ProcessParser::getNumberOfRunningProcesses();
+  // this->threads_ = ProcessParser::getTotalThreads();
+  // this->currentCpuStats = ProcessParser::getSysCpuPercent("");
+  // this->cpu_ =
+  //     ProcessParser::PrintCpuStats(this->lastCpuStats,
+  //     this->currentCpuStats);
+  // this->lastCpuStats = this->currentCpuStats;
+  // this->setCpuCoresStats();
 }
 
 // Constructing string for every core data display
@@ -81,10 +80,10 @@ std::vector<std::string> System::getCoresStats() const {
   return result;
 }
 
-std::string System::getCpuPercent() const { return this->cpuPercent; }
+std::string System::Cpu() const { return cpu_; }
 
-std::string System::getMemPercent() const {
-  return std::to_string(this->memPercent);
+std::string System::MemoryUtilization() const {
+  return std::to_string(SystemParser::MemoryUtilization());
 }
 
 long int System::UpTime() const { return SystemParser::UpTime(); }

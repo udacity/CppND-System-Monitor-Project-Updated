@@ -10,16 +10,16 @@
 class System {
  public:
   System();
-  void setAttributes();
+  void Refresh();
   void setLastCpuMeasures();
-  std::string getMemPercent() const;
+  std::string MemoryUtilization() const;
   long UpTime() const;
   std::string getThreads() const;
   std::string getTotalProc() const;
   std::string getRunningProc() const;
   std::string getKernelVersion() const;
   std::string getOSName() const;
-  std::string getCpuPercent() const;
+  std::string Cpu() const;
   void getOtherCores(int size);
   void setCpuCoresStats();
   std::vector<std::string> getCoresStats() const;
@@ -30,7 +30,7 @@ class System {
   std::vector<std::string> coresStats;
   std::vector<std::vector<std::string>> lastCpuCoresStats;
   std::vector<std::vector<std::string>> currentCpuCoresStats;
-  std::string cpuPercent;
+  std::string cpu_{-1};
   float memPercent;
   std::string os_name_;
   std::string kernel_version_;

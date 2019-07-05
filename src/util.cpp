@@ -16,8 +16,8 @@ string Util::FormatTime(long int input_seconds) {
   long hours = minutes / 60;
   minutes = int(minutes % 60);
 
-  return std::string(Util::ZeroPad(hours) + ":" + Util::ZeroPad(minutes) +
-                     ":" + Util::ZeroPad(seconds));
+  return std::string(Util::ZeroPad(hours) + ":" + Util::ZeroPad(minutes) + ":" +
+                     Util::ZeroPad(seconds));
 }
 
 // constructing string for given percentage

@@ -23,14 +23,14 @@ char *getCString(std::string str) {
 }
 
 void writeSysInfoToConsole(System sys, WINDOW *sys_win) {
-  sys.setAttributes();
+  sys.Refresh();
 
   mvwprintw(sys_win, 2, 2, getCString(("OS: " + sys.getOSName())));
   mvwprintw(sys_win, 3, 2,
             getCString(("Kernel version: " + sys.getKernelVersion())));
   mvwprintw(sys_win, 4, 2, getCString("CPU: "));
   wattron(sys_win, COLOR_PAIR(1));
-  wprintw(sys_win, getCString(Util::GetProgressBar(sys.getCpuPercent())));
+  wprintw(sys_win, getCString(Util::GetProgressBar(sys.Cpu())));
   wattroff(sys_win, COLOR_PAIR(1));
   mvwprintw(sys_win, 5, 2, getCString(("Other cores:")));
   wattron(sys_win, COLOR_PAIR(1));
@@ -41,7 +41,7 @@ void writeSysInfoToConsole(System sys, WINDOW *sys_win) {
   wattroff(sys_win, COLOR_PAIR(1));
   mvwprintw(sys_win, 10, 2, getCString(("Memory: ")));
   wattron(sys_win, COLOR_PAIR(1));
-  wprintw(sys_win, getCString(Util::GetProgressBar(sys.getMemPercent())));
+  wprintw(sys_win, getCString(Util::GetProgressBar(sys.MemoryUtilization())));
   wattroff(sys_win, COLOR_PAIR(1));
   mvwprintw(sys_win, 11, 2,
             getCString(("Total Processes:" + sys.getTotalProc())));
@@ -74,12 +74,12 @@ void getProcessListToConsole(ProcessContainer procs, WINDOW *win) {
 }
 
 void PrintMain(System system, ProcessContainer processes) {
-  initscr();      /* Start curses mode 		  */
-  noecho();       // not printing input values
-  cbreak();       // Terminating on classic ctrl + c
-  start_color();  // Enabling color change of text
+  initscr();                   /* Start curses mode 		  */
+  noecho();                    // not printing input values
+  cbreak();                    // Terminating on classic ctrl + c
+  start_color();               // Enabling color change of text
   int xMax = getmaxx(stdscr);  // getting size of window measured in lines and
-                                 // columns(column one char length)
+                               // columns(column one char length)
   WINDOW *sys_win = newwin(15, xMax - 1, 0, 0);
   WINDOW *proc_win = newwin(13, xMax - 1, 16, 0);
 

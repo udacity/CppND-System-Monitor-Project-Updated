@@ -1,4 +1,4 @@
-#include <cctype>
+#include <ctype.h>
 #include <dirent.h>
 #include <cmath>
 #include <fstream>
@@ -110,17 +110,9 @@ long int ProcessParser::getSysUpTime() { return 0; }
 vector<string> ProcessParser::getSysCpuPercent(string coreNumber) {
   return vector<string>{coreNumber};
 }
-float ProcessParser::getSysRamPercent() { return 0; }
 string ProcessParser::getSysKernelVersion() { return string(""); }
 int ProcessParser::getTotalThreads() { return 0; }
 int ProcessParser::getTotalNumberOfProcesses() { return 0; }
 int ProcessParser::getNumberOfRunningProcesses() { return 0; }
 string ProcessParser::getOSName() { return string(""); }
-string ProcessParser::PrintCpuStats(vector<string> values1,
-                                    vector<string> values2) {
-  string value;
-  if (values1.size() > 0) value += values1[0];
-  if (values2.size() > 0) value += values2[0];
-  return value;
-}
 bool ProcessParser::isPidExisting(string pid) { return pid == pid; }
