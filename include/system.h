@@ -14,9 +14,9 @@ class System {
   void setLastCpuMeasures();
   std::string MemoryUtilization() const;
   long UpTime() const;
-  std::string getThreads() const;
-  std::string getTotalProc() const;
-  std::string getRunningProc() const;
+  std::string Threads() const;
+  std::string TotalProcesses() const;
+  std::string RunningProcesses() const;
   std::string Kernel() const;
   std::string OperatingSystem() const;
   std::string Cpu() const;

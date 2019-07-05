@@ -31,6 +31,22 @@ vector<string> ProcessParser::Pids() {
   return pids;
 }
 
+std::string ProcessParser::Threads(std::string pid) {
+  string line, key, value;
+  std::ifstream stream(Path::base + pid + Path::status);
+  if (stream.is_open()) {
+    while (std::getline(stream, line)) {
+      std::istringstream stream(line);
+      while (stream >> key >> value) {
+        if (key == "Threads:") {
+          return value;
+        }
+      }
+    }
+  }
+  return "NA";
+}
+
 string ProcessParser::VmSize(string pid) {
   string token;
   std::ifstream stream(Path::base + pid + Path::status);
@@ -110,7 +126,4 @@ long int ProcessParser::getSysUpTime() { return 0; }
 vector<string> ProcessParser::getSysCpuPercent(string coreNumber) {
   return vector<string>{coreNumber};
 }
-int ProcessParser::getTotalThreads() { return 0; }
-int ProcessParser::getTotalNumberOfProcesses() { return 0; }
-int ProcessParser::getNumberOfRunningProcesses() { return 0; }
 bool ProcessParser::isPidExisting(string pid) { return pid == pid; }

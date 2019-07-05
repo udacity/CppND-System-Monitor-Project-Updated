@@ -43,9 +43,9 @@ void writeSysInfoToConsole(System sys, WINDOW *sys_win) {
   wprintw(sys_win, getCString(Util::GetProgressBar(sys.MemoryUtilization())));
   wattroff(sys_win, COLOR_PAIR(1));
   mvwprintw(sys_win, 11, 2,
-            getCString(("Total Processes:" + sys.getTotalProc())));
+            getCString(("Total Processes: " + sys.TotalProcesses())));
   mvwprintw(sys_win, 12, 2,
-            getCString(("Running Processes:" + sys.getRunningProc())));
+            getCString(("Running Processes: " + sys.RunningProcesses())));
   mvwprintw(sys_win, 13, 2,
             getCString(("Up Time: " + Util::FormatTime(sys.UpTime()))));
   wrefresh(sys_win);

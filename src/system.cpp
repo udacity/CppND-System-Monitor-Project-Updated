@@ -90,17 +90,16 @@ long int System::UpTime() const { return SystemParser::UpTime(); }
 
 std::string System::Kernel() const { return SystemParser::Kernel(); }
 
-std::string System::getTotalProc() const {
-  return std::to_string(this->running_proc_);
+std::string System::TotalProcesses() const {
+  return SystemParser::TotalProcesses();
 }
 
-std::string System::getRunningProc() const {
-  return std::to_string(this->running_proc_);
+std::string System::RunningProcesses() const {
+  return SystemParser::RunningProcesses();
 }
 
-std::string System::getThreads() const {
-  return std::to_string(this->threads_);
-}
+// TODO: Remove this unless it is used somewhere
+std::string System::Threads() const { return ""; }
 
 std::string System::OperatingSystem() const {
   return SystemParser::OperatingSystem();

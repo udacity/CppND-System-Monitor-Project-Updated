@@ -20,6 +20,9 @@ class SystemParser {
   static float MemoryUtilization();
   static std::string Kernel();
   static std::string OperatingSystem();
+  static std::string TotalThreads();
+  static std::string TotalProcesses();
+  static std::string RunningProcesses();
 
  private:
   static float Active(vector<string> cpu);
@@ -38,6 +41,47 @@ class SystemParser {
   };
   static CPUStates cpu_states_;
 };
+
+std::string SystemParser::TotalThreads() {
+  vector<string> pids = ProcessParser::Pids();
+  int total = 0;
+  for (string& pid : pids) {
+    total += stoi(ProcessParser::Threads(pid));
+  }
+  return std::to_string(total);
+}
+
+std::string SystemParser::TotalProcesses() {
+  string line, key, value;
+  std::ifstream stream(Path::base + Path::stat);
+  if (stream.is_open()) {
+    while (std::getline(stream, line)) {
+      std::istringstream stream(line);
+      while (stream >> key >> value) {
+        if (key == "processes") {
+          return value;
+        }
+      }
+    }
+  }
+  return "NA";
+}
+
+std::string SystemParser::RunningProcesses() {
+  string line, key, value;
+  std::ifstream stream(Path::base + Path::stat);
+  if (stream.is_open()) {
+    while (std::getline(stream, line)) {
+      std::istringstream stream(line);
+      while (stream >> key >> value) {
+        if (key == "procs_running") {
+          return value;
+        }
+      }
+    }
+  }
+  return "NA";
+}
 
 std::string SystemParser::OperatingSystem() {
   string line, key, value;

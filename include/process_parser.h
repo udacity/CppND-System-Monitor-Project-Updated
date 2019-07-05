@@ -32,10 +32,8 @@ class ProcessParser {
   static std::string Uid(std::string pid);
   static std::string User(std::string pid);
   static std::vector<std::string> getSysCpuPercent(std::string coreNumber);
-  static int getTotalThreads();
-  static int getTotalNumberOfProcesses();
-  static int getNumberOfRunningProcesses();
   static bool isPidExisting(std::string pid);  // TODO: Rename Exists()
+  static std::string Threads(std::string pid);
 
  private:
   std::ifstream stream;  // TODO: Remove
