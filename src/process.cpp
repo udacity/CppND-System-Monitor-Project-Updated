@@ -12,16 +12,24 @@ Process::Process(string pid) : pid_(pid) {
 
 void Process::Pid(int pid) { this->pid_ = pid; }
 
-string Process::Pid() const { return this->pid_; }
+string Process::Cmd() const { return cmd_; }
+
+string Process::Cpu() const { return cpu_; }
+
+string Process::Pid() const { return pid_; }
 
 string Process::Ram() const { return ram_; }
 
-string Process::Refresh() {
-  if (!ProcessParser::isPidExisting(this->pid_)) return "";
-  this->ram_ = ProcessParser::VmSize(this->pid_);
-  this->upTime = ProcessParser::getProcUpTime(this->pid_);
-  this->cpu = ProcessParser::getCpuPercent(this->pid_);
+string Process::User() const { return user_; }
 
-  return (this->pid_ + "   ");  // TODO: finish the string! this->user + "   "+
-                                // mem...cpu...upTime...;
+string Process::UpTime() const { return up_time_; }
+
+void Process::Refresh() {
+  if (ProcessParser::isPidExisting(this->pid_)) {
+    cmd_ = ProcessParser::Cmd(pid_);
+    cpu_ = ProcessParser::Cpu(pid_);
+    ram_ = ProcessParser::VmSize(pid_);
+    up_time_ = ProcessParser::UpTime(pid_);
+    user_ = ProcessParser::User(pid_);
+  }
 }

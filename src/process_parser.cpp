@@ -9,8 +9,6 @@
 using std::string;
 using std::vector;
 
-string ProcessParser::getCmd(string pid) { return pid; }
-
 // BONUS: Upgrade this to use C++17 std::filesystem
 vector<string> ProcessParser::getPidList() {
   vector<string> list;
@@ -45,18 +43,19 @@ string ProcessParser::VmSize(string pid) {
       return std::to_string(stoi(values[1]) / 1024);
     }
   }
-
   return string("0");
 }
 
-string ProcessParser::getCpuPercent(string pid) {
-  return pid;
-}
+string ProcessParser::Cmd(string pid) { return "/"+pid; }
+
+string ProcessParser::Cpu(string pid) { return "0"+pid; }
+
+string ProcessParser::UpTime(string pid) { return "0"+pid; }
+
+string ProcessParser::User(string pid) { return "0"+pid; }
+
 long int ProcessParser::getSysUpTime() { return 0; }
-string ProcessParser::getProcUpTime(string pid) { return pid; }
-string ProcessParser::getProcUser(string pid) { return pid; }
-vector<string> ProcessParser::getSysCpuPercent(
-    string coreNumber) {
+vector<string> ProcessParser::getSysCpuPercent(string coreNumber) {
   return vector<string>{coreNumber};
 }
 float ProcessParser::getSysRamPercent() { return 0; }
@@ -67,7 +66,7 @@ int ProcessParser::getTotalNumberOfProcesses() { return 0; }
 int ProcessParser::getNumberOfRunningProcesses() { return 0; }
 string ProcessParser::getOSName() { return string(""); }
 string ProcessParser::PrintCpuStats(vector<string> values1,
-                                         vector<string> values2) {
+                                    vector<string> values2) {
   string value;
   if (values1.size() > 0) value += values1[0];
   if (values2.size() > 0) value += values2[0];
