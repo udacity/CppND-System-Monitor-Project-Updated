@@ -26,7 +26,7 @@ string Process::UpTime() const { return up_time_; }
 
 void Process::Refresh() {
   if (ProcessParser::isPidExisting(this->pid_)) {
-    cmd_ = ProcessParser::Cmd(pid_);
+    cmd_ = ProcessParser::Cmdline(pid_);
     cpu_ = ProcessParser::Cpu(pid_);
     ram_ = ProcessParser::VmSize(pid_);
     up_time_ = ProcessParser::UpTime(pid_);

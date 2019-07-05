@@ -23,7 +23,7 @@
 
 class ProcessParser {
  public:
-  static std::string Cmd(std::string pid);
+  static std::string Cmdline(std::string pid);
   static std::vector<std::string> getPidList();
   static std::string VmSize(std::string pid);
   static std::string Cpu(std::string pid);

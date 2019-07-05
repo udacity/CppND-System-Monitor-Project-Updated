@@ -44,7 +44,16 @@ string ProcessParser::VmSize(string pid) {
   return string("NA");
 }
 
-string ProcessParser::Cmd(string pid) { return "/" + pid; }
+string ProcessParser::Cmdline(string pid) {
+  string line;
+  std::ifstream stream(Path::base + pid + Path::cmdline);
+  if (stream.is_open()) {
+    string line;
+    std::getline(stream, line);
+    return line;
+  }
+  return "NA";
+}
 
 // TODO: Calculate CPU
 string ProcessParser::Cpu(string pid) {
@@ -84,7 +93,7 @@ string ProcessParser::Uid(string pid) {
 
 string ProcessParser::User(string pid) {
   std::ifstream stream(Path::users);
-  if(stream.is_open()){
+  if (stream.is_open()) {
     string line;
     string token = "x:" + ProcessParser::Uid(pid);
     while (std::getline(stream, line)) {
