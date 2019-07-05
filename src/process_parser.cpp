@@ -30,24 +30,25 @@ vector<string> ProcessParser::getPidList() {
 
 string ProcessParser::VmSize(string pid) {
   string token;
-  std::ifstream stream;
-  Util::GetStream(Path::base_path + pid + Path::status_path, stream);
-  while(stream >> token) {
-    if(token == "VmSize:") {
-      stream >> token;
-      return token;
+  std::ifstream stream(Path::base_path + pid + Path::status_path);
+  if (stream.is_open()) {
+    while (stream >> token) {
+      if (token == "VmSize:") {
+        stream >> token;
+        return std::to_string(stoi(token)/1024);
+      }
     }
   }
-  return string("0");
+  return string("NA");
 }
 
-string ProcessParser::Cmd(string pid) { return "/"+pid; }
+string ProcessParser::Cmd(string pid) { return "/" + pid; }
 
-string ProcessParser::Cpu(string pid) { return "0"+pid; }
+string ProcessParser::Cpu(string pid) { return "0" + pid; }
 
-string ProcessParser::UpTime(string pid) { return "0"+pid; }
+string ProcessParser::UpTime(string pid) { return "0" + pid; }
 
-string ProcessParser::User(string pid) { return "0"+pid; }
+string ProcessParser::User(string pid) { return "0" + pid; }
 
 long int ProcessParser::getSysUpTime() { return 0; }
 vector<string> ProcessParser::getSysCpuPercent(string coreNumber) {
