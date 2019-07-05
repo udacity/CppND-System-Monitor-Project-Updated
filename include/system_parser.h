@@ -11,7 +11,22 @@ using std::string;
 class SystemParser {
  public:
   static long int UpTime();
+  static int CpuCores();
 };
+
+int SystemParser::CpuCores() {
+  string token;
+  std::ifstream stream(Path::base + Path::cpuinfo);
+  if (stream.is_open()) {
+    while (stream >> token) {
+      if (token == "cores") {
+        if (stream >> token >> token) return stoi(token);
+      }
+    }
+  }
+  return 0;
+
+}
 
 long int SystemParser::UpTime() {
   string token;

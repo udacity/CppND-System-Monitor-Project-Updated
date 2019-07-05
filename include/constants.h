@@ -21,6 +21,7 @@ class Path {
  public:
   inline static const std::string base{"/proc/"};
   inline static const std::string cmdline{"/cmdline"};
+  inline static const std::string cpuinfo{"/cpuinfo"};
   inline static const std::string status{"/status"};
   inline static const std::string stat{"/stat"};
   inline static const std::string uptime{"/uptime"};
