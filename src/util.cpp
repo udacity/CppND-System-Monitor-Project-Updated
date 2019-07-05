@@ -1,13 +1,23 @@
 #include "util.h"
 #include <string>
 
-std::string Util::FormatTime(long int input_seconds) {
+using std::string;
+using std::to_string;
+
+string Util::ZeroPad(long number) {
+  string padding;
+  if (number < 10) padding = "0";
+  return padding.append(to_string(number));
+}
+
+string Util::FormatTime(long int input_seconds) {
   long seconds = input_seconds % 60;
   long minutes = input_seconds / 60;
   long hours = minutes / 60;
   minutes = int(minutes % 60);
-  return std::string(std::to_string(hours) + ":" + std::to_string(minutes) +
-                     ":" + std::to_string(seconds));
+
+  return std::string(Util::ZeroPad(hours) + ":" + Util::ZeroPad(minutes) +
+                     ":" + Util::ZeroPad(seconds));
 }
 
 // constructing string for given percentage

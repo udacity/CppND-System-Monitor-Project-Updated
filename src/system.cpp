@@ -1,4 +1,4 @@
-#include "sys_info.h"
+#include "system.h"
 #include "system_parser.h"
 
 using std::size_t;

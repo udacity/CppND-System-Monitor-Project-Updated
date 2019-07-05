@@ -11,7 +11,7 @@
 
 #include "process_container.h"
 #include "process_parser.h"
-#include "sys_info.h"
+#include "system.h"
 #include "util.h"
 
 using std::size_t;
