@@ -52,7 +52,7 @@ string ProcessParser::Cpu(string pid) {
   std::ifstream stream(Path::base + pid + Path::stat);
   if (stream.is_open()) {
   }
-  return "NA" + pid;
+  return "NA";
 }
 
 string ProcessParser::UpTime(string pid) {
@@ -66,10 +66,36 @@ string ProcessParser::UpTime(string pid) {
         return to_string(time);
       }
   }
-  return "NA" + pid;
+  return "NA";
 }
 
-string ProcessParser::User(string pid) { return "0" + pid; }
+string ProcessParser::Uid(string pid) {
+  string token;
+  std::ifstream stream(Path::base + pid + Path::status);
+  if (stream.is_open()) {
+    while (stream >> token) {
+      if (token == "Uid:") {
+        if (stream >> token) return token;
+      }
+    }
+  }
+  return string("");
+}
+
+string ProcessParser::User(string pid) {
+  std::ifstream stream(Path::users);
+  if(stream.is_open()){
+    string line;
+    string token = "x:" + ProcessParser::Uid(pid);
+    while (std::getline(stream, line)) {
+      auto marker = line.find(token);
+      if (marker != string::npos) {
+        return line.substr(0, marker - 1);
+      }
+    }
+  }
+  return "NA";
+}
 
 long int ProcessParser::getSysUpTime() { return 0; }
 vector<string> ProcessParser::getSysCpuPercent(string coreNumber) {

@@ -26,6 +26,7 @@ class Path {
   inline static const std::string uptime{"/uptime"};
   inline static const std::string meminfo{"/meminfo"};
   inline static const std::string version{"/version"};
+  inline static const std::string users{"/etc/passwd"};
 };
 
 #endif
