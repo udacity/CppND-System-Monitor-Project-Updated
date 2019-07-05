@@ -112,7 +112,6 @@ vector<string> ProcessParser::getSysCpuPercent(string coreNumber) {
 }
 float ProcessParser::getSysRamPercent() { return 0; }
 string ProcessParser::getSysKernelVersion() { return string(""); }
-int ProcessParser::getNumberOfCores() { return 0; }
 int ProcessParser::getTotalThreads() { return 0; }
 int ProcessParser::getTotalNumberOfProcesses() { return 0; }
 int ProcessParser::getNumberOfRunningProcesses() { return 0; }

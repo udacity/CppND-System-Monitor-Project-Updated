@@ -22,7 +22,7 @@ char *getCString(std::string str) {
   return cstr;
 }
 
-void writeSysInfoToConsole(SysInfo sys, WINDOW *sys_win) {
+void writeSysInfoToConsole(System sys, WINDOW *sys_win) {
   sys.setAttributes();
 
   mvwprintw(sys_win, 2, 2, getCString(("OS: " + sys.getOSName())));
@@ -73,7 +73,7 @@ void getProcessListToConsole(ProcessContainer procs, WINDOW *win) {
   }
 }
 
-void PrintMain(SysInfo sys, ProcessContainer procs) {
+void PrintMain(System system, ProcessContainer processes) {
   initscr();      /* Start curses mode 		  */
   noecho();       // not printing input values
   cbreak();       // Terminating on classic ctrl + c
@@ -88,9 +88,9 @@ void PrintMain(SysInfo sys, ProcessContainer procs) {
   while (1) {
     box(sys_win, 0, 0);
     box(proc_win, 0, 0);
-    procs.Refresh();
-    writeSysInfoToConsole(sys, sys_win);
-    getProcessListToConsole(procs, proc_win);
+    processes.Refresh();
+    writeSysInfoToConsole(system, sys_win);
+    getProcessListToConsole(processes, proc_win);
     wrefresh(sys_win);
     wrefresh(proc_win);
     refresh();
@@ -105,7 +105,7 @@ int main() {
   ProcessContainer processes;
   // Object which containts relevant methods and attributes regarding system
   // details
-  SysInfo sys;
+  System sys;
   // std::string s = writeToConsole(sys);
   PrintMain(sys, processes);
 }

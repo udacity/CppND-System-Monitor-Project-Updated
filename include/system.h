@@ -7,9 +7,9 @@
 #include "process_parser.h"
 #include "util.h"
 
-class SysInfo {
+class System {
  public:
-  SysInfo();
+  System();
   void setAttributes();
   void setLastCpuMeasures();
   std::string getMemPercent() const;

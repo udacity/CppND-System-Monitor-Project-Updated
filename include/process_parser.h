@@ -34,7 +34,6 @@ class ProcessParser {
   static std::vector<std::string> getSysCpuPercent(std::string coreNumber);
   static float getSysRamPercent();
   static std::string getSysKernelVersion();
-  static int getNumberOfCores();
   static int getTotalThreads();
   static int getTotalNumberOfProcesses();
   static int getNumberOfRunningProcesses();
