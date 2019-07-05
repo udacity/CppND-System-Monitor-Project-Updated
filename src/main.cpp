@@ -79,8 +79,8 @@ void printMain(SysInfo sys, ProcessContainer procs) {
   start_color();  // Enabling color change of text
   int xMax = getmaxx(stdscr);  // getting size of window measured in lines and
                                  // columns(column one char length)
-  WINDOW *sys_win = newwin(17, xMax - 1, 0, 0);
-  WINDOW *proc_win = newwin(15, xMax - 1, 18, 0);
+  WINDOW *sys_win = newwin(15, xMax - 1, 0, 0);
+  WINDOW *proc_win = newwin(13, xMax - 1, 16, 0);
 
   init_pair(1, COLOR_BLUE, COLOR_BLACK);
   init_pair(2, COLOR_GREEN, COLOR_BLACK);
