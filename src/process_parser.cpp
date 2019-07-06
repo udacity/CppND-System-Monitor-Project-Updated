@@ -93,7 +93,7 @@ string ProcessParser::CpuUtilization(string pid) {
         user_ticks + kernel_ticks + children_user_ticks + children_kernel_ticks;
     long frequency{sysconf(_SC_CLK_TCK)};
     long system_ticks{SystemParser::UpTime() * frequency};
-    utilization = process_ticks / system_ticks;
+    utilization = process_ticks / system_ticks * 100;
   }
   return to_string(utilization);
 }

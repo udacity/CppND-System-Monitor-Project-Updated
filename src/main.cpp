@@ -16,13 +16,13 @@
 
 using std::size_t;
 
-char *getCString(std::string str) {
-  char *cstr = new char[str.length() + 1];
+char* getCString(std::string str) {
+  char* cstr = new char[str.length() + 1];
   std::strcpy(cstr, str.c_str());
   return cstr;
 }
 
-void writeSysInfoToConsole(System &sys, WINDOW *sys_win) {
+void writeSysInfoToConsole(System& sys, WINDOW* sys_win) {
   sys.Refresh();
 
   mvwprintw(sys_win, 2, 2, getCString(("OS: " + sys.OperatingSystem())));
@@ -54,7 +54,7 @@ void writeSysInfoToConsole(System &sys, WINDOW *sys_win) {
   wrefresh(sys_win);
 }
 
-void getProcessListToConsole(ProcessContainer &procs, WINDOW *win) {
+void getProcessListToConsole(ProcessContainer& procs, WINDOW* win) {
   wattron(win, COLOR_PAIR(2));
   mvwprintw(win, 1, 2, "PID:");
   mvwprintw(win, 1, 9, "User:");
@@ -67,10 +67,12 @@ void getProcessListToConsole(ProcessContainer &procs, WINDOW *win) {
   for (int i = 0; i < 10; i++) {
     mvwprintw(win, 2 + i, 2, processes[i].Pid().c_str());
     mvwprintw(win, 2 + i, 9, processes[i].User().c_str());
-    mvwprintw(win, 2 + i, 16, processes[i].CpuUtilization().c_str());
+    mvwprintw(win, 2 + i, 16,
+              processes[i].CpuUtilization().substr(0, 5).c_str());
     mvwprintw(win, 2 + i, 26, processes[i].Ram().c_str());
     mvwprintw(win, 2 + i, 35, processes[i].UpTime().c_str());
-    mvwprintw(win, 2 + i, 44, processes[i].Cmd().c_str());
+    mvwprintw(win, 2 + i, 44,
+              processes[i].Cmd().substr(0, win->_maxx - 44).c_str());
   }
 }
 
@@ -81,8 +83,8 @@ void PrintMain(System system, ProcessContainer processes) {
   start_color();               // Enabling color change of text
   int xMax = getmaxx(stdscr);  // getting size of window measured in lines and
                                // columns(column one char length)
-  WINDOW *sys_win = newwin(15, xMax - 1, 0, 0);
-  WINDOW *proc_win = newwin(13, xMax - 1, 16, 0);
+  WINDOW* sys_win = newwin(15, xMax - 1, 0, 0);
+  WINDOW* proc_win = newwin(13, xMax - 1, 16, 0);
 
   init_pair(1, COLOR_BLUE, COLOR_BLACK);
   init_pair(2, COLOR_GREEN, COLOR_BLACK);
