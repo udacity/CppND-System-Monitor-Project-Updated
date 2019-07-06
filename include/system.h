@@ -11,7 +11,6 @@ class System {
  public:
   std::string MemoryUtilization() const;
   long UpTime() const;
-  std::string Threads() const;
   std::string TotalProcesses() const;
   std::string RunningProcesses() const;
   std::string Kernel() const;
@@ -23,12 +22,6 @@ class System {
   std::vector<std::string> cached_aggregate_cpu_times_;
   std::vector<std::vector<std::string>> cached_individual_cpu_times_;
   std::vector<std::vector<std::string>> cached_cpu_times_;
-  std::string os_name_;
-  std::string kernel_version_;
-  long up_time_;
-  int total_procs_;
-  int running_proc_;
-  int threads_;
 };
 
 #endif

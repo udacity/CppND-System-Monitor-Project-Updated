@@ -14,8 +14,6 @@
 #include "system.h"
 #include "util.h"
 
-using std::size_t;
-
 char* getCString(std::string str) {
   char* cstr = new char[str.length() + 1];
   std::strcpy(cstr, str.c_str());
@@ -33,7 +31,7 @@ void writeSysInfoToConsole(System& sys, WINDOW* sys_win) {
   mvwprintw(sys_win, 5, 2, getCString(("Individual CPUs:")));
   wattron(sys_win, COLOR_PAIR(1));
   std::vector<std::string> val = sys.IndividualCpuUtilizations();
-  for (size_t i = 0; i < val.size(); i++) {
+  for (std::size_t i = 0; i < val.size(); i++) {
     mvwprintw(sys_win, 6 + i, 2, "");
     wprintw(sys_win, getCString(Util::GetProgressBar(val[i])));
     // mvwprintw(sys_win, (6 + i), 2, getCString(val[i]));

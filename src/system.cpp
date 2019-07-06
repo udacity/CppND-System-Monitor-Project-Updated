@@ -52,9 +52,6 @@ std::string System::RunningProcesses() const {
   return SystemParser::RunningProcesses();
 }
 
-// TODO: Remove this unless it is used somewhere
-std::string System::Threads() const { return ""; }
-
 std::string System::OperatingSystem() const {
   return SystemParser::OperatingSystem();
 }
