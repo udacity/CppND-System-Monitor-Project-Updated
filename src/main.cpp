@@ -9,7 +9,6 @@
 #include <thread>
 #include <vector>
 
-#include "process_container.h"
 #include "process_parser.h"
 #include "system.h"
 #include "util.h"
@@ -50,7 +49,7 @@ void writeSysInfoToConsole(System& sys, WINDOW* sys_win) {
   wrefresh(sys_win);
 }
 
-void getProcessListToConsole(ProcessContainer& procs, WINDOW* win) {
+void getProcessListToConsole(std::vector<Process>& processes, WINDOW* win) {
   wattron(win, COLOR_PAIR(2));
   mvwprintw(win, 1, 2, "PID:");
   mvwprintw(win, 1, 9, "User:");
@@ -59,7 +58,6 @@ void getProcessListToConsole(ProcessContainer& procs, WINDOW* win) {
   mvwprintw(win, 1, 35, "Uptime:");
   mvwprintw(win, 1, 44, "CMD:");
   wattroff(win, COLOR_PAIR(2));
-  auto processes = procs.Processes();
   for (int i = 0; i < 10; i++) {
     mvwprintw(win, 2 + i, 2, processes[i].Pid().c_str());
     mvwprintw(win, 2 + i, 9, processes[i].User().c_str());
@@ -72,7 +70,7 @@ void getProcessListToConsole(ProcessContainer& procs, WINDOW* win) {
   }
 }
 
-void PrintMain(System system, ProcessContainer processes) {
+void PrintMain(System& system) {
   initscr();                   /* Start curses mode 		  */
   noecho();                    // not printing input values
   cbreak();                    // Terminating on classic ctrl + c
@@ -87,8 +85,8 @@ void PrintMain(System system, ProcessContainer processes) {
   while (1) {
     box(sys_win, 0, 0);
     box(proc_win, 0, 0);
-    processes.Update();
     writeSysInfoToConsole(system, sys_win);
+    std::vector<Process> processes{system.Processes()};
     getProcessListToConsole(processes, proc_win);
     wrefresh(sys_win);
     wrefresh(proc_win);
@@ -99,7 +97,6 @@ void PrintMain(System system, ProcessContainer processes) {
 }
 
 int main() {
-  ProcessContainer processes;
-  System sys;
-  PrintMain(sys, processes);
+  System system;
+  PrintMain(system);
 }

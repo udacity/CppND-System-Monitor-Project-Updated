@@ -1,11 +1,17 @@
 #include "process.h"
+#include "process_parser.h"
+#include <cctype>
 #include <string>
 
 using std::string;
 
-Process::Process(string pid) : pid_(pid) {}
-
-void Process::Pid(int pid) { this->pid_ = pid; }
+Process::Process(string pid) : pid_(pid) {
+  cmd_ = ProcessParser::Cmdline(pid_);
+  cpu_ = ProcessParser::CpuUtilization(pid_);
+  ram_ = ProcessParser::VmSize(pid_);
+  up_time_ = ProcessParser::UpTime(pid_);
+  user_ = ProcessParser::User(pid_);
+}
 
 string Process::Cmd() const { return cmd_; }
 
@@ -19,10 +25,10 @@ string Process::User() const { return user_; }
 
 string Process::UpTime() const { return up_time_; }
 
-void Process::Update() {
-  cmd_ = ProcessParser::Cmdline(pid_);
-  cpu_ = ProcessParser::CpuUtilization(pid_);
-  ram_ = ProcessParser::VmSize(pid_);
-  up_time_ = ProcessParser::UpTime(pid_);
-  user_ = ProcessParser::User(pid_);
+bool Process::operator<(const Process& a) const {
+  return stof(cpu_) < stof(a.cpu_);
+}
+
+bool Process::operator>(const Process& a) const {
+  return stof(cpu_) > stof(a.cpu_);
 }

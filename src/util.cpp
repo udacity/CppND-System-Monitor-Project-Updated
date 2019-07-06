@@ -1,5 +1,6 @@
-#include "util.h"
 #include <string>
+
+#include "util.h"
 
 using std::string;
 using std::to_string;

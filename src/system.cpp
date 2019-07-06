@@ -2,12 +2,27 @@
 #include <string>
 #include <vector>
 
+#include "process.h"
+#include "process_parser.h"
 #include "system.h"
 #include "system_parser.h"
 
 using std::size_t;
 using std::string;
 using std::vector;
+
+System::System() { UpdateProcesses(); }
+
+void System::UpdateProcesses() {
+  vector<string> pidList{ProcessParser::Pids()};
+  processes_.clear();
+  for (auto& pid : pidList) {
+    processes_.emplace_back(pid);
+  }
+  std::sort(processes_.begin(), processes_.end(), std::greater<Process>());
+}
+
+std::vector<Process> System::Processes() const { return processes_; }
 
 vector<string> System::IndividualCpuUtilizations() {
   vector<string> utilizations;

@@ -2,7 +2,6 @@
 #define PROCESS_H
 
 #include <string>
-#include "process_parser.h"
 /*
 Basic class for Process representation
 It contains relevant attributes as shown below
@@ -10,14 +9,14 @@ It contains relevant attributes as shown below
 class Process {
  public:
   Process(std::string pid);
-  void Pid(int pid);
   std::string Pid() const;
   std::string User() const;
   std::string Cmd() const;
   std::string CpuUtilization() const;
   std::string Ram() const;
   std::string UpTime() const;
-  void Update();
+  bool operator<(const Process& a) const;
+  bool operator>(const Process& a) const;
 
  private:
   std::string pid_;
