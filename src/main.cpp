@@ -29,13 +29,16 @@ void writeSysInfoToConsole(System &sys, WINDOW *sys_win) {
   mvwprintw(sys_win, 3, 2, getCString(("Kernel: " + sys.Kernel())));
   mvwprintw(sys_win, 4, 2, getCString("Aggregate CPU: "));
   wattron(sys_win, COLOR_PAIR(1));
-  wprintw(sys_win, getCString(Util::GetProgressBar(sys.CpuUtilization())));
+  wprintw(sys_win,
+          getCString(Util::GetProgressBar(sys.AggregateCpuUtilization())));
   wattroff(sys_win, COLOR_PAIR(1));
-  mvwprintw(sys_win, 5, 2, getCString(("Individual CPU:")));
+  mvwprintw(sys_win, 5, 2, getCString(("Individual CPUs:")));
   wattron(sys_win, COLOR_PAIR(1));
-  std::vector<std::string> val = sys.getCoresStats();
+  std::vector<std::string> val = sys.IndividualCpuUtilizations();
   for (size_t i = 0; i < val.size(); i++) {
-    mvwprintw(sys_win, (6 + i), 2, getCString(val[i]));
+    mvwprintw(sys_win, 6 + i, 2, "");
+    wprintw(sys_win, getCString(Util::GetProgressBar(val[i])));
+    // mvwprintw(sys_win, (6 + i), 2, getCString(val[i]));
   }
   wattroff(sys_win, COLOR_PAIR(1));
   mvwprintw(sys_win, 10, 2, getCString(("Memory: ")));

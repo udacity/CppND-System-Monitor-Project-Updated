@@ -16,7 +16,8 @@ class SystemParser {
  public:
   static long int UpTime();
   static int CpuCores();
-  static vector<string> CpuUtilization();
+  static vector<string> AggregateCpuUtilization();
+  static vector<vector<string>> IndividualCpuUtilizations();
   static string CpuUtilization(vector<string> time1, vector<string> time2);
   static float MemoryUtilization();
   static std::string Kernel();
@@ -159,7 +160,7 @@ std::string SystemParser::CpuUtilization(vector<string> time1,
   return to_string(utilization);
 }
 
-vector<string> SystemParser::CpuUtilization() {
+vector<string> SystemParser::AggregateCpuUtilization() {
   string line;
   string token;
   vector<string> values;
@@ -176,6 +177,28 @@ vector<string> SystemParser::CpuUtilization() {
     }
   }
   return values;
+}
+
+vector<vector<string>> SystemParser::IndividualCpuUtilizations() {
+  string line;
+  string token;
+  vector<vector<string>> cpus;
+  std::ifstream filestream(Path::base + Path::stat);
+  if (filestream.is_open()) {
+    int i = 0;
+    while (getline(filestream, line)) {
+      std::istringstream linestream(line);
+      while (linestream >> token) {
+        string cpu{"cpu" + to_string(i)};
+        if (token == cpu) {
+          cpus.push_back({});
+          while (linestream >> token) cpus[i].push_back(token);
+          ++i;
+        }
+      }
+    }
+  }
+  return cpus;
 }
 
 int SystemParser::CpuCores() {

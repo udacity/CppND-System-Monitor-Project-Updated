@@ -65,28 +65,45 @@ void System::Refresh() {
 }
 
 // Constructing string for every core data display
-std::vector<std::string> System::getCoresStats() const {
-  std::vector<std::string> result = std::vector<std::string>();
-  for (size_t i = 0; i < this->coresStats.size(); i++) {
-    std::string temp = ("cpu" + std::to_string(i) + ": ");
-    float check{0};
-    if (!this->coresStats[i].empty()) check = stof(this->coresStats[i]);
-    if (!check || this->coresStats[i] == "nan") {
-      return std::vector<std::string>();
+// std::vector<std::string> System::getCoresStats() const {
+//   std::vector<std::string> result = std::vector<std::string>();
+//   for (size_t i = 0; i < this->coresStats.size(); i++) {
+//     std::string temp = ("cpu" + std::to_string(i) + ": ");
+//     float check{0};
+//     if (!this->coresStats[i].empty()) check = stof(this->coresStats[i]);
+//     if (!check || this->coresStats[i] == "nan") {
+//       return std::vector<std::string>();
+//     }
+//     temp += Util::GetProgressBar(this->coresStats[i]);
+//     result.push_back(temp);
+//   }
+//   return result;
+// }
+
+vector<string> System::IndividualCpuUtilizations() {
+  vector<string> utilizations;
+  vector<vector<string>> individual_cpu_times =
+      SystemParser::IndividualCpuUtilizations();
+  for (size_t i = 0; i < individual_cpu_times.size(); ++i) {
+    utilizations.push_back("0");
+    if (i < cached_individual_cpu_times_.size() &&
+        cached_individual_cpu_times_[i].size() > 0) {
+      utilizations[i] = SystemParser::CpuUtilization(
+          cached_individual_cpu_times_[i], individual_cpu_times[i]);
     }
-    temp += Util::GetProgressBar(this->coresStats[i]);
-    result.push_back(temp);
   }
-  return result;
+  cached_individual_cpu_times_ = individual_cpu_times;
+  return utilizations;
 }
 
-std::string System::CpuUtilization() {
-  vector<string> cpu_times = SystemParser::CpuUtilization();
+std::string System::AggregateCpuUtilization() {
+  vector<string> cpu_times = SystemParser::AggregateCpuUtilization();
   string utilization{"0"};
-  if (cached_cpu_times_.size() > 0) {
-    utilization = SystemParser::CpuUtilization(cached_cpu_times_, cpu_times);
+  if (cached_aggregate_cpu_times_.size() > 0) {
+    utilization =
+        SystemParser::CpuUtilization(cached_aggregate_cpu_times_, cpu_times);
   }
-  cached_cpu_times_ = cpu_times;
+  cached_aggregate_cpu_times_ = cpu_times;
   return utilization;
 }
 
