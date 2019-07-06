@@ -9,8 +9,6 @@
 
 class System {
  public:
-  System();
-  void Refresh();
   std::string MemoryUtilization() const;
   long UpTime() const;
   std::string Threads() const;

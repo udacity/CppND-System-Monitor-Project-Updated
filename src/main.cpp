@@ -23,8 +23,6 @@ char* getCString(std::string str) {
 }
 
 void writeSysInfoToConsole(System& sys, WINDOW* sys_win) {
-  sys.Refresh();
-
   mvwprintw(sys_win, 2, 2, getCString(("OS: " + sys.OperatingSystem())));
   mvwprintw(sys_win, 3, 2, getCString(("Kernel: " + sys.Kernel())));
   mvwprintw(sys_win, 4, 2, getCString("Aggregate CPU: "));
@@ -103,12 +101,7 @@ void PrintMain(System system, ProcessContainer processes) {
 }
 
 int main() {
-  // Object which contains list of current processes, Container for Process
-  // Class
   ProcessContainer processes;
-  // Object which containts relevant methods and attributes regarding system
-  // details
   System sys;
-  // std::string s = writeToConsole(sys);
   PrintMain(sys, processes);
 }
