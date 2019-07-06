@@ -16,7 +16,8 @@ class SystemParser {
  public:
   static long int UpTime();
   static int CpuCores();
-  static string Cpu(vector<string> time1, vector<string> time2);
+  static vector<string> CpuUtilization();
+  static string CpuUtilization(vector<string> time1, vector<string> time2);
   static float MemoryUtilization();
   static std::string Kernel();
   static std::string OperatingSystem();
@@ -25,10 +26,10 @@ class SystemParser {
   static std::string RunningProcesses();
 
  private:
-  static float Active(vector<string> cpu);
-  static float Idle(vector<string> cpu);
+  static long Active(vector<string> cpu);
+  static long Idle(vector<string> cpu);
   enum CPUStates {
-    kUser_ = 1,
+    kUser_ = 0,
     kNice_,
     kSystem_,
     kIdle_,
@@ -135,23 +136,46 @@ float SystemParser::MemoryUtilization() {
   return (1 - mem_free / (mem_total - buffers)) * 100;
 }
 
-float SystemParser::Active(vector<string> time) {
-  return (stof(time[CPUStates::kUser_]) + stof(time[CPUStates::kNice_]) +
-          stof(time[CPUStates::kSystem_]) + stof(time[CPUStates::kIRQ_]) +
-          stof(time[CPUStates::kSoftIRQ_]) + stof(time[CPUStates::kSteal_]) +
-          stof(time[CPUStates::kGuest_]) + stof(time[CPUStates::kGuestNice_]));
+long SystemParser::Active(vector<string> time) {
+  float active{0};
+  active += stol(time[CPUStates::kUser_]);
+  return active +
+         (stol(time[CPUStates::kNice_]) + stol(time[CPUStates::kSystem_]) +
+          stol(time[CPUStates::kIRQ_]) + stol(time[CPUStates::kSoftIRQ_]) +
+          stol(time[CPUStates::kSteal_]) + stol(time[CPUStates::kGuest_]) +
+          stol(time[CPUStates::kGuestNice_]));
 }
 
-float SystemParser::Idle(vector<string> time) {
-  return (stof(time[CPUStates::kIdle_]) + stof(time[CPUStates::kIOwait_]));
+long SystemParser::Idle(vector<string> time) {
+  return (stol(time[CPUStates::kIdle_]) + stol(time[CPUStates::kIOwait_]));
 }
 
-std::string SystemParser::Cpu(vector<string> time1, vector<string> time2) {
-  float active = Active(time2) - Active(time1);
-  float idle = Idle(time2) - Idle(time1);
-  float total = active + idle;
-  float utilization = active / total * 100;
+std::string SystemParser::CpuUtilization(vector<string> time1,
+                                         vector<string> time2) {
+  long active{Active(time2) - Active(time1)};
+  long idle{Idle(time2) - Idle(time1)};
+  long total{active + idle};
+  float utilization = static_cast<float>(active) / total * 100;
   return to_string(utilization);
+}
+
+vector<string> SystemParser::CpuUtilization() {
+  string line;
+  string token;
+  vector<string> values;
+  std::ifstream filestream(Path::base + Path::stat);
+  if (filestream.is_open()) {
+    while (getline(filestream, line)) {
+      std::istringstream linestream(line);
+      while (linestream >> token) {
+        if (token == "cpu") {
+          while (linestream >> token) values.push_back(token);
+          return values;
+        }
+      }
+    }
+  }
+  return values;
 }
 
 int SystemParser::CpuCores() {

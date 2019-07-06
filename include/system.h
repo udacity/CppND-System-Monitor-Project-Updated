@@ -19,13 +19,13 @@ class System {
   std::string RunningProcesses() const;
   std::string Kernel() const;
   std::string OperatingSystem() const;
-  std::string Cpu() const;
+  std::string CpuUtilization();
   void getOtherCores(int size);
   void setCpuCoresStats();
   std::vector<std::string> getCoresStats() const;
 
  private:
-  std::vector<std::string> lastCpuStats;
+  std::vector<std::string> cached_cpu_times_;
   std::vector<std::string> currentCpuStats;
   std::vector<std::string> coresStats;
   std::vector<std::vector<std::string>> lastCpuCoresStats;

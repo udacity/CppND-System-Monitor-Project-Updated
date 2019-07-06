@@ -16,23 +16,23 @@ System::System() {
   // this->kernel_version_ = ProcessParser::getSysKernelVersion();
 }
 
-void System::getOtherCores(int size) {
-  // when number of cores is detected, vectors are modified to fit incoming data
-  this->coresStats = std::vector<std::string>();
-  this->coresStats.resize(size);
-  this->lastCpuCoresStats = std::vector<std::vector<std::string>>();
-  this->lastCpuCoresStats.resize(size);
-  this->currentCpuCoresStats = std::vector<std::vector<std::string>>();
-  this->currentCpuCoresStats.resize(size);
-  for (int i = 0; i < size; i++) {
-    this->lastCpuCoresStats[i] =
-        ProcessParser::getSysCpuPercent(std::to_string(i));
-  }
-}
+// void System::getOtherCores(int size) {
+//   // when number of cores is detected, vectors are modified to fit incoming
+//   data this->coresStats = std::vector<std::string>();
+//   this->coresStats.resize(size);
+//   this->lastCpuCoresStats = std::vector<std::vector<std::string>>();
+//   this->lastCpuCoresStats.resize(size);
+//   this->currentCpuCoresStats = std::vector<std::vector<std::string>>();
+//   this->currentCpuCoresStats.resize(size);
+//   for (int i = 0; i < size; i++) {
+//     this->lastCpuCoresStats[i] =
+//         ProcessParser::getSysCpuPercent(std::to_string(i));
+//   }
+// // }
 
-void System::setLastCpuMeasures() {
-  this->lastCpuStats = ProcessParser::getSysCpuPercent("");
-}
+// void System::setLastCpuMeasures() {
+//   this->lastCpuStats = ProcessParser::getSysCpuPercent("");
+// }
 
 // void System::setCpuCoresStats() {
 //   // Getting data from files (previous data is required)
@@ -80,7 +80,15 @@ std::vector<std::string> System::getCoresStats() const {
   return result;
 }
 
-std::string System::Cpu() const { return cpu_; }
+std::string System::CpuUtilization() {
+  vector<string> cpu_times = SystemParser::CpuUtilization();
+  string utilization{"0"};
+  if (cached_cpu_times_.size() > 0) {
+    utilization = SystemParser::CpuUtilization(cached_cpu_times_, cpu_times);
+  }
+  cached_cpu_times_ = cpu_times;
+  return utilization;
+}
 
 std::string System::MemoryUtilization() const {
   return std::to_string(SystemParser::MemoryUtilization());

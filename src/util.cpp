@@ -41,7 +41,9 @@ std::string Util::GetProgressBar(std::string percent) {
     }
   }
 
-  return result + " " + percent.substr(0, 5) + " /100%";
+  string display{percent.substr(0, 4)};
+  if (stof(percent) < 10) display = percent.substr(0, 3);
+  return result + " " + display + "/100%";
 }
 
 // TODO: Move to ProcessParser

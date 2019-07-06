@@ -22,16 +22,16 @@ char *getCString(std::string str) {
   return cstr;
 }
 
-void writeSysInfoToConsole(System sys, WINDOW *sys_win) {
+void writeSysInfoToConsole(System &sys, WINDOW *sys_win) {
   sys.Refresh();
 
   mvwprintw(sys_win, 2, 2, getCString(("OS: " + sys.OperatingSystem())));
   mvwprintw(sys_win, 3, 2, getCString(("Kernel: " + sys.Kernel())));
-  mvwprintw(sys_win, 4, 2, getCString("CPU: "));
+  mvwprintw(sys_win, 4, 2, getCString("Aggregate CPU: "));
   wattron(sys_win, COLOR_PAIR(1));
-  wprintw(sys_win, getCString(Util::GetProgressBar(sys.Cpu())));
+  wprintw(sys_win, getCString(Util::GetProgressBar(sys.CpuUtilization())));
   wattroff(sys_win, COLOR_PAIR(1));
-  mvwprintw(sys_win, 5, 2, getCString(("Other cores:")));
+  mvwprintw(sys_win, 5, 2, getCString(("Individual CPU:")));
   wattron(sys_win, COLOR_PAIR(1));
   std::vector<std::string> val = sys.getCoresStats();
   for (size_t i = 0; i < val.size(); i++) {
@@ -51,7 +51,7 @@ void writeSysInfoToConsole(System sys, WINDOW *sys_win) {
   wrefresh(sys_win);
 }
 
-void getProcessListToConsole(ProcessContainer procs, WINDOW *win) {
+void getProcessListToConsole(ProcessContainer &procs, WINDOW *win) {
   wattron(win, COLOR_PAIR(2));
   mvwprintw(win, 1, 2, "PID:");
   mvwprintw(win, 1, 9, "User:");
