@@ -1,7 +1,7 @@
 #include "process.h"
-#include "process_parser.h"
 #include <cctype>
 #include <string>
+#include "process_parser.h"
 
 using std::string;
 
