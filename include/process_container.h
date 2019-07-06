@@ -10,7 +10,6 @@ class ProcessContainer {
  public:
   ProcessContainer();
   void Update();
-  std::string printList();
   std::vector<Process> Processes() const;
 
  private:

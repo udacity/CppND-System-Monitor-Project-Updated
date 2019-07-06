@@ -139,9 +139,3 @@ string ProcessParser::User(string pid) {
   }
   return "0";
 }
-
-long int ProcessParser::getSysUpTime() { return 0; }
-vector<string> ProcessParser::getSysCpuPercent(string coreNumber) {
-  return vector<string>{coreNumber};
-}
-bool ProcessParser::isPidExisting(string pid) { return pid == pid; }

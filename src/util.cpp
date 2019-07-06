@@ -45,12 +45,3 @@ std::string Util::GetProgressBar(std::string percent) {
   if (stof(percent) < 10) display = percent.substr(0, 3);
   return result + " " + display + "/100%";
 }
-
-// TODO: Move to ProcessParser
-void Util::GetStream(std::string path, std::ifstream& stream) {
-  stream.open(path, std::ifstream::in);
-  if (!stream || !stream.is_open()) {
-    stream.close();
-    throw std::runtime_error("Non - existing PID");
-  }
-}
