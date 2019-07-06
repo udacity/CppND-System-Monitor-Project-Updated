@@ -8,7 +8,6 @@
 // TODO: Move into System
 class ProcessContainer {
  public:
-  ProcessContainer();
   void Update();
   std::vector<Process> Processes() const;
 

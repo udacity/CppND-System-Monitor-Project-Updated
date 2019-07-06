@@ -4,17 +4,14 @@
 
 using std::stof;
 
-ProcessContainer::ProcessContainer() {}
-
 // TODO: Move into Process
 void ProcessContainer::Update() {
   std::vector<std::string> pidList{ProcessParser::Pids()};
   processes_.clear();
   for (auto& pid : pidList) {
-    processes_.emplace_back(pid);
-  }
-  for (auto& process : processes_) {
+    Process process(pid);
     process.Update();
+    processes_.push_back(process);
   }
   std::sort(processes_.begin(), processes_.end(), ProcessContainer::Compare);
 }
