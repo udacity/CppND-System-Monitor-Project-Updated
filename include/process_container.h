@@ -15,6 +15,7 @@ class ProcessContainer {
 
  private:
   std::vector<Process> processes_;
+  static bool Compare(const Process& a, const Process& b);
 };
 
 #endif
