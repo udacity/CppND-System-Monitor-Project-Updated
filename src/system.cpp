@@ -1,7 +1,13 @@
+#include <cstddef>
+#include <string>
+#include <vector>
+
 #include "system.h"
 #include "system_parser.h"
 
 using std::size_t;
+using std::string;
+using std::vector;
 
 System::System() {
   /*

@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "process_parser.h"
+#include "system_parser.h"
 #include "util.h"
 
 using std::string;
@@ -72,12 +73,30 @@ string ProcessParser::Cmdline(string pid) {
 }
 
 // TODO: Calculate CPU
-string ProcessParser::Cpu(string pid) {
-  string token;
-  std::ifstream stream(Path::base + pid + Path::stat);
-  if (stream.is_open()) {
+string ProcessParser::CpuUtilization(string pid) {
+  float utilization{0};
+  string line, token;
+  vector<string> values;
+  std::ifstream filestream(Path::base + pid + Path::stat);
+  if (filestream.is_open()) {
+    std::getline(filestream, line);
+    std::istringstream linestream(line);
+    while (linestream >> token) {
+      values.push_back(token);
+    }
   }
-  return "NA";
+  if (values.size() > 21) {
+    float user_ticks = stof(values[13]);
+    float kernel_ticks = stof(values[14]);
+    float children_user_ticks = stof(values[15]);
+    float children_kernel_ticks = stof(values[16]);
+    float process_ticks =
+        user_ticks + kernel_ticks + children_user_ticks + children_kernel_ticks;
+    long frequency{sysconf(_SC_CLK_TCK)};
+    long system_ticks{SystemParser::UpTime() * frequency};
+    utilization = process_ticks / system_ticks;
+  }
+  return to_string(utilization);
 }
 
 string ProcessParser::UpTime(string pid) {
@@ -119,7 +138,7 @@ string ProcessParser::User(string pid) {
       }
     }
   }
-  return "NA";
+  return "0";
 }
 
 long int ProcessParser::getSysUpTime() { return 0; }

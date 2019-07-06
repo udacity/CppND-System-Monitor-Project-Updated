@@ -68,7 +68,7 @@ void getProcessListToConsole(ProcessContainer &procs, WINDOW *win) {
     processes[i].Refresh();
     mvwprintw(win, 2 + i, 2, processes[i].Pid().c_str());
     mvwprintw(win, 2 + i, 9, processes[i].User().c_str());
-    mvwprintw(win, 2 + i, 16, processes[i].Cpu().c_str());
+    mvwprintw(win, 2 + i, 16, processes[i].CpuUtilization().c_str());
     mvwprintw(win, 2 + i, 26, processes[i].Ram().c_str());
     mvwprintw(win, 2 + i, 35, processes[i].UpTime().c_str());
     mvwprintw(win, 2 + i, 44, processes[i].Cmd().c_str());

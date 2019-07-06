@@ -14,7 +14,7 @@ class Process {
   std::string Pid() const;
   std::string User() const;
   std::string Cmd() const;
-  std::string Cpu() const;
+  std::string CpuUtilization() const;
   std::string Ram() const;
   std::string UpTime() const;
   void Refresh();
