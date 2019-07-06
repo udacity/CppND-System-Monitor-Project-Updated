@@ -9,7 +9,7 @@
 class ProcessContainer {
  public:
   ProcessContainer();
-  void Refresh();
+  void Update();
   std::string printList();
   std::vector<Process> Processes() const;
 

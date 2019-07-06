@@ -17,7 +17,7 @@ class Process {
   std::string CpuUtilization() const;
   std::string Ram() const;
   std::string UpTime() const;
-  void Refresh();
+  void Update();
 
  private:
   std::string pid_;

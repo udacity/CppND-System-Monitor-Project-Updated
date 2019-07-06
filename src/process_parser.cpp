@@ -45,7 +45,7 @@ std::string ProcessParser::Threads(std::string pid) {
       }
     }
   }
-  return "NA";
+  return "0";
 }
 
 string ProcessParser::VmSize(string pid) {
@@ -58,7 +58,7 @@ string ProcessParser::VmSize(string pid) {
       }
     }
   }
-  return string("NA");
+  return string("0");
 }
 
 string ProcessParser::Cmdline(string pid) {
@@ -69,10 +69,9 @@ string ProcessParser::Cmdline(string pid) {
     std::getline(stream, line);
     return line;
   }
-  return "NA";
+  return "";
 }
 
-// TODO: Calculate CPU
 string ProcessParser::CpuUtilization(string pid) {
   float utilization{0};
   string line, token;

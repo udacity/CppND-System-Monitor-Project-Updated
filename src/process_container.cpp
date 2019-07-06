@@ -5,20 +5,15 @@
 ProcessContainer::ProcessContainer() {}
 
 // TODO: Move into Process
-void ProcessContainer::Refresh() {
+void ProcessContainer::Update() {
   std::vector<std::string> pidList{ProcessParser::Pids()};
   processes_.clear();
   for (auto& pid : pidList) {
     processes_.emplace_back(pid);
   }
+  for (auto& process : processes_) {
+    process.Update();
+  }
 }
-
-// std::string ProcessContainer::printList() {
-//   std::string result = "";
-//   for (int i = 0; i < this->processes_.size(); i++) {
-//     result += this->processes_[i].getProcess();
-//   }
-//   return result;
-// }
 
 std::vector<Process> ProcessContainer::Processes() const { return processes_; }

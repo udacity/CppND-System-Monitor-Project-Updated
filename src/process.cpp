@@ -19,7 +19,7 @@ string Process::User() const { return user_; }
 
 string Process::UpTime() const { return up_time_; }
 
-void Process::Refresh() {
+void Process::Update() {
   if (ProcessParser::isPidExisting(this->pid_)) {
     cmd_ = ProcessParser::Cmdline(pid_);
     cpu_ = ProcessParser::CpuUtilization(pid_);

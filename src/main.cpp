@@ -65,7 +65,6 @@ void getProcessListToConsole(ProcessContainer &procs, WINDOW *win) {
   wattroff(win, COLOR_PAIR(2));
   auto processes = procs.Processes();
   for (int i = 0; i < 10; i++) {
-    processes[i].Refresh();
     mvwprintw(win, 2 + i, 2, processes[i].Pid().c_str());
     mvwprintw(win, 2 + i, 9, processes[i].User().c_str());
     mvwprintw(win, 2 + i, 16, processes[i].CpuUtilization().c_str());
@@ -90,7 +89,7 @@ void PrintMain(System system, ProcessContainer processes) {
   while (1) {
     box(sys_win, 0, 0);
     box(proc_win, 0, 0);
-    processes.Refresh();
+    processes.Update();
     writeSysInfoToConsole(system, sys_win);
     getProcessListToConsole(processes, proc_win);
     wrefresh(sys_win);
