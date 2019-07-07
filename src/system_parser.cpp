@@ -100,14 +100,3 @@ vector<vector<string>> SystemParser::IndividualCpuUtilizations() {
   }
   return cpus;
 }
-
-long int SystemParser::UpTime() {
-  string token;
-  std::ifstream stream(Path::base + Path::uptime);
-  if (stream.is_open()) {
-    if (stream >> token) {
-      return stoi(token);
-    }
-  }
-  return 0;
-}

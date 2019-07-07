@@ -9,7 +9,6 @@
 
 class SystemParser {
  public:
-  static long int UpTime();
   static std::vector<std::string> AggregateCpuUtilization();
   static std::vector<std::vector<std::string>> IndividualCpuUtilizations();
   static float CpuUtilization(std::vector<std::string> time1,
