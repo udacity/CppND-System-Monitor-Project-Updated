@@ -21,11 +21,10 @@ class System {
   std::vector<Process> Processes() const;
 
  private:
-  void UpdateProcesses();  // TODO: Move to ProcessParser
+  void UpdateProcesses();
   std::vector<Process> processes_;
   std::vector<std::string> cached_aggregate_cpu_times_;
   std::vector<std::vector<std::string>> cached_individual_cpu_times_;
-  std::vector<std::vector<std::string>> cached_cpu_times_;
 };
 
 #endif

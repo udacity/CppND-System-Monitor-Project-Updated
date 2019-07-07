@@ -6,14 +6,14 @@
 using std::string;
 
 Process::Process(string pid) : pid_(pid) {
-  cmd_ = ProcessParser::Cmdline(pid_);
+  command_ = ProcessParser::Cmdline(pid_);
   cpu_ = ProcessParser::CpuUtilization(pid_);
   ram_ = ProcessParser::VmSize(pid_);
   up_time_ = ProcessParser::UpTime(pid_);
   user_ = ProcessParser::User(pid_);
 }
 
-string Process::Cmd() const { return cmd_; }
+string Process::Command() const { return command_; }
 
 string Process::CpuUtilization() const { return cpu_; }
 

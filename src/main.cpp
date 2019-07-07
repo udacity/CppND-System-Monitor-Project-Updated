@@ -13,83 +13,83 @@
 #include "system.h"
 #include "util.h"
 
-char* getCString(std::string str) {
-  char* cstr = new char[str.length() + 1];
-  std::strcpy(cstr, str.c_str());
-  return cstr;
-}
-
-void writeSysInfoToConsole(System& sys, WINDOW* sys_win) {
-  mvwprintw(sys_win, 2, 2, getCString(("OS: " + sys.OperatingSystem())));
-  mvwprintw(sys_win, 3, 2, getCString(("Kernel: " + sys.Kernel())));
-  mvwprintw(sys_win, 4, 2, getCString("Aggregate CPU: "));
-  wattron(sys_win, COLOR_PAIR(1));
-  wprintw(sys_win,
-          getCString(Util::GetProgressBar(sys.AggregateCpuUtilization())));
-  wattroff(sys_win, COLOR_PAIR(1));
-  mvwprintw(sys_win, 5, 2, getCString(("Individual CPUs:")));
-  wattron(sys_win, COLOR_PAIR(1));
-  std::vector<std::string> val = sys.IndividualCpuUtilizations();
+void DisplaySystem(System& system, WINDOW* window) {
+  int row{0};
+  mvwprintw(window, ++row, 2, ("OS: " + system.OperatingSystem()).c_str());
+  mvwprintw(window, ++row, 2, ("Kernel: " + system.Kernel()).c_str());
+  mvwprintw(window, ++row, 2, "Aggregate CPU: ");
+  wattron(window, COLOR_PAIR(1));
+  wprintw(window,
+          Util::GetProgressBar(system.AggregateCpuUtilization()).c_str());
+  wattroff(window, COLOR_PAIR(1));
+  mvwprintw(window, ++row, 2, "Individual CPUs:");
+  wattron(window, COLOR_PAIR(1));
+  std::vector<std::string> val = system.IndividualCpuUtilizations();
   for (std::size_t i = 0; i < val.size(); i++) {
-    mvwprintw(sys_win, 6 + i, 2, "");
-    wprintw(sys_win, getCString(Util::GetProgressBar(val[i])));
-    // mvwprintw(sys_win, (6 + i), 2, getCString(val[i]));
+    mvwprintw(window, ++row, 2, "");
+    wprintw(window, Util::GetProgressBar(val[i]).c_str());
   }
-  wattroff(sys_win, COLOR_PAIR(1));
-  mvwprintw(sys_win, 10, 2, getCString(("Memory: ")));
-  wattron(sys_win, COLOR_PAIR(1));
-  wprintw(sys_win, getCString(Util::GetProgressBar(sys.MemoryUtilization())));
-  wattroff(sys_win, COLOR_PAIR(1));
-  mvwprintw(sys_win, 11, 2,
-            getCString(("Total Processes: " + sys.TotalProcesses())));
-  mvwprintw(sys_win, 12, 2,
-            getCString(("Running Processes: " + sys.RunningProcesses())));
-  mvwprintw(sys_win, 13, 2,
-            getCString(("Up Time: " + Util::FormatTime(sys.UpTime()))));
-  wrefresh(sys_win);
+  wattroff(window, COLOR_PAIR(1));
+  mvwprintw(window, ++row, 2, "Memory: ");
+  wattron(window, COLOR_PAIR(1));
+  wprintw(window, Util::GetProgressBar(system.MemoryUtilization()).c_str());
+  wattroff(window, COLOR_PAIR(1));
+  mvwprintw(window, ++row, 2,
+            ("Total Processes: " + system.TotalProcesses()).c_str());
+  mvwprintw(window, ++row, 2,
+            ("Running Processes: " + system.RunningProcesses()).c_str());
+  mvwprintw(window, ++row, 2,
+            ("Up Time: " + Util::FormatTime(system.UpTime())).c_str());
+  wrefresh(window);
 }
 
-void getProcessListToConsole(std::vector<Process>& processes, WINDOW* win) {
-  wattron(win, COLOR_PAIR(2));
-  mvwprintw(win, 1, 2, "PID:");
-  mvwprintw(win, 1, 9, "User:");
-  mvwprintw(win, 1, 16, "CPU[%%]:");
-  mvwprintw(win, 1, 26, "RAM[MB]:");
-  mvwprintw(win, 1, 35, "Uptime:");
-  mvwprintw(win, 1, 44, "CMD:");
-  wattroff(win, COLOR_PAIR(2));
+void DisplayProcesses(const std::vector<Process>& processes, WINDOW* window) {
+  int row{0};
+  int const pid_column{2};
+  int const user_column{9};
+  int const cpu_column{16};
+  int const ram_column{26};
+  int const time_column{35};
+  int const command_column{44};
+  wattron(window, COLOR_PAIR(2));
+  mvwprintw(window, ++row, 2, "PID");
+  mvwprintw(window, row, 9, "USER");
+  mvwprintw(window, row, 16, "CPU[%%]");
+  mvwprintw(window, row, 26, "RAM[MB]");
+  mvwprintw(window, row, 35, "TIME+");
+  mvwprintw(window, row, 44, "COMMAND");
+  wattroff(window, COLOR_PAIR(2));
   for (int i = 0; i < 10; i++) {
-    mvwprintw(win, 2 + i, 2, processes[i].Pid().c_str());
-    mvwprintw(win, 2 + i, 9, processes[i].User().c_str());
-    mvwprintw(win, 2 + i, 16,
+    mvwprintw(window, ++row, pid_column, processes[i].Pid().c_str());
+    mvwprintw(window, row, user_column, processes[i].User().c_str());
+    mvwprintw(window, row, cpu_column,
               processes[i].CpuUtilization().substr(0, 5).c_str());
-    mvwprintw(win, 2 + i, 26, processes[i].Ram().c_str());
-    mvwprintw(win, 2 + i, 35, processes[i].UpTime().c_str());
-    mvwprintw(win, 2 + i, 44,
-              processes[i].Cmd().substr(0, win->_maxx - 44).c_str());
+    mvwprintw(window, row, ram_column, processes[i].Ram().c_str());
+    mvwprintw(window, row, time_column, processes[i].UpTime().c_str());
+    mvwprintw(window, row, command_column,
+              processes[i].Command().substr(0, window->_maxx - 44).c_str());
   }
 }
 
-void PrintMain(System& system) {
-  initscr();                   /* Start curses mode 		  */
-  noecho();                    // not printing input values
-  cbreak();                    // Terminating on classic ctrl + c
-  start_color();               // Enabling color change of text
-  int xMax = getmaxx(stdscr);  // getting size of window measured in lines and
-                               // columns(column one char length)
-  WINDOW* sys_win = newwin(15, xMax - 1, 0, 0);
-  WINDOW* proc_win = newwin(13, xMax - 1, 16, 0);
+void Display(System& system) {
+  initscr();      // start ncurses
+  noecho();       // do not print input values
+  cbreak();       // terminate ncurses on ctrl + c
+  start_color();  // enable color
 
-  init_pair(1, COLOR_BLUE, COLOR_BLACK);
-  init_pair(2, COLOR_GREEN, COLOR_BLACK);
+  int x_max{getmaxx(stdscr)};
+  WINDOW* system_window = newwin(14, x_max - 1, 0, 0);
+  WINDOW* process_window = newwin(13, x_max - 1, system_window->_maxy + 1, 0);
+
   while (1) {
-    box(sys_win, 0, 0);
-    box(proc_win, 0, 0);
-    writeSysInfoToConsole(system, sys_win);
-    std::vector<Process> processes{system.Processes()};
-    getProcessListToConsole(processes, proc_win);
-    wrefresh(sys_win);
-    wrefresh(proc_win);
+    init_pair(1, COLOR_BLUE, COLOR_BLACK);
+    init_pair(2, COLOR_GREEN, COLOR_BLACK);
+    box(system_window, 0, 0);
+    box(process_window, 0, 0);
+    DisplaySystem(system, system_window);
+    DisplayProcesses(system.Processes(), process_window);
+    wrefresh(system_window);
+    wrefresh(process_window);
     refresh();
     sleep(1);
   }
@@ -98,5 +98,5 @@ void PrintMain(System& system) {
 
 int main() {
   System system;
-  PrintMain(system);
+  Display(system);
 }

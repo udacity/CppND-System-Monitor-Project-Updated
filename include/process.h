@@ -11,7 +11,7 @@ class Process {
   Process(std::string pid);
   std::string Pid() const;
   std::string User() const;
-  std::string Cmd() const;
+  std::string Command() const;
   std::string CpuUtilization() const;
   std::string Ram() const;
   std::string UpTime() const;
@@ -21,7 +21,7 @@ class Process {
  private:
   std::string pid_;
   std::string user_;
-  std::string cmd_;
+  std::string command_;
   std::string cpu_;
   std::string ram_;
   std::string up_time_;
