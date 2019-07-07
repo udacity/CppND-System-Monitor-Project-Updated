@@ -1,7 +1,7 @@
 #include <ctype.h>
 #include <dirent.h>
 #include <unistd.h>
-#include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -55,8 +55,7 @@ string ProcessParser::Cmdline(string pid) {
   return "";
 }
 
-string ProcessParser::CpuUtilization(string pid) {
-  float utilization{0};
+long ProcessParser::Jiffies(string pid) {
   string line, token;
   vector<string> values;
   std::ifstream filestream(Path::base + pid + Path::stat);
@@ -67,18 +66,15 @@ string ProcessParser::CpuUtilization(string pid) {
       values.push_back(token);
     }
   }
+  long jiffies{0};
   if (values.size() > 21) {
-    float user_ticks = stof(values[13]);
-    float kernel_ticks = stof(values[14]);
-    float children_user_ticks = stof(values[15]);
-    float children_kernel_ticks = stof(values[16]);
-    float process_ticks =
-        user_ticks + kernel_ticks + children_user_ticks + children_kernel_ticks;
-    long frequency{sysconf(_SC_CLK_TCK)};
-    long system_ticks{SystemParser::UpTime() * frequency};
-    utilization = process_ticks / system_ticks * 100;
+    long user = stol(values[13]);
+    long kernel = stol(values[14]);
+    long children_user = stol(values[15]);
+    long children_kernel = stol(values[16]);
+    jiffies = user + kernel + children_user + children_kernel;
   }
-  return to_string(utilization);
+  return jiffies;
 }
 
 string ProcessParser::UpTime(string pid) {

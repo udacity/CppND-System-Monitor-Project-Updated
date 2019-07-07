@@ -11,7 +11,7 @@ class ProcessParser {
   static std::string Cmdline(std::string pid);
   static std::vector<std::string> Pids();
   static std::string VmSize(std::string pid);
-  static std::string CpuUtilization(std::string pid);
+  static long Jiffies(std::string pid);
   static std::string UpTime(std::string pid);
   static std::string Uid(std::string pid);
   static std::string User(std::string pid);

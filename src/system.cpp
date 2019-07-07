@@ -1,4 +1,6 @@
+#include <unistd.h>
 #include <cstddef>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -7,16 +9,28 @@
 #include "system.h"
 #include "system_parser.h"
 
+using std::map;
 using std::size_t;
 using std::string;
 using std::vector;
 
-std::vector<Process> System::Processes() const {
+std::vector<Process> System::Processes() {
   vector<Process> processes;
+  map<string, long> process_jiffies;
+  long system_jiffies = UpTime() * sysconf(_SC_CLK_TCK);
   for (auto& pid : ProcessParser::Pids()) {
     processes.emplace_back(pid);
+    process_jiffies[pid] = processes.back().Jiffies();
+    if (cached_process_jiffies_.find(pid) != cached_process_jiffies_.end()) {
+      float cpu = static_cast<float>(process_jiffies[pid] -
+                                     cached_process_jiffies_[pid]) /
+                  static_cast<float>(system_jiffies - cached_system_jiffies_);
+      processes.back().CpuUtilization(cpu);
+    }
   }
   std::sort(processes.begin(), processes.end(), std::greater<Process>());
+  cached_process_jiffies_ = process_jiffies;
+  cached_system_jiffies_ = system_jiffies;
   return processes;
 }
 

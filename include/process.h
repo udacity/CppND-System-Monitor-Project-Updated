@@ -12,7 +12,9 @@ class Process {
   std::string Pid() const;
   std::string User() const;
   std::string Command() const;
-  std::string CpuUtilization() const;
+  float CpuUtilization() const;
+  void CpuUtilization(float cpu);
+  long Jiffies() const;
   std::string Ram() const;
   std::string UpTime() const;
   bool operator<(const Process& a) const;
@@ -20,11 +22,7 @@ class Process {
 
  private:
   std::string pid_;
-  std::string user_;
-  std::string command_;
-  std::string cpu_;
-  std::string ram_;
-  std::string up_time_;
+  float cpu_{0};
 };
 
 #endif
