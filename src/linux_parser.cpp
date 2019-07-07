@@ -126,11 +126,12 @@ int LinuxParser::TotalProcesses() {
   string value;
   std::ifstream stream(kProcDirectory + kStatFilename);
   if (stream.is_open()) {
-    std::getline(stream, line);
-    std::istringstream stream(line);
-    while (stream >> key >> value) {
-      if (key == "processes") {
-        return stoi(value);
+    while (std::getline(stream, line)) {
+      std::istringstream stream(line);
+      while (stream >> key >> value) {
+        if (key == "processes") {
+          return stoi(value);
+        }
       }
     }
   }
