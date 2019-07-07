@@ -6,76 +6,16 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-std::string SystemParser::TotalThreads() {
-  vector<string> pids = ProcessParser::Pids();
-  int total = 0;
-  for (string& pid : pids) {
-    total += stoi(ProcessParser::Threads(pid));
-  }
-  return std::to_string(total);
-}
-
-std::string SystemParser::TotalProcesses() {
-  string line, key, value;
-  std::ifstream stream(Path::base + Path::stat);
+vector<string> SystemParser::Lines(string filepath) {
+  string line;
+  vector<string> lines;
+  std::ifstream stream(filepath);
   if (stream.is_open()) {
     while (std::getline(stream, line)) {
-      std::istringstream stream(line);
-      while (stream >> key >> value) {
-        if (key == "processes") {
-          return value;
-        }
-      }
+      lines.push_back(line);
     }
   }
-  return "NA";
-}
-
-std::string SystemParser::RunningProcesses() {
-  string line, key, value;
-  std::ifstream stream(Path::base + Path::stat);
-  if (stream.is_open()) {
-    while (std::getline(stream, line)) {
-      std::istringstream stream(line);
-      while (stream >> key >> value) {
-        if (key == "procs_running") {
-          return value;
-        }
-      }
-    }
-  }
-  return "NA";
-}
-
-std::string SystemParser::OperatingSystem() {
-  string line, key, value;
-  std::ifstream stream("/etc/os-release");
-  if (stream.is_open()) {
-    while (std::getline(stream, line)) {
-      std::replace(line.begin(), line.end(), ' ', '_');
-      std::replace(line.begin(), line.end(), '=', ' ');
-      std::replace(line.begin(), line.end(), '"', ' ');
-      std::istringstream stream(line);
-      while (stream >> key >> value) {
-        if (key == "PRETTY_NAME") {
-          std::replace(value.begin(), value.end(), '_', ' ');
-          return value;
-        }
-      }
-    }
-  }
-  return "NA";
-}
-
-std::string SystemParser::Kernel() {
-  string token{"NA"};
-  std::ifstream stream(Path::base + Path::version);
-  if (stream.is_open()) {
-    for (int i = 0; i <= 2; ++i) {
-      stream >> token;
-    }
-  }
-  return token;
+  return lines;
 }
 
 // TODO: Refactor to use a map
@@ -160,19 +100,6 @@ vector<vector<string>> SystemParser::IndividualCpuUtilizations() {
     }
   }
   return cpus;
-}
-
-int SystemParser::CpuCores() {
-  string token;
-  std::ifstream stream(Path::base + Path::cpuinfo);
-  if (stream.is_open()) {
-    while (stream >> token) {
-      if (token == "cores") {
-        if (stream >> token >> token) return stoi(token);
-      }
-    }
-  }
-  return 0;
 }
 
 long int SystemParser::UpTime() {

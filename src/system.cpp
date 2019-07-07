@@ -51,18 +51,67 @@ float System::MemoryUtilization() const {
   return SystemParser::MemoryUtilization();
 }
 
-long int System::UpTime() const { return SystemParser::UpTime(); }
-
-std::string System::Kernel() const { return SystemParser::Kernel(); }
-
-std::string System::TotalProcesses() const {
-  return SystemParser::TotalProcesses();
-}
-
-std::string System::RunningProcesses() const {
-  return SystemParser::RunningProcesses();
-}
-
 std::string System::OperatingSystem() const {
-  return SystemParser::OperatingSystem();
+  string key, value;
+  for (string& line : SystemParser::Lines("/etc/os-release")) {
+    std::replace(line.begin(), line.end(), ' ', '_');
+    std::replace(line.begin(), line.end(), '=', ' ');
+    std::replace(line.begin(), line.end(), '"', ' ');
+    std::istringstream stream(line);
+    while (stream >> key >> value) {
+      if (key == "PRETTY_NAME") {
+        std::replace(value.begin(), value.end(), '_', ' ');
+        return value;
+      }
+    }
+  }
+  return "";
+}
+
+std::string System::Kernel() const {
+  string token;
+  for (string& line : SystemParser::Lines(Path::base + Path::version)) {
+    std::istringstream stream(line);
+    for (int i = 0; i <= 2; ++i) {
+      stream >> token;
+    }
+  }
+  return token;
+}
+
+long int System::UpTime() const {
+  string token;
+  for (string& line : SystemParser::Lines(Path::base + Path::uptime)) {
+    std::istringstream stream(line);
+    if (stream >> token) {
+      return stoi(token);
+    }
+  }
+  return 0;
+}
+
+int System::TotalProcesses() const {
+  string key, value;
+  for (string& line : SystemParser::Lines(Path::base + Path::stat)) {
+    std::istringstream stream(line);
+    while (stream >> key >> value) {
+      if (key == "processes") {
+        return stoi(value);
+      }
+    }
+  }
+  return 0;
+}
+
+int System::RunningProcesses() const {
+  string key, value;
+  for (string& line : SystemParser::Lines(Path::base + Path::stat)) {
+    std::istringstream stream(line);
+    while (stream >> key >> value) {
+      if (key == "processes") {
+        return stoi(value);
+      }
+    }
+  }
+  return 0;
 }

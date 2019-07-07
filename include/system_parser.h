@@ -10,17 +10,12 @@
 class SystemParser {
  public:
   static long int UpTime();
-  static int CpuCores();
   static std::vector<std::string> AggregateCpuUtilization();
   static std::vector<std::vector<std::string>> IndividualCpuUtilizations();
   static float CpuUtilization(std::vector<std::string> time1,
                               std::vector<std::string> time2);
   static float MemoryUtilization();
-  static std::string Kernel();
-  static std::string OperatingSystem();
-  static std::string TotalThreads();
-  static std::string TotalProcesses();
-  static std::string RunningProcesses();
+  static std::vector<std::string> Lines(std::string filepath);
 
  private:
   static long Active(std::vector<std::string> cpu);

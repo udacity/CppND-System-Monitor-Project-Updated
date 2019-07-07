@@ -1,13 +1,12 @@
 #include <ctype.h>
 #include <dirent.h>
-#include <cmath>
+#include <unistd.h>
 #include <fstream>
 #include <string>
 #include <vector>
 
 #include "process_parser.h"
 #include "system_parser.h"
-#include "util.h"
 
 using std::string;
 using std::to_string;
@@ -30,22 +29,6 @@ vector<string> ProcessParser::Pids() {
   }
   closedir(directory);
   return pids;
-}
-
-std::string ProcessParser::Threads(std::string pid) {
-  string line, key, value;
-  std::ifstream stream(Path::base + pid + Path::status);
-  if (stream.is_open()) {
-    while (std::getline(stream, line)) {
-      std::istringstream stream(line);
-      while (stream >> key >> value) {
-        if (key == "Threads:") {
-          return value;
-        }
-      }
-    }
-  }
-  return "0";
 }
 
 string ProcessParser::VmSize(string pid) {

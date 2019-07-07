@@ -5,14 +5,13 @@
 #include <string>
 #include <vector>
 #include "process.h"
-#include "util.h"
 
 class System {
  public:
   float MemoryUtilization() const;
   long UpTime() const;
-  std::string TotalProcesses() const;
-  std::string RunningProcesses() const;
+  int TotalProcesses() const;
+  int RunningProcesses() const;
   std::string Kernel() const;
   std::string OperatingSystem() const;
   float AggregateCpuUtilization();

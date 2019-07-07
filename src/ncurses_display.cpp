@@ -1,11 +1,13 @@
 #include <curses.h>
+#include <chrono>
 #include <string>
+#include <thread>
 #include <vector>
 
+#include "format.h"
 #include "ncurses_display.h"
 #include "process_parser.h"
 #include "system.h"
-#include "util.h"
 
 using std::string;
 using std::to_string;
@@ -49,11 +51,12 @@ void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
   wprintw(window, ProgressBar(system.MemoryUtilization()).c_str());
   wattroff(window, COLOR_PAIR(1));
   mvwprintw(window, ++row, 2,
-            ("Total Processes: " + system.TotalProcesses()).c_str());
+            ("Total Processes: " + to_string(system.TotalProcesses())).c_str());
+  mvwprintw(
+      window, ++row, 2,
+      ("Running Processes: " + to_string(system.RunningProcesses())).c_str());
   mvwprintw(window, ++row, 2,
-            ("Running Processes: " + system.RunningProcesses()).c_str());
-  mvwprintw(window, ++row, 2,
-            ("Up Time: " + Util::FormatTime(system.UpTime())).c_str());
+            ("Up Time: " + Format::Time(system.UpTime())).c_str());
   wrefresh(window);
 }
 
@@ -107,7 +110,7 @@ void NCursesDisplay::Display(System& system, int n) {
     wrefresh(system_window);
     wrefresh(process_window);
     refresh();
-    sleep(1);
+    std::this_thread::sleep_for(std::chrono::seconds(1));
   }
   endwin();
 }
