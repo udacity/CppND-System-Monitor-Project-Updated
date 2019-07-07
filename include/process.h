@@ -16,7 +16,6 @@ class Process {
   void CpuUtilization(long active_ticks, long system_ticks);
   long Jiffies() const;
   std::string Ram() const;
-  std::string Uid() const;
   long int UpTime() const;
   bool operator<(const Process& a) const;
   bool operator>(const Process& a) const;

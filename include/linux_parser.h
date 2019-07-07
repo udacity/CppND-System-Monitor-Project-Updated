@@ -6,20 +6,28 @@
 #include <string>
 
 namespace LinuxParser {
-std::vector<std::string> CpuUtilization();
-std::vector<std::vector<std::string>> IndividualCpuUtilizations();
-float CpuUtilization(std::vector<std::string> time1,
-                     std::vector<std::string> time2);
+// Paths
+const std::string kProcDirectory{"/proc/"};
+const std::string kCmdlineFilename{"/cmdline"};
+const std::string kCpuinfoFilename{"/cpuinfo"};
+const std::string kStatusFilename{"/status"};
+const std::string kStatFilename{"/stat"};
+const std::string kUptimeFilename{"/uptime"};
+const std::string kMeminfoFilename{"/meminfo"};
+const std::string kVersionFilename{"/version"};
+const std::string kOSPath{"/etc/os-release"};
+const std::string kPasswordPath{"/etc/passwd"};
+
+// System
 float MemoryUtilization();
-std::vector<std::string> Lines(std::string filepath);
 long UpTime();
 std::vector<int> Pids();
+int TotalProcesses();
+int RunningProcesses();
+std::string OperatingSystem();
+std::string Kernel();
 
-long Jiffies();
-long ActiveJiffies();
-long ActiveJiffies(int pid);
-long IdleJiffies();
-
+// CPU
 enum CPUStates {
   kUser_ = 0,
   kNice_,
@@ -32,15 +40,20 @@ enum CPUStates {
   kGuest_,
   kGuestNice_
 };
-const std::string kProcDirectory{"/proc/"};
-const std::string kCmdlineFilename{"/cmdline"};
-const std::string kCpuinfoFilename{"/cpuinfo"};
-const std::string kStatusFilename{"/status"};
-const std::string kStatFilename{"/stat"};
-const std::string kUptimeFilename{"/uptime"};
-const std::string kMeminfoFilename{"/meminfo"};
-const std::string kVersionFilename{"/version"};
-const std::string kPasswordPath{"/etc/passwd"};
+std::vector<std::string> CpuUtilization();
+float CpuUtilization(std::vector<std::string> time1,
+                     std::vector<std::string> time2);
+long Jiffies();
+long ActiveJiffies();
+long ActiveJiffies(int pid);
+long IdleJiffies();
+
+// Processes
+std::string Command(int pid);
+std::string Ram(int pid);
+std::string Uid(int pid);
+std::string User(int pid);
+long int UpTime(int pid);
 };  // namespace LinuxParser
 
 #endif

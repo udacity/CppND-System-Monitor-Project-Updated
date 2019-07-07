@@ -25,76 +25,13 @@ void Process::CpuUtilization(long active_ticks, long system_ticks) {
   cached_system_ticks_ = system_ticks;
 }
 
-string Process::Command() const {
-  string line;
-  std::ifstream stream(LinuxParser::kProcDirectory + to_string(pid_) +
-                       LinuxParser::kCmdlineFilename);
-  if (stream.is_open()) {
-    string line;
-    std::getline(stream, line);
-    return line;
-  }
-  return "";
-}
+string Process::Command() const { return LinuxParser::Command(Pid()); }
 
-string Process::Ram() const {
-  string token;
-  std::ifstream stream(LinuxParser::kProcDirectory + to_string(pid_) +
-                       LinuxParser::kStatusFilename);
-  if (stream.is_open()) {
-    while (stream >> token) {
-      if (token == "VmSize:") {
-        if (stream >> token) return std::to_string(stoi(token) / 1024);
-      }
-    }
-  }
-  return string("0");
-}
+string Process::Ram() const { return LinuxParser::Ram(Pid()); }
 
-string Process::Uid() const {
-  string token;
-  std::ifstream stream(LinuxParser::kProcDirectory + to_string(pid_) +
-                       LinuxParser::kStatusFilename);
-  if (stream.is_open()) {
-    while (stream >> token) {
-      if (token == "Uid:") {
-        if (stream >> token) return token;
-      }
-    }
-  }
-  return string("");
-}
+string Process::User() const { return LinuxParser::User(Pid()); }
 
-string Process::User() const {
-  std::ifstream stream(LinuxParser::kPasswordPath);
-  if (stream.is_open()) {
-    string line;
-    string token = "x:" + Uid();
-    while (std::getline(stream, line)) {
-      auto marker = line.find(token);
-      if (marker != string::npos) {
-        return line.substr(0, marker - 1);
-      }
-    }
-  }
-  return "0";
-}
-
-long int Process::UpTime() const {
-  long int time{0};
-  string token;
-  std::ifstream stream(LinuxParser::kProcDirectory + to_string(pid_) +
-                       LinuxParser::kStatFilename);
-  if (stream.is_open()) {
-    for (int i = 0; stream >> token; ++i)
-      if (i == 13) {
-        long int time{stol(token)};
-        time /= sysconf(_SC_CLK_TCK);
-        return time;
-      }
-  }
-  return time;
-}
+long int Process::UpTime() const { return LinuxParser::UpTime(Pid()); }
 
 bool Process::operator<(const Process& a) const {
   return CpuUtilization() < a.CpuUtilization();
