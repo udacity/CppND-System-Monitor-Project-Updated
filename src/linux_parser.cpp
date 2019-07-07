@@ -38,29 +38,20 @@ float LinuxParser::MemoryUtilization() {
   return 1 - mem_free / (mem_total - buffers);
 }
 
-long LinuxParser::Active(vector<string> time) {
-  float active{0};
-  active += stol(time[CPUStates::kUser_]);
-  return active +
-         (stol(time[CPUStates::kNice_]) + stol(time[CPUStates::kSystem_]) +
-          stol(time[CPUStates::kIRQ_]) + stol(time[CPUStates::kSoftIRQ_]) +
-          stol(time[CPUStates::kSteal_]) + stol(time[CPUStates::kGuest_]) +
-          stol(time[CPUStates::kGuestNice_]));
+long LinuxParser::ActiveJiffies() {
+  vector<string> time = CpuUtilization();
+  return (stol(time[CPUStates::kUser_]) + stol(time[CPUStates::kNice_]) +
+          stol(time[CPUStates::kSystem_]) + stol(time[CPUStates::kIRQ_]) +
+          stol(time[CPUStates::kSoftIRQ_]) + stol(time[CPUStates::kSteal_]) +
+          stol(time[CPUStates::kGuest_]) + stol(time[CPUStates::kGuestNice_]));
 }
 
-long LinuxParser::Idle(vector<string> time) {
+long LinuxParser::IdleJiffies() {
+  vector<string> time = CpuUtilization();
   return (stol(time[CPUStates::kIdle_]) + stol(time[CPUStates::kIOwait_]));
 }
 
-float LinuxParser::CpuUtilization(vector<string> time1, vector<string> time2) {
-  long active{Active(time2) - Active(time1)};
-  long idle{Idle(time2) - Idle(time1)};
-  long total{active + idle};
-  float utilization = static_cast<float>(active) / total;
-  return utilization;
-}
-
-vector<string> LinuxParser::AggregateCpuUtilization() {
+vector<string> LinuxParser::CpuUtilization() {
   string line;
   string token;
   vector<string> values;

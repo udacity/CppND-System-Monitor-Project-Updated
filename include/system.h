@@ -5,10 +5,13 @@
 #include <map>
 #include <string>
 #include <vector>
+
 #include "process.h"
+#include "processor.h"
 
 class System {
  public:
+  Processor& Cpu();
   std::vector<Process> Processes();
   float MemoryUtilization() const;
   long UpTime() const;
@@ -16,13 +19,10 @@ class System {
   int RunningProcesses() const;
   std::string Kernel() const;
   std::string OperatingSystem() const;
-  float AggregateCpuUtilization();
-  std::vector<float> IndividualCpuUtilizations();
 
  private:
+  Processor cpu_;
   std::vector<int> Pids() const;
-  std::vector<std::string> cached_aggregate_cpu_times_;
-  std::vector<std::vector<std::string>> cached_individual_cpu_times_;
   std::map<int, long> cached_process_jiffies_;
   long cached_system_jiffies_{0};
 };

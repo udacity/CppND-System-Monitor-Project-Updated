@@ -6,14 +6,14 @@
 #include <string>
 
 namespace LinuxParser {
-std::vector<std::string> AggregateCpuUtilization();
+std::vector<std::string> CpuUtilization();
 std::vector<std::vector<std::string>> IndividualCpuUtilizations();
 float CpuUtilization(std::vector<std::string> time1,
                      std::vector<std::string> time2);
 float MemoryUtilization();
 std::vector<std::string> Lines(std::string filepath);
-long Active(std::vector<std::string> cpu);
-long Idle(std::vector<std::string> cpu);
+long ActiveJiffies();
+long IdleJiffies();
 enum CPUStates {
   kUser_ = 0,
   kNice_,

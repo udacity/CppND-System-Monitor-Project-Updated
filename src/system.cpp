@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "processor.h"
 #include "linux_parser.h"
 #include "process.h"
 #include "system.h"
@@ -13,6 +14,8 @@ using std::map;
 using std::size_t;
 using std::string;
 using std::vector;
+
+Processor& System::Cpu() { return cpu_; }
 
 vector<int> System::Pids() const {
   vector<int> pids;
@@ -53,31 +56,15 @@ std::vector<Process> System::Processes() {
   return processes;
 }
 
-vector<float> System::IndividualCpuUtilizations() {
-  vector<float> utilizations;
-  vector<vector<string>> individual_cpu_times =
-      LinuxParser::IndividualCpuUtilizations();
-  for (size_t i = 0; i < individual_cpu_times.size(); ++i) {
-    utilizations.push_back(0.0);
-    if (i < cached_individual_cpu_times_.size() &&
-        cached_individual_cpu_times_[i].size() > 0) {
-      utilizations[i] = LinuxParser::CpuUtilization(
-          cached_individual_cpu_times_[i], individual_cpu_times[i]);
+std::string System::Kernel() const {
+  string token;
+  for (string& line : LinuxParser::Lines(LinuxParser::kProcDirectory + LinuxParser::kVersionFilename)) {
+    std::istringstream stream(line);
+    for (int i = 0; i <= 2; ++i) {
+      stream >> token;
     }
   }
-  cached_individual_cpu_times_ = individual_cpu_times;
-  return utilizations;
-}
-
-float System::AggregateCpuUtilization() {
-  vector<string> cpu_times = LinuxParser::AggregateCpuUtilization();
-  float utilization{0};
-  if (cached_aggregate_cpu_times_.size() > 0) {
-    utilization =
-        LinuxParser::CpuUtilization(cached_aggregate_cpu_times_, cpu_times);
-  }
-  cached_aggregate_cpu_times_ = cpu_times;
-  return utilization;
+  return token;
 }
 
 float System::MemoryUtilization() const {
@@ -101,23 +88,14 @@ std::string System::OperatingSystem() const {
   return "";
 }
 
-std::string System::Kernel() const {
-  string token;
-  for (string& line : LinuxParser::Lines(LinuxParser::kProcDirectory + LinuxParser::kVersionFilename)) {
+int System::RunningProcesses() const {
+  string key, value;
+  for (string& line : LinuxParser::Lines(LinuxParser::kProcDirectory + LinuxParser::kStatFilename)) {
     std::istringstream stream(line);
-    for (int i = 0; i <= 2; ++i) {
-      stream >> token;
-    }
-  }
-  return token;
-}
-
-long int System::UpTime() const {
-  string token;
-  for (string& line : LinuxParser::Lines(LinuxParser::kProcDirectory + LinuxParser::kUptimeFilename)) {
-    std::istringstream stream(line);
-    if (stream >> token) {
-      return stoi(token);
+    while (stream >> key >> value) {
+      if (key == "procs_running") {
+        return stoi(value);
+      }
     }
   }
   return 0;
@@ -136,14 +114,12 @@ int System::TotalProcesses() const {
   return 0;
 }
 
-int System::RunningProcesses() const {
-  string key, value;
-  for (string& line : LinuxParser::Lines(LinuxParser::kProcDirectory + LinuxParser::kStatFilename)) {
+long int System::UpTime() const {
+  string token;
+  for (string& line : LinuxParser::Lines(LinuxParser::kProcDirectory + LinuxParser::kUptimeFilename)) {
     std::istringstream stream(line);
-    while (stream >> key >> value) {
-      if (key == "processes") {
-        return stoi(value);
-      }
+    if (stream >> token) {
+      return stoi(token);
     }
   }
   return 0;
