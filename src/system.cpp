@@ -6,9 +6,9 @@
 #include <vector>
 
 #include "linux_parser.h"
-#include "linux_system.h"
 #include "process.h"
 #include "processor.h"
+#include "system.h"
 
 using std::map;
 using std::set;
@@ -16,9 +16,9 @@ using std::size_t;
 using std::string;
 using std::vector;
 
-Processor& LinuxSystem::Cpu() { return cpu_; }
+Processor& System::Cpu() { return cpu_; }
 
-vector<Process>& LinuxSystem::Processes() {
+vector<Process>& System::Processes() {
   vector<int> pids{LinuxParser::Pids()};
 
   // Create a set
@@ -43,18 +43,18 @@ vector<Process>& LinuxSystem::Processes() {
   return processes_;
 }
 
-std::string LinuxSystem::Kernel() { return LinuxParser::Kernel(); }
+std::string System::Kernel() const { return LinuxParser::Kernel(); }
 
-float LinuxSystem::MemoryUtilization() {
+float System::MemoryUtilization() const {
   return LinuxParser::MemoryUtilization();
 }
 
-std::string LinuxSystem::OperatingSystem() {
+std::string System::OperatingSystem() const {
   return LinuxParser::OperatingSystem();
 }
 
-int LinuxSystem::RunningProcesses() { return LinuxParser::RunningProcesses(); }
+int System::RunningProcesses() const { return LinuxParser::RunningProcesses(); }
 
-int LinuxSystem::TotalProcesses() { return LinuxParser::TotalProcesses(); }
+int System::TotalProcesses() const { return LinuxParser::TotalProcesses(); }
 
-long int LinuxSystem::UpTime() { return LinuxParser::UpTime(); }
+long int System::UpTime() const { return LinuxParser::UpTime(); }

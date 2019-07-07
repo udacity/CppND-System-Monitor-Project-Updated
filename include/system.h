@@ -1,6 +1,8 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
 
+#include <iostream>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -9,14 +11,18 @@
 
 class System {
  public:
-  virtual Processor& Cpu() = 0;
-  virtual std::vector<Process>& Processes() = 0;
-  virtual float MemoryUtilization() = 0;
-  virtual long UpTime() = 0;
-  virtual int TotalProcesses() = 0;
-  virtual int RunningProcesses() = 0;
-  virtual std::string Kernel() = 0;
-  virtual std::string OperatingSystem() = 0;
+  Processor& Cpu();
+  std::vector<Process>& Processes();
+  float MemoryUtilization() const;
+  long UpTime() const;
+  int TotalProcesses() const;
+  int RunningProcesses() const;
+  std::string Kernel() const;
+  std::string OperatingSystem() const;
+
+ private:
+  Processor cpu_;
+  std::vector<Process> processes_;
 };
 
 #endif
