@@ -1,3 +1,8 @@
+#include <dirent.h>
+#include <unistd.h>
+#include <string>
+#include <vector>
+
 #include "linux_parser.h"
 
 using std::stof;
@@ -17,7 +22,25 @@ vector<string> LinuxParser::Lines(string filepath) {
   return lines;
 }
 
-// TODO: Refactor to use a map
+vector<int> LinuxParser::Pids() {
+  vector<int> pids;
+  DIR* directory = opendir("/proc");
+  struct dirent* file;
+  while ((file = readdir(directory)) != nullptr) {
+    // Is this a directory?
+    if (file->d_type == DT_DIR) {
+      // Is every character of the name a digit?
+      string filename(file->d_name);
+      if (std::all_of(filename.begin(), filename.end(), isdigit)) {
+        int pid = stoi(filename);
+        pids.push_back(pid);
+      }
+    }
+  }
+  closedir(directory);
+  return pids;
+}
+
 float LinuxParser::MemoryUtilization() {
   float mem_total{1};
   float mem_free{0};
@@ -36,6 +59,43 @@ float LinuxParser::MemoryUtilization() {
     }
   }
   return 1 - mem_free / (mem_total - buffers);
+}
+
+long LinuxParser::UpTime() {
+  string token;
+  for (string& line : LinuxParser::Lines(LinuxParser::kProcDirectory +
+                                         LinuxParser::kUptimeFilename)) {
+    std::istringstream stream(line);
+    if (stream >> token) {
+      return stoi(token);
+    }
+  }
+  return 0;
+}
+
+long LinuxParser::Jiffies() { return UpTime() * sysconf(_SC_CLK_TCK); }
+
+long LinuxParser::ActiveJiffies(int pid) {
+  string line, token;
+  vector<string> values;
+  std::ifstream filestream(LinuxParser::kProcDirectory + to_string(pid) +
+                           LinuxParser::kStatFilename);
+  if (filestream.is_open()) {
+    std::getline(filestream, line);
+    std::istringstream linestream(line);
+    while (linestream >> token) {
+      values.push_back(token);
+    }
+  }
+  long jiffies{0};
+  if (values.size() > 21) {
+    long user = stol(values[13]);
+    long kernel = stol(values[14]);
+    long children_user = stol(values[15]);
+    long children_kernel = stol(values[16]);
+    jiffies = user + kernel + children_user + children_kernel;
+  }
+  return jiffies;
 }
 
 long LinuxParser::ActiveJiffies() {

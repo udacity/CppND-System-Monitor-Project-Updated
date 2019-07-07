@@ -12,8 +12,14 @@ float CpuUtilization(std::vector<std::string> time1,
                      std::vector<std::string> time2);
 float MemoryUtilization();
 std::vector<std::string> Lines(std::string filepath);
+long UpTime();
+std::vector<int> Pids();
+
+long Jiffies();
 long ActiveJiffies();
+long ActiveJiffies(int pid);
 long IdleJiffies();
+
 enum CPUStates {
   kUser_ = 0,
   kNice_,

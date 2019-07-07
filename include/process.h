@@ -13,17 +13,20 @@ class Process {
   std::string User() const;
   std::string Command() const;
   float CpuUtilization() const;
-  void CpuUtilization(float cpu);
+  void CpuUtilization(long active_ticks, long system_ticks);
   long Jiffies() const;
   std::string Ram() const;
   std::string Uid() const;
-  std::string UpTime() const;
+  long int UpTime() const;
   bool operator<(const Process& a) const;
   bool operator>(const Process& a) const;
 
  private:
   int pid_;
   float cpu_{0};
+  long cached_active_ticks_{0};
+  long cached_idle_ticks_{0};
+  long cached_system_ticks_{0};
 };
 
 #endif

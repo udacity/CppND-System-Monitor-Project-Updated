@@ -17,7 +17,13 @@ int Process::Pid() const { return pid_; }
 
 float Process::CpuUtilization() const { return cpu_; }
 
-void Process::CpuUtilization(float cpu) { cpu_ = cpu; }
+void Process::CpuUtilization(long active_ticks, long system_ticks) {
+  long duration_active{active_ticks - cached_active_ticks_};
+  long duration{system_ticks - cached_system_ticks_};
+  cpu_ = static_cast<float>(duration_active) / duration;
+  cached_active_ticks_ = active_ticks;
+  cached_system_ticks_ = system_ticks;
+}
 
 string Process::Command() const {
   string line;
@@ -74,42 +80,20 @@ string Process::User() const {
   return "0";
 }
 
-string Process::UpTime() const {
+long int Process::UpTime() const {
+  long int time{0};
   string token;
   std::ifstream stream(LinuxParser::kProcDirectory + to_string(pid_) +
                        LinuxParser::kStatFilename);
   if (stream.is_open()) {
     for (int i = 0; stream >> token; ++i)
       if (i == 13) {
-        int time{stoi(token)};
+        long int time{stol(token)};
         time /= sysconf(_SC_CLK_TCK);
-        return to_string(time);
+        return time;
       }
   }
-  return token;
-}
-
-long Process::Jiffies() const {
-  string line, token;
-  vector<string> values;
-  std::ifstream filestream(LinuxParser::kProcDirectory + to_string(pid_) +
-                           LinuxParser::kStatFilename);
-  if (filestream.is_open()) {
-    std::getline(filestream, line);
-    std::istringstream linestream(line);
-    while (linestream >> token) {
-      values.push_back(token);
-    }
-  }
-  long jiffies{0};
-  if (values.size() > 21) {
-    long user = stol(values[13]);
-    long kernel = stol(values[14]);
-    long children_user = stol(values[15]);
-    long children_kernel = stol(values[16]);
-    jiffies = user + kernel + children_user + children_kernel;
-  }
-  return jiffies;
+  return time;
 }
 
 bool Process::operator<(const Process& a) const {

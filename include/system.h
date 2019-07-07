@@ -12,7 +12,7 @@
 class System {
  public:
   Processor& Cpu();
-  std::vector<Process> Processes();
+  std::vector<Process>& Processes();
   float MemoryUtilization() const;
   long UpTime() const;
   int TotalProcesses() const;
@@ -22,9 +22,7 @@ class System {
 
  private:
   Processor cpu_;
-  std::vector<int> Pids() const;
-  std::map<int, long> cached_process_jiffies_;
-  long cached_system_jiffies_{0};
+  std::vector<Process> processes_;
 };
 
 #endif
