@@ -1,11 +1,5 @@
 #include <curses.h>
-#include <time.h>
-#include <chrono>
-#include <cstddef>
-#include <iomanip>
-#include <sstream>
 #include <string>
-#include <thread>
 #include <vector>
 
 #include "ncurses_display.h"
