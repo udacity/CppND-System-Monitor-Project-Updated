@@ -6,7 +6,6 @@
 
 #include "format.h"
 #include "ncurses_display.h"
-#include "process_parser.h"
 #include "system.h"
 
 using std::string;

@@ -1,9 +1,9 @@
 #include "process.h"
+#include <system_parser.h>
 #include <unistd.h>
 #include <cctype>
 #include <sstream>
 #include <string>
-#include "process_parser.h"
 
 using std::string;
 using std::to_string;
@@ -41,11 +41,24 @@ string Process::Ram() const {
   return string("0");
 }
 
+string Process::Uid() const {
+  string token;
+  std::ifstream stream(Path::base + pid_ + Path::status);
+  if (stream.is_open()) {
+    while (stream >> token) {
+      if (token == "Uid:") {
+        if (stream >> token) return token;
+      }
+    }
+  }
+  return string("");
+}
+
 string Process::User() const {
   std::ifstream stream(Path::users);
   if (stream.is_open()) {
     string line;
-    string token = "x:" + ProcessParser::Uid(pid_);
+    string token = "x:" + Uid();
     while (std::getline(stream, line)) {
       auto marker = line.find(token);
       if (marker != string::npos) {

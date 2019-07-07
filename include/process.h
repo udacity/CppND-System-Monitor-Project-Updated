@@ -16,6 +16,7 @@ class Process {
   void CpuUtilization(float cpu);
   long Jiffies() const;
   std::string Ram() const;
+  std::string Uid() const;
   std::string UpTime() const;
   bool operator<(const Process& a) const;
   bool operator>(const Process& a) const;

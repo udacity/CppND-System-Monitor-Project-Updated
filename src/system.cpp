@@ -1,3 +1,4 @@
+#include <dirent.h>
 #include <unistd.h>
 #include <cstddef>
 #include <map>
@@ -5,7 +6,6 @@
 #include <vector>
 
 #include "process.h"
-#include "process_parser.h"
 #include "system.h"
 #include "system_parser.h"
 
@@ -14,11 +14,29 @@ using std::size_t;
 using std::string;
 using std::vector;
 
+vector<string> System::Pids() const {
+  vector<string> pids;
+  DIR* directory = opendir("/proc");
+  struct dirent* file;
+  while ((file = readdir(directory)) != nullptr) {
+    // Is this a directory?
+    if (file->d_type == DT_DIR) {
+      // Is every character of the name a digit?
+      string filename(file->d_name);
+      if (std::all_of(filename.begin(), filename.end(), isdigit)) {
+        pids.push_back(filename);
+      }
+    }
+  }
+  closedir(directory);
+  return pids;
+}
+
 std::vector<Process> System::Processes() {
   vector<Process> processes;
   map<string, long> process_jiffies;
   long system_jiffies = UpTime() * sysconf(_SC_CLK_TCK);
-  for (auto& pid : ProcessParser::Pids()) {
+  for (auto& pid : Pids()) {
     processes.emplace_back(pid);
     process_jiffies[pid] = processes.back().Jiffies();
     if (cached_process_jiffies_.find(pid) != cached_process_jiffies_.end()) {

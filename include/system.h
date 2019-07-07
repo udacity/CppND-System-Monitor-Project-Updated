@@ -18,6 +18,7 @@ class System {
   float AggregateCpuUtilization();
   std::vector<float> IndividualCpuUtilizations();
   std::vector<Process> Processes();
+  std::vector<std::string> Pids() const;
 
  private:
   std::vector<std::string> cached_aggregate_cpu_times_;
