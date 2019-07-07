@@ -9,6 +9,7 @@
 
 class System {
  public:
+  std::vector<Process> Processes();
   float MemoryUtilization() const;
   long UpTime() const;
   int TotalProcesses() const;
@@ -17,13 +18,12 @@ class System {
   std::string OperatingSystem() const;
   float AggregateCpuUtilization();
   std::vector<float> IndividualCpuUtilizations();
-  std::vector<Process> Processes();
-  std::vector<std::string> Pids() const;
 
  private:
+  std::vector<int> Pids() const;
   std::vector<std::string> cached_aggregate_cpu_times_;
   std::vector<std::vector<std::string>> cached_individual_cpu_times_;
-  std::map<std::string, long> cached_process_jiffies_;
+  std::map<int, long> cached_process_jiffies_;
   long cached_system_jiffies_{0};
 };
 

@@ -7,15 +7,17 @@
 
 #include "process.h"
 #include "system.h"
-#include "system_parser.h"
+#include "linux_parser.h"
 
 using std::map;
 using std::size_t;
 using std::string;
 using std::vector;
 
-vector<string> System::Pids() const {
-  vector<string> pids;
+
+
+vector<int> System::Pids() const {
+  vector<int> pids;
   DIR* directory = opendir("/proc");
   struct dirent* file;
   while ((file = readdir(directory)) != nullptr) {
@@ -24,7 +26,8 @@ vector<string> System::Pids() const {
       // Is every character of the name a digit?
       string filename(file->d_name);
       if (std::all_of(filename.begin(), filename.end(), isdigit)) {
-        pids.push_back(filename);
+        int pid = stoi(filename);
+        pids.push_back(pid);
       }
     }
   }
@@ -34,7 +37,7 @@ vector<string> System::Pids() const {
 
 std::vector<Process> System::Processes() {
   vector<Process> processes;
-  map<string, long> process_jiffies;
+  map<int, long> process_jiffies;
   long system_jiffies = UpTime() * sysconf(_SC_CLK_TCK);
   for (auto& pid : Pids()) {
     processes.emplace_back(pid);
@@ -55,12 +58,12 @@ std::vector<Process> System::Processes() {
 vector<float> System::IndividualCpuUtilizations() {
   vector<float> utilizations;
   vector<vector<string>> individual_cpu_times =
-      SystemParser::IndividualCpuUtilizations();
+      LinuxParser::IndividualCpuUtilizations();
   for (size_t i = 0; i < individual_cpu_times.size(); ++i) {
     utilizations.push_back(0.0);
     if (i < cached_individual_cpu_times_.size() &&
         cached_individual_cpu_times_[i].size() > 0) {
-      utilizations[i] = SystemParser::CpuUtilization(
+      utilizations[i] = LinuxParser::CpuUtilization(
           cached_individual_cpu_times_[i], individual_cpu_times[i]);
     }
   }
@@ -69,23 +72,23 @@ vector<float> System::IndividualCpuUtilizations() {
 }
 
 float System::AggregateCpuUtilization() {
-  vector<string> cpu_times = SystemParser::AggregateCpuUtilization();
+  vector<string> cpu_times = LinuxParser::AggregateCpuUtilization();
   float utilization{0};
   if (cached_aggregate_cpu_times_.size() > 0) {
     utilization =
-        SystemParser::CpuUtilization(cached_aggregate_cpu_times_, cpu_times);
+        LinuxParser::CpuUtilization(cached_aggregate_cpu_times_, cpu_times);
   }
   cached_aggregate_cpu_times_ = cpu_times;
   return utilization;
 }
 
 float System::MemoryUtilization() const {
-  return SystemParser::MemoryUtilization();
+  return LinuxParser::MemoryUtilization();
 }
 
 std::string System::OperatingSystem() const {
   string key, value;
-  for (string& line : SystemParser::Lines("/etc/os-release")) {
+  for (string& line : LinuxParser::Lines("/etc/os-release")) {
     std::replace(line.begin(), line.end(), ' ', '_');
     std::replace(line.begin(), line.end(), '=', ' ');
     std::replace(line.begin(), line.end(), '"', ' ');
@@ -102,7 +105,7 @@ std::string System::OperatingSystem() const {
 
 std::string System::Kernel() const {
   string token;
-  for (string& line : SystemParser::Lines(Path::base + Path::version)) {
+  for (string& line : LinuxParser::Lines(Path::base + Path::version)) {
     std::istringstream stream(line);
     for (int i = 0; i <= 2; ++i) {
       stream >> token;
@@ -113,7 +116,7 @@ std::string System::Kernel() const {
 
 long int System::UpTime() const {
   string token;
-  for (string& line : SystemParser::Lines(Path::base + Path::uptime)) {
+  for (string& line : LinuxParser::Lines(Path::base + Path::uptime)) {
     std::istringstream stream(line);
     if (stream >> token) {
       return stoi(token);
@@ -124,7 +127,7 @@ long int System::UpTime() const {
 
 int System::TotalProcesses() const {
   string key, value;
-  for (string& line : SystemParser::Lines(Path::base + Path::stat)) {
+  for (string& line : LinuxParser::Lines(Path::base + Path::stat)) {
     std::istringstream stream(line);
     while (stream >> key >> value) {
       if (key == "processes") {
@@ -137,7 +140,7 @@ int System::TotalProcesses() const {
 
 int System::RunningProcesses() const {
   string key, value;
-  for (string& line : SystemParser::Lines(Path::base + Path::stat)) {
+  for (string& line : LinuxParser::Lines(Path::base + Path::stat)) {
     std::istringstream stream(line);
     while (stream >> key >> value) {
       if (key == "processes") {

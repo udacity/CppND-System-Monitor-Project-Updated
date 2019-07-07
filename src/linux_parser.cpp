@@ -1,11 +1,11 @@
-#include "system_parser.h"
+#include "linux_parser.h"
 
 using std::stof;
 using std::string;
 using std::to_string;
 using std::vector;
 
-vector<string> SystemParser::Lines(string filepath) {
+vector<string> LinuxParser::Lines(string filepath) {
   string line;
   vector<string> lines;
   std::ifstream stream(filepath);
@@ -18,7 +18,7 @@ vector<string> SystemParser::Lines(string filepath) {
 }
 
 // TODO: Refactor to use a map
-float SystemParser::MemoryUtilization() {
+float LinuxParser::MemoryUtilization() {
   float mem_total{1};
   float mem_free{0};
   float buffers{0};
@@ -38,7 +38,7 @@ float SystemParser::MemoryUtilization() {
   return 1 - mem_free / (mem_total - buffers);
 }
 
-long SystemParser::Active(vector<string> time) {
+long LinuxParser::Active(vector<string> time) {
   float active{0};
   active += stol(time[CPUStates::kUser_]);
   return active +
@@ -48,11 +48,11 @@ long SystemParser::Active(vector<string> time) {
           stol(time[CPUStates::kGuestNice_]));
 }
 
-long SystemParser::Idle(vector<string> time) {
+long LinuxParser::Idle(vector<string> time) {
   return (stol(time[CPUStates::kIdle_]) + stol(time[CPUStates::kIOwait_]));
 }
 
-float SystemParser::CpuUtilization(vector<string> time1, vector<string> time2) {
+float LinuxParser::CpuUtilization(vector<string> time1, vector<string> time2) {
   long active{Active(time2) - Active(time1)};
   long idle{Idle(time2) - Idle(time1)};
   long total{active + idle};
@@ -60,7 +60,7 @@ float SystemParser::CpuUtilization(vector<string> time1, vector<string> time2) {
   return utilization;
 }
 
-vector<string> SystemParser::AggregateCpuUtilization() {
+vector<string> LinuxParser::AggregateCpuUtilization() {
   string line;
   string token;
   vector<string> values;
@@ -79,7 +79,7 @@ vector<string> SystemParser::AggregateCpuUtilization() {
   return values;
 }
 
-vector<vector<string>> SystemParser::IndividualCpuUtilizations() {
+vector<vector<string>> LinuxParser::IndividualCpuUtilizations() {
   string line;
   string token;
   vector<vector<string>> cpus;
