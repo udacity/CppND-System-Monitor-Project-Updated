@@ -1,8 +1,8 @@
 #include <string>
 #include <vector>
 
-#include "processor.h"
 #include "linux_parser.h"
+#include "processor.h"
 
 float Processor::Utilization() {
   float utilization{0};

@@ -5,9 +5,9 @@
 #include <string>
 #include <vector>
 
-#include "processor.h"
 #include "linux_parser.h"
 #include "process.h"
+#include "processor.h"
 #include "system.h"
 
 using std::map;
@@ -58,7 +58,8 @@ std::vector<Process> System::Processes() {
 
 std::string System::Kernel() const {
   string token;
-  for (string& line : LinuxParser::Lines(LinuxParser::kProcDirectory + LinuxParser::kVersionFilename)) {
+  for (string& line : LinuxParser::Lines(LinuxParser::kProcDirectory +
+                                         LinuxParser::kVersionFilename)) {
     std::istringstream stream(line);
     for (int i = 0; i <= 2; ++i) {
       stream >> token;
@@ -90,7 +91,8 @@ std::string System::OperatingSystem() const {
 
 int System::RunningProcesses() const {
   string key, value;
-  for (string& line : LinuxParser::Lines(LinuxParser::kProcDirectory + LinuxParser::kStatFilename)) {
+  for (string& line : LinuxParser::Lines(LinuxParser::kProcDirectory +
+                                         LinuxParser::kStatFilename)) {
     std::istringstream stream(line);
     while (stream >> key >> value) {
       if (key == "procs_running") {
@@ -103,7 +105,8 @@ int System::RunningProcesses() const {
 
 int System::TotalProcesses() const {
   string key, value;
-  for (string& line : LinuxParser::Lines(LinuxParser::kProcDirectory + LinuxParser::kStatFilename)) {
+  for (string& line : LinuxParser::Lines(LinuxParser::kProcDirectory +
+                                         LinuxParser::kStatFilename)) {
     std::istringstream stream(line);
     while (stream >> key >> value) {
       if (key == "processes") {
@@ -116,7 +119,8 @@ int System::TotalProcesses() const {
 
 long int System::UpTime() const {
   string token;
-  for (string& line : LinuxParser::Lines(LinuxParser::kProcDirectory + LinuxParser::kUptimeFilename)) {
+  for (string& line : LinuxParser::Lines(LinuxParser::kProcDirectory +
+                                         LinuxParser::kUptimeFilename)) {
     std::istringstream stream(line);
     if (stream >> token) {
       return stoi(token);

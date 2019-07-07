@@ -33,7 +33,8 @@ string Process::Command() const {
 
 string Process::Ram() const {
   string token;
-  std::ifstream stream(LinuxParser::kProcDirectory + to_string(pid_) + LinuxParser::kStatusFilename);
+  std::ifstream stream(LinuxParser::kProcDirectory + to_string(pid_) +
+                       LinuxParser::kStatusFilename);
   if (stream.is_open()) {
     while (stream >> token) {
       if (token == "VmSize:") {
@@ -46,7 +47,8 @@ string Process::Ram() const {
 
 string Process::Uid() const {
   string token;
-  std::ifstream stream(LinuxParser::kProcDirectory + to_string(pid_) + LinuxParser::kStatusFilename);
+  std::ifstream stream(LinuxParser::kProcDirectory + to_string(pid_) +
+                       LinuxParser::kStatusFilename);
   if (stream.is_open()) {
     while (stream >> token) {
       if (token == "Uid:") {
@@ -74,7 +76,8 @@ string Process::User() const {
 
 string Process::UpTime() const {
   string token;
-  std::ifstream stream(LinuxParser::kProcDirectory + to_string(pid_) + LinuxParser::kStatFilename);
+  std::ifstream stream(LinuxParser::kProcDirectory + to_string(pid_) +
+                       LinuxParser::kStatFilename);
   if (stream.is_open()) {
     for (int i = 0; stream >> token; ++i)
       if (i == 13) {
