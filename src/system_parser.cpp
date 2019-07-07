@@ -96,7 +96,7 @@ float SystemParser::MemoryUtilization() {
       }
     }
   }
-  return (1 - mem_free / (mem_total - buffers)) * 100;
+  return 1 - mem_free / (mem_total - buffers);
 }
 
 long SystemParser::Active(vector<string> time) {
@@ -113,13 +113,12 @@ long SystemParser::Idle(vector<string> time) {
   return (stol(time[CPUStates::kIdle_]) + stol(time[CPUStates::kIOwait_]));
 }
 
-std::string SystemParser::CpuUtilization(vector<string> time1,
-                                         vector<string> time2) {
+float SystemParser::CpuUtilization(vector<string> time1, vector<string> time2) {
   long active{Active(time2) - Active(time1)};
   long idle{Idle(time2) - Idle(time1)};
   long total{active + idle};
-  float utilization = static_cast<float>(active) / total * 100;
-  return to_string(utilization);
+  float utilization = static_cast<float>(active) / total;
+  return utilization;
 }
 
 vector<string> SystemParser::AggregateCpuUtilization() {

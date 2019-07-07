@@ -9,20 +9,17 @@
 
 class System {
  public:
-  System();
-  std::string MemoryUtilization() const;
+  float MemoryUtilization() const;
   long UpTime() const;
   std::string TotalProcesses() const;
   std::string RunningProcesses() const;
   std::string Kernel() const;
   std::string OperatingSystem() const;
-  std::string AggregateCpuUtilization();
-  std::vector<std::string> IndividualCpuUtilizations();
+  float AggregateCpuUtilization();
+  std::vector<float> IndividualCpuUtilizations();
   std::vector<Process> Processes() const;
 
  private:
-  void UpdateProcesses();
-  std::vector<Process> processes_;
   std::vector<std::string> cached_aggregate_cpu_times_;
   std::vector<std::vector<std::string>> cached_individual_cpu_times_;
 };

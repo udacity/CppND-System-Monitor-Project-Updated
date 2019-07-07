@@ -11,25 +11,21 @@ using std::size_t;
 using std::string;
 using std::vector;
 
-System::System() { UpdateProcesses(); }
-
-void System::UpdateProcesses() {
-  vector<string> pidList{ProcessParser::Pids()};
-  processes_.clear();
-  for (auto& pid : pidList) {
-    processes_.emplace_back(pid);
+std::vector<Process> System::Processes() const {
+  vector<Process> processes;
+  for (auto& pid : ProcessParser::Pids()) {
+    processes.emplace_back(pid);
   }
-  std::sort(processes_.begin(), processes_.end(), std::greater<Process>());
+  std::sort(processes.begin(), processes.end(), std::greater<Process>());
+  return processes;
 }
 
-std::vector<Process> System::Processes() const { return processes_; }
-
-vector<string> System::IndividualCpuUtilizations() {
-  vector<string> utilizations;
+vector<float> System::IndividualCpuUtilizations() {
+  vector<float> utilizations;
   vector<vector<string>> individual_cpu_times =
       SystemParser::IndividualCpuUtilizations();
   for (size_t i = 0; i < individual_cpu_times.size(); ++i) {
-    utilizations.push_back("0");
+    utilizations.push_back(0.0);
     if (i < cached_individual_cpu_times_.size() &&
         cached_individual_cpu_times_[i].size() > 0) {
       utilizations[i] = SystemParser::CpuUtilization(
@@ -40,9 +36,9 @@ vector<string> System::IndividualCpuUtilizations() {
   return utilizations;
 }
 
-std::string System::AggregateCpuUtilization() {
+float System::AggregateCpuUtilization() {
   vector<string> cpu_times = SystemParser::AggregateCpuUtilization();
-  string utilization{"0"};
+  float utilization{0};
   if (cached_aggregate_cpu_times_.size() > 0) {
     utilization =
         SystemParser::CpuUtilization(cached_aggregate_cpu_times_, cpu_times);
@@ -51,8 +47,8 @@ std::string System::AggregateCpuUtilization() {
   return utilization;
 }
 
-std::string System::MemoryUtilization() const {
-  return std::to_string(SystemParser::MemoryUtilization());
+float System::MemoryUtilization() const {
+  return SystemParser::MemoryUtilization();
 }
 
 long int System::UpTime() const { return SystemParser::UpTime(); }

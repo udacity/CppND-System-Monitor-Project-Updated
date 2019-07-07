@@ -7,26 +7,46 @@
 #include "system.h"
 #include "util.h"
 
+using std::string;
+using std::to_string;
+
+// 50 bars uniformly displayed from 0 - 100 %
+// 2% is one bar(|)
+std::string NCursesDisplay::ProgressBar(float percent) {
+  std::string result{"0%"};
+  int size{50};
+  float bars{percent * size};
+
+  for (int i{0}; i < size; ++i) {
+    result += i <= bars ? '|' : ' ';
+  }
+
+  string display{to_string(percent * 100).substr(0, 4)};
+  if (percent < 0.1 || percent == 1.0)
+    display = " " + to_string(percent * 100).substr(0, 3);
+  return result + " " + display + "/100%";
+}
+
 void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
   int row{0};
   mvwprintw(window, ++row, 2, ("OS: " + system.OperatingSystem()).c_str());
   mvwprintw(window, ++row, 2, ("Kernel: " + system.Kernel()).c_str());
   mvwprintw(window, ++row, 2, "Aggregate CPU: ");
   wattron(window, COLOR_PAIR(1));
-  wprintw(window,
-          Util::GetProgressBar(system.AggregateCpuUtilization()).c_str());
+  mvwprintw(window, ++row, 2, "");
+  wprintw(window, ProgressBar(system.AggregateCpuUtilization()).c_str());
   wattroff(window, COLOR_PAIR(1));
   mvwprintw(window, ++row, 2, "Individual CPUs:");
   wattron(window, COLOR_PAIR(1));
-  std::vector<std::string> val = system.IndividualCpuUtilizations();
-  for (std::size_t i = 0; i < val.size(); i++) {
+  for (float utilization : system.IndividualCpuUtilizations()) {
     mvwprintw(window, ++row, 2, "");
-    wprintw(window, Util::GetProgressBar(val[i]).c_str());
+    wprintw(window, ProgressBar(utilization).c_str());
   }
   wattroff(window, COLOR_PAIR(1));
   mvwprintw(window, ++row, 2, "Memory: ");
   wattron(window, COLOR_PAIR(1));
-  wprintw(window, Util::GetProgressBar(system.MemoryUtilization()).c_str());
+  mvwprintw(window, ++row, 2, "");
+  wprintw(window, ProgressBar(system.MemoryUtilization()).c_str());
   wattroff(window, COLOR_PAIR(1));
   mvwprintw(window, ++row, 2,
             ("Total Processes: " + system.TotalProcesses()).c_str());
@@ -73,7 +93,7 @@ void NCursesDisplay::Display(System& system, int n) {
   start_color();  // enable color
 
   int x_max{getmaxx(stdscr)};
-  WINDOW* system_window = newwin(14, x_max - 1, 0, 0);
+  WINDOW* system_window = newwin(16, x_max - 1, 0, 0);
   WINDOW* process_window =
       newwin(3 + n, x_max - 1, system_window->_maxy + 1, 0);
 
