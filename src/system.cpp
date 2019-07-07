@@ -5,16 +5,14 @@
 #include <string>
 #include <vector>
 
+#include "linux_parser.h"
 #include "process.h"
 #include "system.h"
-#include "linux_parser.h"
 
 using std::map;
 using std::size_t;
 using std::string;
 using std::vector;
-
-
 
 vector<int> System::Pids() const {
   vector<int> pids;

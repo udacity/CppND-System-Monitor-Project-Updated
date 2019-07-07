@@ -1,11 +1,11 @@
+#include <unistd.h>
 #include <cctype>
 #include <sstream>
 #include <string>
-#include <unistd.h>
 #include <vector>
 
-#include "process.h"
 #include "linux_parser.h"
+#include "process.h"
 
 using std::string;
 using std::to_string;
