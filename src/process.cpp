@@ -21,7 +21,8 @@ void Process::CpuUtilization(float cpu) { cpu_ = cpu; }
 
 string Process::Command() const {
   string line;
-  std::ifstream stream(Path::base + to_string(pid_) + Path::cmdline);
+  std::ifstream stream(LinuxParser::kProcDirectory + to_string(pid_) +
+                       LinuxParser::kCmdlineFilename);
   if (stream.is_open()) {
     string line;
     std::getline(stream, line);
@@ -32,7 +33,7 @@ string Process::Command() const {
 
 string Process::Ram() const {
   string token;
-  std::ifstream stream(Path::base + to_string(pid_) + Path::status);
+  std::ifstream stream(LinuxParser::kProcDirectory + to_string(pid_) + LinuxParser::kStatusFilename);
   if (stream.is_open()) {
     while (stream >> token) {
       if (token == "VmSize:") {
@@ -45,7 +46,7 @@ string Process::Ram() const {
 
 string Process::Uid() const {
   string token;
-  std::ifstream stream(Path::base + to_string(pid_) + Path::status);
+  std::ifstream stream(LinuxParser::kProcDirectory + to_string(pid_) + LinuxParser::kStatusFilename);
   if (stream.is_open()) {
     while (stream >> token) {
       if (token == "Uid:") {
@@ -57,7 +58,7 @@ string Process::Uid() const {
 }
 
 string Process::User() const {
-  std::ifstream stream(Path::users);
+  std::ifstream stream(LinuxParser::kPasswordPath);
   if (stream.is_open()) {
     string line;
     string token = "x:" + Uid();
@@ -73,7 +74,7 @@ string Process::User() const {
 
 string Process::UpTime() const {
   string token;
-  std::ifstream stream(Path::base + to_string(pid_) + Path::stat);
+  std::ifstream stream(LinuxParser::kProcDirectory + to_string(pid_) + LinuxParser::kStatFilename);
   if (stream.is_open()) {
     for (int i = 0; stream >> token; ++i)
       if (i == 13) {
@@ -88,7 +89,8 @@ string Process::UpTime() const {
 long Process::Jiffies() const {
   string line, token;
   vector<string> values;
-  std::ifstream filestream(Path::base + to_string(pid_) + Path::stat);
+  std::ifstream filestream(LinuxParser::kProcDirectory + to_string(pid_) +
+                           LinuxParser::kStatFilename);
   if (filestream.is_open()) {
     std::getline(filestream, line);
     std::istringstream linestream(line);

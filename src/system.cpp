@@ -103,7 +103,7 @@ std::string System::OperatingSystem() const {
 
 std::string System::Kernel() const {
   string token;
-  for (string& line : LinuxParser::Lines(Path::base + Path::version)) {
+  for (string& line : LinuxParser::Lines(LinuxParser::kProcDirectory + LinuxParser::kVersionFilename)) {
     std::istringstream stream(line);
     for (int i = 0; i <= 2; ++i) {
       stream >> token;
@@ -114,7 +114,7 @@ std::string System::Kernel() const {
 
 long int System::UpTime() const {
   string token;
-  for (string& line : LinuxParser::Lines(Path::base + Path::uptime)) {
+  for (string& line : LinuxParser::Lines(LinuxParser::kProcDirectory + LinuxParser::kUptimeFilename)) {
     std::istringstream stream(line);
     if (stream >> token) {
       return stoi(token);
@@ -125,7 +125,7 @@ long int System::UpTime() const {
 
 int System::TotalProcesses() const {
   string key, value;
-  for (string& line : LinuxParser::Lines(Path::base + Path::stat)) {
+  for (string& line : LinuxParser::Lines(LinuxParser::kProcDirectory + LinuxParser::kStatFilename)) {
     std::istringstream stream(line);
     while (stream >> key >> value) {
       if (key == "processes") {
@@ -138,7 +138,7 @@ int System::TotalProcesses() const {
 
 int System::RunningProcesses() const {
   string key, value;
-  for (string& line : LinuxParser::Lines(Path::base + Path::stat)) {
+  for (string& line : LinuxParser::Lines(LinuxParser::kProcDirectory + LinuxParser::kStatFilename)) {
     std::istringstream stream(line);
     while (stream >> key >> value) {
       if (key == "processes") {

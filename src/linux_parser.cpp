@@ -23,7 +23,7 @@ float LinuxParser::MemoryUtilization() {
   float mem_free{0};
   float buffers{0};
   string token;
-  std::ifstream stream(Path::base + Path::meminfo);
+  std::ifstream stream(kProcDirectory + kMeminfoFilename);
   if (stream.is_open()) {
     while (stream >> token) {
       if (token == "MemTotal:") {
@@ -64,7 +64,7 @@ vector<string> LinuxParser::AggregateCpuUtilization() {
   string line;
   string token;
   vector<string> values;
-  std::ifstream filestream(Path::base + Path::stat);
+  std::ifstream filestream(kProcDirectory + kStatFilename);
   if (filestream.is_open()) {
     while (getline(filestream, line)) {
       std::istringstream linestream(line);
@@ -83,7 +83,7 @@ vector<vector<string>> LinuxParser::IndividualCpuUtilizations() {
   string line;
   string token;
   vector<vector<string>> cpus;
-  std::ifstream filestream(Path::base + Path::stat);
+  std::ifstream filestream(kProcDirectory + kStatFilename);
   if (filestream.is_open()) {
     int i = 0;
     while (getline(filestream, line)) {
