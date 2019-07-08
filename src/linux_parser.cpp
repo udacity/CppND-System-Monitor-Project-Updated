@@ -12,7 +12,7 @@ using std::vector;
 
 vector<int> LinuxParser::Pids() {
   vector<int> pids;
-  DIR* directory = opendir("/proc");
+  DIR* directory = opendir(kProcDirectory.c_str());
   struct dirent* file;
   while ((file = readdir(directory)) != nullptr) {
     // Is this a directory?
@@ -126,11 +126,12 @@ int LinuxParser::TotalProcesses() {
   string value;
   std::ifstream stream(kProcDirectory + kStatFilename);
   if (stream.is_open()) {
-    std::getline(stream, line);
-    std::istringstream stream(line);
-    while (stream >> key >> value) {
-      if (key == "processes") {
-        return stoi(value);
+    while (std::getline(stream, line)) {
+      std::istringstream stream(line);
+      while (stream >> key >> value) {
+        if (key == "processes") {
+          return stoi(value);
+        }
       }
     }
   }
