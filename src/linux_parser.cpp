@@ -12,7 +12,7 @@ using std::vector;
 
 vector<int> LinuxParser::Pids() {
   vector<int> pids;
-  DIR* directory = opendir("/proc");
+  DIR* directory = opendir(kProcDirectory.c_str());
   struct dirent* file;
   while ((file = readdir(directory)) != nullptr) {
     // Is this a directory?
