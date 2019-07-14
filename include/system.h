@@ -1,8 +1,6 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
 
-#include <iostream>
-#include <map>
 #include <string>
 #include <vector>
 
@@ -21,8 +19,8 @@ class System {
   std::string OperatingSystem() const;
 
  private:
-  Processor cpu_;
-  std::vector<Process> processes_;
+  Processor cpu_ = {};
+  std::vector<Process> processes_ = {};
 };
 
 #endif
