@@ -5,10 +5,6 @@ all: format test build
 format:
 	clang-format src/* include/* -i
 
-.PHONY: test
-test:
-	# No tests yet
-
 .PHONY: build
 build:
 	mkdir -p build
