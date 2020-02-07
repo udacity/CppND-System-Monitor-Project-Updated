@@ -25,9 +25,9 @@ class Process {
  private:
     int pid_;
 
-    int cpu_active_;
-    long previous_cpu_usage_active_;
-    long previous_cpu_usage_idle_;
+    float cpu_active_{0.0};
+    long previous_cpu_usage_active_{0l};
+    long previous_cpu_usage_idle_{0l};
 };
 
 #endif
