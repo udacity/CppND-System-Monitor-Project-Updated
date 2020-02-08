@@ -109,11 +109,10 @@ int LinuxParser::TotalProcesses() {
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
-      while (linestream >> key) {
-        if (key == "processes") {
-          linestream >> value;
-          return value;
-        }
+      linestream >> key;
+      if (key == "processes") {
+        linestream >> value;
+        return value;
       }
     }
   }
