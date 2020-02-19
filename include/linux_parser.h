@@ -28,23 +28,20 @@ std::string OperatingSystem();
 std::string Kernel();
 
 // CPU
-enum CPUStates {
-  kUser_ = 0,
-  kNice_,
-  kSystem_,
-  kIdle_,
-  kIOwait_,
-  kIRQ_,
-  kSoftIRQ_,
-  kSteal_,
-  kGuest_,
-  kGuestNice_
+class CPUStat {
+  public:
+   CPUStat() : user_(0), nice_(0), system_(0), idle_(0),
+               ioWait_(0), irq_(0), softIRQ_(0), steal_(0) {}
+   long user_;
+   long nice_;
+   long system_;
+   long idle_;
+   long ioWait_;
+   long irq_;
+   long softIRQ_;
+   long steal_;
 };
-std::vector<long> CpuUtilization();
-long Jiffies();
-long ActiveJiffies();
-long ActiveJiffies(int pid);
-long IdleJiffies();
+CPUStat CpuUtilization();
 
 // Processes
 std::string Command(int pid);

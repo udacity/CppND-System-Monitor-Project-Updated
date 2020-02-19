@@ -1,6 +1,7 @@
 #ifndef PROCESSOR_H
 #define PROCESSOR_H
 
+#include "linux_parser.h"
 #include <vector>
 
 class Processor {
@@ -9,7 +10,7 @@ class Processor {
 
   // TODO: Declare any necessary private members
  private:
- std::vector<long> prevUtil{0,0,0,0,0,0,0,0};
+   LinuxParser::CPUStat prevUtil;
 };
 
 #endif
