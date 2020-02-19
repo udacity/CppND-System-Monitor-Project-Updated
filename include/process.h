@@ -15,6 +15,8 @@ class Process {
   void User(std::string u);
 
   std::string Command();                   // TODO: See src/process.cpp
+  void Command(std::string c);
+
   float CpuUtilization();                  // TODO: See src/process.cpp
   std::string Ram();                       // TODO: See src/process.cpp
   long int UpTime();                       // TODO: See src/process.cpp
@@ -24,6 +26,7 @@ class Process {
  private:
   int pid_;
   std::string user_;
+  std::string command_;
 };
 
 #endif

@@ -25,6 +25,7 @@ void System::refreshProcesses() {
         proc.Pid(pids[i]);
         int uid = LinuxParser::Uid(pids[i]);
         proc.User(LinuxParser::User(uid));
+        proc.Command(LinuxParser::Command(pids[i]));
         
         processes_.push_back(proc);
     }
