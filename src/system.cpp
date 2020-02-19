@@ -21,14 +21,7 @@ void System::refreshProcesses() {
     processes_.clear();
     vector<int> pids = LinuxParser::Pids();
     for (uint i=0; i<pids.size(); i++) {
-        Process proc;
-        proc.Pid(pids[i]);
-        int uid = LinuxParser::Uid(pids[i]);
-        proc.User(LinuxParser::User(uid));
-        proc.Command(LinuxParser::Command(pids[i]));
-        proc.Ram(LinuxParser::Ram(pids[i]));
-        proc.UpTime(LinuxParser::UpTime(pids[i]));
-
+        Process proc(pids[i]);
         processes_.push_back(proc);
     }
 }
