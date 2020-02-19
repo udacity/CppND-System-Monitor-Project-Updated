@@ -30,7 +30,8 @@ string Process::User() { return user_; }
 void Process::User(string u) { user_ = u; }
 
 // TODO: Return the age of this process (in seconds)
-long int Process::UpTime() { return 0; }
+long int Process::UpTime() { return uptime_; }
+void Process::UpTime(long u) { uptime_ = u; }
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function

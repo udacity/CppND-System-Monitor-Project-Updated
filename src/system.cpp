@@ -27,6 +27,7 @@ void System::refreshProcesses() {
         proc.User(LinuxParser::User(uid));
         proc.Command(LinuxParser::Command(pids[i]));
         proc.Ram(LinuxParser::Ram(pids[i]));
+        proc.UpTime(LinuxParser::UpTime(pids[i]));
 
         processes_.push_back(proc);
     }

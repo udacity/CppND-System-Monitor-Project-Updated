@@ -22,6 +22,7 @@ class Process {
   void Ram(std::string r);
 
   long int UpTime();                       // TODO: See src/process.cpp
+  void UpTime(long u);
   bool operator<(Process const& a) const;  // TODO: See src/process.cpp
 
   // TODO: Declare any necessary private members
@@ -30,6 +31,7 @@ class Process {
   std::string user_;
   std::string command_;
   std::string ram_;
+  long uptime_;
 };
 
 #endif
