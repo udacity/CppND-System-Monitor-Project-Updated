@@ -178,7 +178,27 @@ string LinuxParser::Command(int pid) {
 
 // TODO: Read and return the memory used by a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Ram(int pid[[maybe_unused]]) { return string(); }
+string LinuxParser::Ram(int pid) {
+  string line;
+  string key;
+  int mem = 0;
+  std::stringstream ss;
+  ss  << kProcDirectory
+      << "/" << std::to_string(pid) << "/" 
+      << kStatusFilename;
+  std::ifstream filestream(ss.str());
+  if (filestream.is_open()) {
+    while (std::getline(filestream, line)) {
+      std::istringstream linestream(line);
+      linestream >> key >> mem;
+      if (key == "VmSize:") {
+        mem /= 1024;
+        return std::to_string(mem);
+      }
+    }
+  }
+  return "";
+}
 
 // TODO: Read and return the user ID associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
@@ -194,10 +214,9 @@ int LinuxParser::Uid(int pid) {
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
-      while (linestream >> key >> value) {
-        if (key == "Uid:") {
-          return value;
-        }
+      linestream >> key >> value;
+      if (key == "Uid:") {
+        return value;
       }
     }
   }
