@@ -1,31 +1,31 @@
 #include "processor.h"
 
-// TODO: Return the aggregate CPU utilization
+#include <vector>
+
+// Return the aggregate CPU utilization
 float Processor::Utilization() {
-    LinuxParser::CPUStat currUtil = LinuxParser::CpuUtilization();
-    
-    // The following calculations are taken from an answer in:
-    // https://stackoverflow.com/questions/23367857/accurate-calculation-of-cpu-usage-given-in-percentage-in-linux
-    long PrevIdle = prevUtil.idle_ + prevUtil.ioWait_;
-    long Idle = currUtil.idle_ + currUtil.ioWait_;
+  const LinuxParser::systemCPUStat currUtil = LinuxParser::CpuUtilization();
 
-    long PrevNonIdle = prevUtil.user_ + prevUtil.nice_
-                        + prevUtil.system_ + prevUtil.irq_
-                        + prevUtil.softIRQ_ + prevUtil.steal_;
-    long NonIdle = currUtil.user_ + currUtil.nice_
-                    + currUtil.system_ + currUtil.irq_
-                    + currUtil.softIRQ_ + currUtil.steal_;
+  // The following calculations are taken from an answer in:
+  // https://stackoverflow.com/questions/23367857/accurate-calculation-of-cpu-usage-given-in-percentage-in-linux
+  const long PrevIdle = prevUtil.idle_ + prevUtil.ioWait_;
+  const long Idle = currUtil.idle_ + currUtil.ioWait_;
 
-    long PrevTotal = PrevIdle + PrevNonIdle;
-    long Total = Idle + NonIdle;
+  const long PrevNonIdle = prevUtil.user_ + prevUtil.nice_ + prevUtil.system_ +
+                     prevUtil.irq_ + prevUtil.softIRQ_ + prevUtil.steal_;
+  const long NonIdle = currUtil.user_ + currUtil.nice_ + currUtil.system_ +
+                 currUtil.irq_ + currUtil.softIRQ_ + currUtil.steal_;
 
-    long totald = Total - PrevTotal;
-    long idled = Idle - PrevIdle;
+  const long PrevTotal = PrevIdle + PrevNonIdle;
+  const long Total = Idle + NonIdle;
 
-    float CPU_Percentage = (totald - idled)*1.00/totald;
+  const long totald = Total - PrevTotal;
+  const long idled = Idle - PrevIdle;
 
-    // For the next calculation, currUtil becomes prevUtil
-    prevUtil = currUtil;
+  const float CPU_Percentage = (totald - idled) * 1.00 / totald;
 
-    return CPU_Percentage;
+  // For the next calculation, currUtil becomes prevUtil
+  prevUtil = currUtil;
+
+  return CPU_Percentage;
 }

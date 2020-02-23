@@ -1,16 +1,16 @@
 #ifndef PROCESSOR_H
 #define PROCESSOR_H
 
-#include "linux_parser.h"
 #include <vector>
+
+#include "linux_parser.h"
 
 class Processor {
  public:
-  float Utilization();  // TODO: See src/processor.cpp
+  float Utilization();  // Return the aggregate CPU utilization
 
-  // TODO: Declare any necessary private members
  private:
-   LinuxParser::CPUStat prevUtil;
+  LinuxParser::systemCPUStat prevUtil;
 };
 
 #endif
