@@ -103,6 +103,8 @@ void NCursesDisplay::Display(System& system, int n) {
     wrefresh(system_window);
     wrefresh(process_window);
     refresh();
+    werase(system_window);
+    werase(process_window);
     std::this_thread::sleep_for(std::chrono::seconds(1));
   }
   endwin();
