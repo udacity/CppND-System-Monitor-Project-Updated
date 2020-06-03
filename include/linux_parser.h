@@ -1,6 +1,18 @@
 #ifndef SYSTEM_PARSER_H
 #define SYSTEM_PARSER_H
 
+#define USER	  0
+#define NICE	  1
+#define SYSTEM	  2
+#define IDLE	  3
+#define IOWAIT 	  4
+#define IRQ		  5
+#define SOFTIRQ	  6
+#define STEAL  	  7
+#define GUEST	  8
+#define GUESTNICE 9
+#define START_TIME_TOKEN 21
+
 #include <fstream>
 #include <regex>
 #include <string>
