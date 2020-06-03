@@ -18,10 +18,6 @@ using std::vector;
 System::System(): os_(LinuxParser::OperatingSystem()), kernel_(LinuxParser::Kernel())
 {
 
-        // Initialize processor
-        Processor processor;
-       // cpu_ = processor;
-
         // Initialize processes
         vector<int> pids = LinuxParser::Pids();
         for (int pid : pids) {

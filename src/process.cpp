@@ -19,10 +19,10 @@ Process::Process(int pid):
 {};
 
 // TODO: Return this process's ID
-int Process::Pid() { return pid_; } //return pid_;
+int Process::Pid() const{ return pid_; } //return pid_;
 
 // TODO: Return this process's CPU utilization
-float Process::CpuUtilization() {
+float Process::CpuUtilization() const {
 	float totaltime = LinuxParser::ActiveJiffies(Pid());  // In jiffies
 	float uptime = LinuxParser::UpTime();                 // In seconds
 	float secondsactive = uptime - (Process::UpTime() / sysconf(_SC_CLK_TCK));  // In seconds
@@ -40,10 +40,10 @@ string Process::Ram() { return LinuxParser::Ram(Pid()); }
 string Process::User() { return user_; }
 
 // TODO: Return the age of this process (in seconds)
-long int Process::UpTime() { return LinuxParser::UpTime(Pid()); }
+long int Process::UpTime() const{ return LinuxParser::UpTime(Pid()); }
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
 bool Process::operator<(Process const& a) const {
-  return (a.cpu_ < cpu_);
+  return (CpuUtilization() > a.CpuUtilization());
 }

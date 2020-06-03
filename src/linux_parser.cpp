@@ -166,10 +166,8 @@ long LinuxParser::ActiveJiffies() {
 	long irqjif = 		std::stol(LinuxParser::CpuUtilization()[IRQ]);
 	long softirqjif = 	std::stol(LinuxParser::CpuUtilization()[SOFTIRQ]);
 	long stealjif = 		std::stol(LinuxParser::CpuUtilization()[STEAL]);
-	long guestjf = 		0;//std::stol(LinuxParser::CpuUtilization()[GUEST]);
-	long guestnicejf = 0;//	std::stol(LinuxParser::CpuUtilization()[GUESTNICE]);
 
-	activeJiffies = userjif+nicejif+irqjif+softirqjif+stealjif+systemjif;//+guestjf+guestnicejf;
+	activeJiffies = userjif+nicejif+irqjif+softirqjif+stealjif+systemjif;
 	return activeJiffies;
 
 
