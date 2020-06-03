@@ -11,7 +11,7 @@
 #define STEAL  	  7
 #define GUEST	  8
 #define GUESTNICE 9
-#define START_TIME_TOKEN 21
+#define START_TIME_TOKEN 22
 
 #include <fstream>
 #include <regex>
