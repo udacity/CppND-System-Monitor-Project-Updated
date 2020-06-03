@@ -8,20 +8,23 @@
 #include "processor.h"
 
 class System {
- public:
-  Processor& Cpu();                   // TODO: See src/system.cpp
-  std::vector<Process>& Processes();  // TODO: See src/system.cpp
-  float MemoryUtilization();          // TODO: See src/system.cpp
-  long UpTime();                      // TODO: See src/system.cpp
-  int TotalProcesses();               // TODO: See src/system.cpp
-  int RunningProcesses();             // TODO: See src/system.cpp
-  std::string Kernel();               // TODO: See src/system.cpp
-  std::string OperatingSystem();      // TODO: See src/system.cpp
+public:
+	System();                           // Declare custom constructor
+	Processor& Cpu();                   // TODO: See src/system.cpp
+	std::vector<Process>& Processes();  // TODO: See src/system.cpp
+	float MemoryUtilization();          // TODO: See src/system.cpp
+	long UpTime();                      // TODO: See src/system.cpp
+	int TotalProcesses();               // TODO: See src/system.cpp
+	int RunningProcesses();             // TODO: See src/system.cpp
+	std::string Kernel();               // TODO: See src/system.cpp
+	std::string OperatingSystem();      // TODO: See src/system.cpp
 
-  // TODO: Define any necessary private members
- private:
-  Processor cpu_ = {};
-  std::vector<Process> processes_ = {};
+	// TODO: Define any necessary private members
+private:
+	Processor cpu_ = {};
+	std::vector<Process> processes_ = {};
+	std::string const os_;
+	std::string const kernel_;
 };
 
 #endif

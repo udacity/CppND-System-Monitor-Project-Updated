@@ -116,12 +116,44 @@ long LinuxParser::UpTime() {
 
 // TODO: Read and return the number of jiffies for the system
 long LinuxParser::Jiffies() {
-	return (LinuxParser::ActiveJiffies()+LinuxParser::IdleJiffies());
+
+	long totalJiffies = 0;
+	long userjif = 		std::stol(LinuxParser::CpuUtilization()[USER]);
+	long nicejif =		 std::stol(LinuxParser::CpuUtilization()[NICE]);
+	long systemjif = 		std::stol(LinuxParser::CpuUtilization()[SYSTEM]);
+	long idlejif = 		std::stol(LinuxParser::CpuUtilization()[IDLE]);
+	long iowaitjif = 		std::stol(LinuxParser::CpuUtilization()[IOWAIT]);
+	long irqjif = 		std::stol(LinuxParser::CpuUtilization()[IRQ]);
+	long softirqjif = 	std::stol(LinuxParser::CpuUtilization()[SOFTIRQ]);
+	long stealjif = 		std::stol(LinuxParser::CpuUtilization()[STEAL]);
+	long guestjf = 		std::stol(LinuxParser::CpuUtilization()[GUEST]);
+	long guestnicejf = 	std::stol(LinuxParser::CpuUtilization()[GUESTNICE]);
+
+	totalJiffies = userjif+nicejif+irqjif+softirqjif+stealjif+systemjif+idlejif+iowaitjif+guestjf+guestnicejf;
+	return totalJiffies;
+
+
 }
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
+long LinuxParser::ActiveJiffies(int pid) {
+	string line;
+	string var;
+	string utime, stime, cutime, cstime;
+	std::ifstream filestream(kProcDirectory + to_string(pid) + kStatFilename);
+	if (filestream.is_open()) {
+		while (std::getline(filestream, line)) {
+			std::istringstream linestream(line);
+			for(int i = 1; i < 14; i++) {
+				linestream >> var; // Stop at 13th token
+			}
+			linestream >> utime >> stime >> cutime >> cstime; // Grab active jiffies
+			long totaltime = stol(utime) + stol(stime) + stol(cutime) + stol(cstime);
+			return totaltime;
+		}
+	}
+}
 
 // TODO: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() {
@@ -130,14 +162,14 @@ long LinuxParser::ActiveJiffies() {
 	long activeJiffies = 0;
 	long userjif = 		std::stol(LinuxParser::CpuUtilization()[USER]);
 	long nicejif =		 std::stol(LinuxParser::CpuUtilization()[NICE]);
-	//long systemjif = 		std::stol(LinuxParser::CpuUtilization()[SYSTEM]); suppress warning about unused variable
+	long systemjif = 		std::stol(LinuxParser::CpuUtilization()[SYSTEM]);
 	long irqjif = 		std::stol(LinuxParser::CpuUtilization()[IRQ]);
 	long softirqjif = 	std::stol(LinuxParser::CpuUtilization()[SOFTIRQ]);
 	long stealjif = 		std::stol(LinuxParser::CpuUtilization()[STEAL]);
-	long guestjf = 		std::stol(LinuxParser::CpuUtilization()[GUEST]);
-	long guestnicejf = 	std::stol(LinuxParser::CpuUtilization()[GUESTNICE]);
+	long guestjf = 		0;//std::stol(LinuxParser::CpuUtilization()[GUEST]);
+	long guestnicejf = 0;//	std::stol(LinuxParser::CpuUtilization()[GUESTNICE]);
 
-	activeJiffies = userjif+nicejif+irqjif+softirqjif+stealjif+guestjf+guestnicejf;
+	activeJiffies = userjif+nicejif+irqjif+softirqjif+stealjif+systemjif;//+guestjf+guestnicejf;
 	return activeJiffies;
 
 
@@ -160,40 +192,40 @@ long LinuxParser::IdleJiffies() {
 vector<string> LinuxParser::CpuUtilization() {
 	string line,name;
 	std::ifstream filestream(kProcDirectory + kStatFilename);
-	long user = 0;
-	long nice = 0;
-	long system = 0;
-	long idle = 0;
-	long iowait = 0;
-	long irq = 0;
-	long softirq = 0;
-	long steal = 0;
-	long guest = 0;
-	long guest_nice = 0;
+	string cpu ;
+	string user     ;
+	string nice     ;
+	string system   ;
+	string idle     ;
+	string iowait   ;
+	string irq      ;
+	string softirq  ;
+	string steal    ;
+	string guest    ;
+	string guest_nice ;
 	vector<string> CpuUtil;
-	std::vector<long> cpu;
 
 
 	if(filestream.is_open())
 	{
-	      while (std::getline(filestream, line))
-	      {
-	        std::istringstream linestream(line);
-			linestream >> name >> user >> nice >> system >> idle >> iowait >> irq >> softirq >> steal >> guest >> guest_nice;
+		std::getline(filestream, line);
 
-	      }
+			std::istringstream linestream(line);
+			linestream >> cpu >> user >> nice >> system >> idle >> iowait >> irq >> softirq >> steal >> guest >> guest_nice;
+
+
 	}
 
-	CpuUtil.push_back(to_string(user));
-	CpuUtil.push_back(to_string(nice));
-	CpuUtil.push_back(to_string(system));
-	CpuUtil.push_back(to_string(idle));
-	CpuUtil.push_back(to_string(iowait));
-	CpuUtil.push_back(to_string(irq));
-	CpuUtil.push_back(to_string(softirq));
-	CpuUtil.push_back(to_string(steal));
-	CpuUtil.push_back(to_string(guest));
-	CpuUtil.push_back(to_string(guest_nice));
+	CpuUtil.push_back(user);
+	CpuUtil.push_back(nice);
+	CpuUtil.push_back(system);
+	CpuUtil.push_back(idle);
+	CpuUtil.push_back(iowait);
+	CpuUtil.push_back(irq);
+	CpuUtil.push_back(softirq);
+	CpuUtil.push_back(steal);
+	CpuUtil.push_back(guest);
+	CpuUtil.push_back(guest_nice);
 
 
 
@@ -310,20 +342,21 @@ string LinuxParser::Uid(int pid) {
 // TODO: Read and return the user associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::User(int pid) {
-	string line;
-	std::ifstream filestream(kPasswordPath);
-	string find_pid_name = "x" + LinuxParser::Uid(pid);
-	if (filestream.is_open())
-	{
-		std::getline(filestream, line);
-		std::istringstream linestream(line);
-		if(line.find(find_pid_name) != std::string::npos)
-		{
-			return line.substr(0,line.find(":"));
-		}
-
-	}
-	return line;
+	 string line;
+	  string user, x, uid_lhs;
+	  string uid_rhs{LinuxParser::Uid(pid)};
+	  std::ifstream filestream(kPasswordPath);
+	  if (filestream.is_open()) {
+	    while (std::getline(filestream, line)) {
+	      std::replace(line.begin(), line.end(), ':', ' ');
+	      std::istringstream linestream(line);
+	      while (linestream >> user >> x >> uid_lhs) {
+	        if (uid_lhs == uid_rhs) {
+	          return user;
+	        }
+	      }
+	    }
+	  }
 }
 
 // TODO: Read and return the uptime of a process

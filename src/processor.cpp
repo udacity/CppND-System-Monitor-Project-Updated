@@ -5,7 +5,7 @@
 float Processor::Utilization() {
 
 	float totalTime = LinuxParser::Jiffies();
-	float activeTime = LinuxParser::ActiveJiffies();
-	cpu_ = activeTime/totalTime;
+	float idleTime = LinuxParser::IdleJiffies();
+	cpu_ = ((totalTime - idleTime)/totalTime);
 	return cpu_;
 }
