@@ -66,33 +66,112 @@ vector<int> LinuxParser::Pids() {
   return pids;
 }
 
-// TODO: Read and return the system memory utilization
-float LinuxParser::MemoryUtilization() { return 0.0; }
+// Read and return the system memory utilization
+float LinuxParser::MemoryUtilization() {
+  int memTotal = -1;
+  int memFree = -1;
+  std::ifstream fs(kProcDirectory+kMeminfoFilename);
+  if (fs.is_open()) {
+    string line;
+    string key;
+    while (std::getline(fs, line) && (memFree==-1 || memTotal==-1)) {
+      std::istringstream ls(line);
+      ls >> key;
+      if (key == "MemTotal:") {
+         ls >> memTotal;
+      }
+      else if (key == "MemFree:") {
+         ls >> memFree;
+      }
+    }
+  }
+  return (memTotal<=0 || memFree==-1 ? 0.0f : (memTotal-memFree)/(float)memTotal);
+}
 
-// TODO: Read and return the system uptime
-long LinuxParser::UpTime() { return 0; }
+// Read and return the system uptime
+long LinuxParser::UpTime() {
+  long uptimeSec = 0;
+  std::ifstream filestream(kProcDirectory+kUptimeFilename);
+  if (filestream.is_open()) {
+    string line;
+    std::getline(filestream, line);
+    std::istringstream linestream(line);
+    linestream >> uptimeSec;
+  }
+  return uptimeSec;
+}
 
-// TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { return 0; }
+// Read and return active, total jiffies for all cpus
+vector<LinuxParser::CpuJiffies> LinuxParser::AllJiffies() {
+  vector<LinuxParser::CpuJiffies> cpuJiffies {};
+  std::ifstream fs(kProcDirectory+kStatFilename);
+  if (fs.is_open()) {
+    string line;
+    string key;
+    long jiffs[8] = {0};
+    while (std::getline(fs, line)) {
+      std::istringstream ls(line);
+      if ((ls >> key) && key.rfind("cpu", 0) == 0) {
+        for (int i=0; i<8; ++i) {
+          ls >> jiffs[i];
+        }
+        LinuxParser::CpuJiffies cj = {
+          .cpuID=key,
+          .activeJiffies=jiffs[LinuxParser::kUser_]+jiffs[LinuxParser::kNice_]+
+                    jiffs[LinuxParser::kSystem_]+jiffs[LinuxParser::kIRQ_]+
+                    jiffs[LinuxParser::kSoftIRQ_]+jiffs[LinuxParser::kSteal_],
+          .totalJiffies=0
+        };
+        cj.totalJiffies=cj.activeJiffies+jiffs[LinuxParser::kIdle_]+jiffs[LinuxParser::kIOwait_];
+        cpuJiffies.push_back(cj);
+      }
+    }
+  }
+  return cpuJiffies;
+}
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
 long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
 
-// TODO: Read and return the number of active jiffies for the system
-long LinuxParser::ActiveJiffies() { return 0; }
-
-// TODO: Read and return the number of idle jiffies for the system
-long LinuxParser::IdleJiffies() { return 0; }
-
 // TODO: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() { return {}; }
 
-// TODO: Read and return the total number of processes
-int LinuxParser::TotalProcesses() { return 0; }
+// Read and return the total number of processes
+int LinuxParser::TotalProcesses() {
+  int totalProcs = 0;
+  std::ifstream filestream(kProcDirectory+kStatFilename);
+  if (filestream.is_open()) {
+    string line;
+    string key;
+    while (std::getline(filestream, line)) {
+      std::istringstream linestream(line);
+      if ((linestream >> key) && key == "processes") {
+        linestream >> totalProcs;
+        return totalProcs;
+      }
+    }
+  }
+  return totalProcs;
+}
 
-// TODO: Read and return the number of running processes
-int LinuxParser::RunningProcesses() { return 0; }
+// Read and return the number of running processes
+int LinuxParser::RunningProcesses() {
+  int runningProcs = 0;
+  std::ifstream filestream(kProcDirectory+kStatFilename);
+  if (filestream.is_open()) {
+    string line;
+    string key;
+    while (std::getline(filestream, line)) {
+      std::istringstream linestream(line);
+      if ((linestream >> key) && key == "procs_running") {
+        linestream >> runningProcs;
+        return runningProcs;
+      }
+    }
+  }
+  return runningProcs;
+}
 
 // TODO: Read and return the command associated with a process
 // REMOVE: [[maybe_unused]] once you define the function

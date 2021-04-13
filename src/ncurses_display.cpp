@@ -28,27 +28,39 @@ std::string NCursesDisplay::ProgressBar(float percent) {
   return result + " " + display + "/100%";
 }
 
+void printAttrib(WINDOW* window, string label, string value) {
+  wattron(window, COLOR_PAIR(2));
+  wprintw(window, label.c_str());
+  wattroff(window, COLOR_PAIR(2));
+  wprintw(window, value.c_str());
+}
+
+void printAttrib(WINDOW* window, int row, int col, string label, string value) {
+  mvwprintw(window, row, col, "");
+  printAttrib(window, label, value);
+}
+
+void printProgressBar(WINDOW* window, int row, int col, string label, float pct) {
+  wattron(window, COLOR_PAIR(2));
+  mvwprintw(window, row, col, label.c_str());
+  wattroff(window, COLOR_PAIR(2));
+  wattron(window, COLOR_PAIR(1));
+  mvwprintw(window, row, col+5, "");
+  wprintw(window, NCursesDisplay::ProgressBar(pct).c_str());
+  wattroff(window, COLOR_PAIR(1));
+}
+
 void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
-  int row{0};
-  mvwprintw(window, ++row, 2, ("OS: " + system.OperatingSystem()).c_str());
-  mvwprintw(window, ++row, 2, ("Kernel: " + system.Kernel()).c_str());
-  mvwprintw(window, ++row, 2, "CPU: ");
-  wattron(window, COLOR_PAIR(1));
-  mvwprintw(window, row, 10, "");
-  wprintw(window, ProgressBar(system.Cpu().Utilization()).c_str());
-  wattroff(window, COLOR_PAIR(1));
-  mvwprintw(window, ++row, 2, "Memory: ");
-  wattron(window, COLOR_PAIR(1));
-  mvwprintw(window, row, 10, "");
-  wprintw(window, ProgressBar(system.MemoryUtilization()).c_str());
-  wattroff(window, COLOR_PAIR(1));
-  mvwprintw(window, ++row, 2,
-            ("Total Processes: " + to_string(system.TotalProcesses())).c_str());
-  mvwprintw(
-      window, ++row, 2,
-      ("Running Processes: " + to_string(system.RunningProcesses())).c_str());
-  mvwprintw(window, ++row, 2,
-            ("Up Time: " + Format::ElapsedTime(system.UpTime())).c_str());
+  int row{1};
+  printAttrib(window, row, 2, "OS: ", system.OperatingSystem());
+  printAttrib(window, " Kernel: ", system.Kernel());
+  for (auto cpu : system.Cpu()) {
+    printProgressBar(window, ++row, 2, cpu.CpuID(), cpu.Utilization());
+  }
+  printProgressBar(window, ++row, 2, "Mem", system.MemoryUtilization());
+  printAttrib(window, ++row, 2, "Total/Running Processes: ", 
+    to_string(system.TotalProcesses())+"/"+to_string(system.RunningProcesses()));
+  printAttrib(window, " Up Time: ", Format::ElapsedTime(system.UpTime()));
   wrefresh(window);
 }
 
@@ -90,11 +102,13 @@ void NCursesDisplay::Display(System& system, int n) {
   start_color();  // enable color
 
   int x_max{getmaxx(stdscr)};
-  WINDOW* system_window = newwin(9, x_max - 1, 0, 0);
+  int cpuDispCount = std::min(static_cast<std::size_t>(5), system.Cpu().size());
+  WINDOW* system_window = newwin(5 + cpuDispCount, x_max - 1, 0, 0);
   WINDOW* process_window =
       newwin(3 + n, x_max - 1, system_window->_maxy + 1, 0);
 
   while (1) {
+    system.UpdateStats();
     init_pair(1, COLOR_BLUE, COLOR_BLACK);
     init_pair(2, COLOR_GREEN, COLOR_BLACK);
     box(system_window, 0, 0);
