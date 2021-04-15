@@ -11,21 +11,22 @@
 using std::string;
 using std::to_string;
 
-// 50 bars uniformly displayed from 0 - 100 %
-// 2% is one bar(|)
-std::string NCursesDisplay::ProgressBar(float percent) {
-  std::string result{"0%"};
-  int size{50};
-  float bars{percent * size};
+std::string FormatPercent(float pct) {
+  string display{to_string(pct * 100.0f).substr(0, 4)};
+  if (pct < 0.1f || pct == 1.0f)
+    display = " " + to_string(pct * 100.0f).substr(0, 3);
+  return display+"%";
+}
 
-  for (int i{0}; i < size; ++i) {
+// renders progress bar with given width showing utilization
+std::string NCursesDisplay::ProgressBar(float percent, int width) {
+  std::string result;
+  int bars = percent * width;
+
+  for (int i{0}; i < width; ++i) {
     result += i <= bars ? '|' : ' ';
   }
-
-  string display{to_string(percent * 100).substr(0, 4)};
-  if (percent < 0.1 || percent == 1.0)
-    display = " " + to_string(percent * 100).substr(0, 3);
-  return result + " " + display + "/100%";
+  return result;
 }
 
 void printAttrib(WINDOW* window, string label, string value) {
@@ -44,10 +45,11 @@ void printProgressBar(WINDOW* window, int row, int col, string label, float pct)
   wattron(window, COLOR_PAIR(2));
   mvwprintw(window, row, col, label.c_str());
   wattroff(window, COLOR_PAIR(2));
-  wattron(window, COLOR_PAIR(1));
-  mvwprintw(window, row, col+5, "");
+  mvwprintw(window, row, col+5, (FormatPercent(pct)+" [").c_str());
+  wattron(window, COLOR_PAIR(3));
   wprintw(window, NCursesDisplay::ProgressBar(pct).c_str());
-  wattroff(window, COLOR_PAIR(1));
+  wattroff(window, COLOR_PAIR(3));
+  wprintw(window, "]");
 }
 
 void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
@@ -111,6 +113,7 @@ void NCursesDisplay::Display(System& system, int n) {
     system.UpdateStats();
     init_pair(1, COLOR_BLUE, COLOR_BLACK);
     init_pair(2, COLOR_GREEN, COLOR_BLACK);
+    init_pair(3, COLOR_CYAN, COLOR_BLACK);
     box(system_window, 0, 0);
     box(process_window, 0, 0);
     DisplaySystem(system, system_window);
