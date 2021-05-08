@@ -4,6 +4,8 @@
 #include <fstream>
 #include <regex>
 #include <string>
+#include <unordered_set>
+#include <unordered_map>
 
 namespace LinuxParser {
 // Paths
@@ -21,11 +23,11 @@ const std::string kPasswordPath{"/etc/passwd"};
 // System
 float MemoryUtilization();
 long UpTime();
-std::vector<int> Pids();
 int TotalProcesses();
 int RunningProcesses();
 std::string OperatingSystem();
 std::string Kernel();
+std::unordered_set<int> Pids();
 
 // CPU
 enum CPUStates {
@@ -46,14 +48,20 @@ struct CpuJiffies {
   long totalJiffies;
 };
 
+struct PidJiffies {
+  long activeJiffies;
+  long startTime;
+};
+
 std::vector<std::string> CpuUtilization();
 std::vector<CpuJiffies> AllJiffies();
-long ActiveJiffies(int pid);
 
 // Processes
-std::string Command(int pid);
-std::string Ram(int pid);
-std::string Uid(int pid);
+PidJiffies ProcessJiffies(const int pid);
+std::unordered_map<int, std::string> Usernames();
+std::string Command(const int pid);
+int Ram(const int pid);
+int Uid(const int pid);
 std::string User(int pid);
 long int UpTime(int pid);
 };  // namespace LinuxParser
