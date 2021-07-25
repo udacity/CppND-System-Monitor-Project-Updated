@@ -7,6 +7,7 @@
 #include "process.h"
 #include "processor.h"
 #include "system.h"
+#include <algorithm>
 
 using std::set;
 using std::size_t;
@@ -22,6 +23,7 @@ vector<Process>& System::Processes() {
     for(auto pid: pids) {
         processes_.emplace_back(Process(pid));
     }
+    std::sort(processes_.begin(), processes_.end());
 
     return processes_; 
     
