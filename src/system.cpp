@@ -16,10 +16,9 @@ using std::vector;
 
 Processor& System::Cpu() { return cpu_; }
 
-//TODO: check if pids is already in processes_ and update it, if not add it to the vector and destroy if there is no matching process
 vector<Process>& System::Processes() { 
     
-    vector<int> nPids, oPids = {}; //new pids, old pids, deleted pids
+    vector<int> nPids, oPids = {}; //new pids, old pids
     auto pids = LinuxParser::Pids();
     bool match = false;
 
@@ -38,6 +37,21 @@ vector<Process>& System::Processes() {
         match = false;
     }
 
+    //Delete missing processes
+    for(unsigned int j = 0; j < processes_.size(); j++) {
+        for(auto oPid: oPids) {
+            if(processes_[j] == oPid) {
+                match = true;
+                break;
+            }
+        }
+        if(!match) {
+            processes_.erase(processes_.begin() + j);
+        }
+        match = false;
+    }
+
+    //Add new processes
     for(auto nPid: nPids) {
         processes_.emplace_back(Process(nPid));
     }

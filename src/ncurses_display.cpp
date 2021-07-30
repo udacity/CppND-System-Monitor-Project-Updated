@@ -83,6 +83,10 @@ void NCursesDisplay::DisplayProcesses(std::vector<Process>& processes,
     mvwprintw(window, row, command_column,
               processes[i].Command().substr(0, window->_maxx - 46).c_str());
   }
+  for(int j = 0; j < n - num_processes; j++) {
+    wmove(window, ++row, pid_column);
+    wclrtoeol(window);
+  }
 }
 
 void NCursesDisplay::Display(System& system, int n) {
