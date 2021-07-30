@@ -10,26 +10,27 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-Process::Process(int pid) : pid_(pid), upTime_(LinuxParser::UpTime(pid)), activeTime_(LinuxParser::ActiveJiffies(pid)) {
+Process::Process(int pid) : 
+pid_(pid), systemJiffies_(LinuxParser::Jiffies()), procJiffies_(LinuxParser::ActiveJiffies(pid)), upTime_(LinuxParser::UpTime(pid)) {
 
 }
 
 int Process::Pid() { return pid_; }
 
-float Process::CpuUtilization() { 
-    
-    auto nUpTime = LinuxParser::UpTime();
-    auto nActiveTime = LinuxParser::ActiveJiffies(pid_);
+void Process::UpdateCPU() {
+    auto nSystemJiffies = LinuxParser::Jiffies();
+    auto nProcJiffies = LinuxParser::ActiveJiffies(pid_);
 
-    auto changeUpTime = nUpTime - upTime_;
-    auto changeActiveTime = nActiveTime - activeTime_;
+    auto changeTotal = nSystemJiffies - systemJiffies_;
+    auto changeProc = nProcJiffies - procJiffies_; 
 
-    upTime_ = nUpTime;
-    activeTime_ = nActiveTime;
+    systemJiffies_ = nSystemJiffies;
+    procJiffies_ = nProcJiffies;
 
-    return float(changeActiveTime / sysconf(_SC_CLK_TCK)) / float(changeUpTime);
-
+    cpuUsage_ = float(changeProc) / float(changeTotal);
 }
+
+float Process::CpuUtilization() { return cpuUsage_; }
 
 string Process::Command() { return LinuxParser::Command(pid_); }
 
@@ -37,6 +38,6 @@ string Process::Ram() { return LinuxParser::Ram(pid_); }
 
 string Process::User() { return LinuxParser::User(pid_); }
 
-long int Process::UpTime() { return LinuxParser::UpTime() - LinuxParser::UpTime(pid_); }
+long int Process::UpTime() { return LinuxParser::UpTime() - upTime_; }
 
 bool Process::operator<(Process const& a) const { return a.cpuUsage_ < this->cpuUsage_; }

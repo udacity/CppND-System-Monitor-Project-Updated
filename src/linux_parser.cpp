@@ -109,8 +109,10 @@ long LinuxParser::Jiffies() {
 long LinuxParser::ActiveJiffies(int pid) { 
   long active_jiffies = 0;
   auto stat_values = Stat(pid);
-  for(int i = 13; i < 17; i++) {
-    active_jiffies += std::stol(stat_values.at(i).c_str());
+  if(stat_values.size() >= 17) {
+    for(int i = 13; i < 17; i++) {
+      active_jiffies += std::stol(stat_values.at(i).c_str());
+    }
   }
   return active_jiffies; 
 }

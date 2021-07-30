@@ -12,7 +12,8 @@ class Process {
   Process(int pid);
   int Pid();                               
   std::string User();                      
-  std::string Command();                   
+  std::string Command();    
+  void UpdateCPU();               
   float CpuUtilization();                  
   std::string Ram();                       
   long int UpTime();                       
@@ -20,10 +21,10 @@ class Process {
 
  private:
     int pid_;
-    long upTime_;
-    long activeTime_;
+    long systemJiffies_;
+    long procJiffies_;
     float cpuUsage_;
-
+    long upTime_;
 };
 
 #endif
