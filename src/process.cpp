@@ -95,7 +95,7 @@ string Process::Command() {
     }
   }
   // check for size and prune for readability
-  if (read_value.size() > 40){
+  if (read_value.size() > 40) {
     read_value = read_value.substr(0, 37);
     read_value += "...";
   }

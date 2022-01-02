@@ -168,7 +168,7 @@ vector<unsigned long long int> LinuxParser::CpuUtilization() {
       while (linestream >> key) {
         if (key == filterCpu) {
           while (linestream >> stat) {
-            cpu_usages.emplace_back(stol(stat));
+            cpu_usages.emplace_back(stoll(stat));
           }
           filestream.close();
           return cpu_usages;

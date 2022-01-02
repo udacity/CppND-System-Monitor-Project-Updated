@@ -18,7 +18,7 @@ vector<Process>& System::Processes() {
 
   std::sort(pids.begin(), pids.end());
   /* using emplace back for performance and simplicity as per reviewers note */
-  for (const int & pid: pids) {
+  for (const int& pid : pids) {
     processes_.emplace_back(pid);
   }
 
