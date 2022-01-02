@@ -13,19 +13,17 @@ string Format::ElapsedTime(long seconds) {
 
   std::stringstream ss;
 
-  int hour = seconds / (60 * 60 * 1000);
+  int hours = seconds / (3600);
 
-  seconds -= hour * (60 * 60 * 1000);
+  seconds = seconds % (3600);
 
-  int minute = (seconds) / (60 * 1000);
+  int minutes = seconds / 60;
 
-  seconds -= minute * (60 * 1000);
+  seconds = seconds % 60;
 
-  int second = (seconds) / 1000;
-
-  ss << std::setw(2) << std::setfill('0') << std::to_string(hour);
-  ss << ":" << std::setw(2) << std::to_string(minute);
-  ss << ":" << std::setw(2) << std::to_string(second);
+  ss << std::setw(2) << std::setfill('0') << std::to_string(hours);
+  ss << ":" << std::setw(2) << std::to_string(minutes);
+  ss << ":" << std::setw(2) << std::to_string(seconds);
 
   return ss.str();
 }
