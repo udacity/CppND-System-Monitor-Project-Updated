@@ -85,10 +85,10 @@ float LinuxParser::MemoryUtilization() {
       std::istringstream linestream(line);
 
       while (linestream >> key >> value) {
-        if (key == "MemTotal") {
+        if (key == filterMemTotalString) {
           avalilabe_mem = stoi(value);
         }
-        if (key == "MemFree") {
+        if (key == filterMemFreeString) {
           free_mem = stoi(value);
         }
       }
@@ -126,7 +126,7 @@ vector<long int> LinuxParser::JiffiesInfos() {
       std::istringstream linestream(line);
 
       while (linestream >> key) {
-        if (key == "cpu") {
+        if (key == filterCpu) {
           while (linestream >> stat) {
             cpu_usages.emplace_back(stol(stat));
           }
@@ -154,7 +154,7 @@ long LinuxParser::ActiveJiffies() {
 // TODO: Read and return the number of idle jiffies for the system
 long LinuxParser::IdleJiffies() { return LinuxParser::JiffiesInfos()[3]; }
 
-vector<long int> LinuxParser::CpuUtilization() {
+vector<unsigned long long int> LinuxParser::CpuUtilization() {
   string line;
   string key;
   string value;
@@ -164,9 +164,9 @@ vector<long int> LinuxParser::CpuUtilization() {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
       string stat;
-      vector<long int> cpu_usages;
+      vector<unsigned long long int> cpu_usages;
       while (linestream >> key) {
-        if (key == "cpu") {
+        if (key == filterCpu) {
           while (linestream >> stat) {
             cpu_usages.emplace_back(stol(stat));
           }
@@ -194,7 +194,7 @@ int LinuxParser::TotalProcesses() {
       std::istringstream linestream(line);
 
       while (linestream >> key >> value) {
-        if (key == "processes") {
+        if (key == filterProcesses) {
           processes = stoi(value);
         }
       }
@@ -218,7 +218,7 @@ int LinuxParser::RunningProcesses() {
       std::istringstream linestream(line);
 
       while (linestream >> key >> value) {
-        if (key == "procs_running") {
+        if (key == filterRunningProcesses) {
           processes = stoi(value);
         }
       }
