@@ -9,21 +9,17 @@
 #include "processor.h"
 #include "system.h"
 
-using std::set;
-using std::size_t;
-using std::string;
-using std::vector;
+using namespace std;
 
 Processor& System::Cpu() { return cpu_; }
 
 vector<Process>& System::Processes() {
   vector<int> pids = LinuxParser::Pids();
 
-  // vector<Process> procs;
   std::sort(pids.begin(), pids.end());
-  for (uint i = 0; i < pids.size(); i++) {
-    Process proc(pids[i]);
-    processes_.push_back(proc);
+  /* using emplace back for performance and simplicity as per reviewers note */
+  for (const int & pid: pids) {
+    processes_.emplace_back(pid);
   }
 
   return processes_;

@@ -39,7 +39,7 @@ float Process::CpuUtilization() {
 
       // unpack to a vector
       while (linestream >> stat) {
-        data.push_back((stat));
+        data.emplace_back((stat));
       }
     }
   }
@@ -48,13 +48,13 @@ float Process::CpuUtilization() {
   stime = stol(data[14]);
   cutime = stol(data[15]);
   cstime = stol(data[16]);
-  starttime = stol(data[22]);
+  starttime = stol(data[21]);
   int hertz = sysconf(_SC_CLK_TCK);
   int total_time = utime + stime + cutime + cstime;
-  float seconds = uptime - (float(starttime) / hertz);
+  float seconds = uptime - (static_cast<float>(starttime) / hertz);
   float cpu_usage = 0.0;
 
-  cpu_usage = ((float(total_time) / hertz) / seconds);
+  cpu_usage = ((static_cast<float>(total_time) / hertz) / seconds);
   last_cpu = cpu_usage;
   return cpu_usage;
 }
@@ -74,7 +74,7 @@ long Process::ActiveJiffies(int pid) {
 
       // unpack to a vector
       while (linestream >> stat) {
-        data.push_back((stat));
+        data.emplace_back((stat));
       }
     }
   }
@@ -94,6 +94,11 @@ string Process::Command() {
       linestream >> read_value;
     }
   }
+  // check for size and prune for readability
+  if (read_value.size() > 40){
+    read_value = read_value.substr(0, 37);
+    read_value += "...";
+  }
   return read_value;
 }
 
@@ -111,7 +116,8 @@ string Process::Ram() {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
-        if (key == "VmSize") {
+        /* using vmrss to get the psysical ram as per reviewers suggestion */
+        if (key == LinuxParser::filterProcMem) {
           /* implict int conversion by using the mem_mb variable */
           mem_mb = std::round(stoi(value) * 0.001);
           used_mem = to_string(mem_mb);
@@ -138,7 +144,7 @@ string Process::Uid() {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
       while (linestream >> key >> value >> uid) {
-        if (key == "Uid") {
+        if (key == LinuxParser::filterUID) {
           return uid;
           break;
         }
@@ -188,11 +194,11 @@ long int Process::UpTime() {
 
       // unpack to a vector
       while (linestream >> stat) {
-        data.push_back((stat));
+        data.emplace_back((stat));
       }
     }
   }
-  age = stol(data[21]) / sysconf(_SC_CLK_TCK);
+  age = LinuxParser::UpTime() - (stol(data[21]) / sysconf(_SC_CLK_TCK));
 
   return age;
   // return 0;
