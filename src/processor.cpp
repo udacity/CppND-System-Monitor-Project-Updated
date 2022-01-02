@@ -24,35 +24,20 @@ float Processor::Utilization() {
   unsigned long long int irq = line_read[5];
   unsigned long long int softirq = line_read[6];
   unsigned long long int steal = line_read[7];
-  unsigned long long int guest = line_read[8];
-  unsigned long long int guest_nice = line_read[9];
 
   unsigned long long int current_idle = idle + iowait;
-  unsigned long long int last_idle_calc = last_idle + last_iowait;
-
-  unsigned long long int current_non_idle = user + nice + system + irq + softirq + steal;
-  unsigned long long int last_non_idle =
-      last_user + last_nice + last_system + last_irq + last_softirq + last_steal;
-
+  unsigned long long int current_non_idle =
+      user + nice + system + irq + softirq + steal;
   unsigned long long int current_total = current_idle + current_non_idle;
-  unsigned long long int last_total = last_idle_calc + last_non_idle;
 
   unsigned long long int total_diff = current_total - last_total;
-  unsigned long long int idle_diff = current_idle - last_idle_calc;
+  unsigned long long int idle_diff = current_idle - last_idle;
 
-
-  double cpu_use = (total_diff - idle_diff) / float(total_diff);
+  float cpu_use = (total_diff - idle_diff) / float(total_diff);
 
   // store current data to be used in the future
-  last_nice = nice;
-  last_system = system;
-  last_idle = idle;
-  last_iowait = iowait;
-  last_irq = irq;
-  last_softirq = softirq;
-  last_steal = steal;
-  last_guest = guest;
-  last_guest_nice = guest_nice;
+  last_idle = current_idle;
+  last_total = current_total;
 
   return cpu_use;
 }
