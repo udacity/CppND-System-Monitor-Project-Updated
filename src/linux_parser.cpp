@@ -27,6 +27,7 @@ string LinuxParser::OperatingSystem() {
       while (linestream >> key >> value) {
         if (key == "PRETTY_NAME") {
           std::replace(value.begin(), value.end(), '_', ' ');
+          filestream.close();
           return value;
         }
       }
@@ -45,6 +46,7 @@ string LinuxParser::Kernel() {
     std::istringstream linestream(line);
     linestream >> os >> version >> kernel;
   }
+  stream.close();
   return kernel;
 }
 
@@ -60,7 +62,7 @@ vector<int> LinuxParser::Pids() {
       string filename(file->d_name);
       if (std::all_of(filename.begin(), filename.end(), isdigit)) {
         int pid = stoi(filename);
-        pids.push_back(pid);
+        pids.emplace_back(pid);
       }
     }
   }
@@ -91,7 +93,7 @@ float LinuxParser::MemoryUtilization() {
         }
       }
     }
-
+    filestream.close();
     return (avalilabe_mem - free_mem) / avalilabe_mem;
   }
   return 0.0;
@@ -126,12 +128,13 @@ vector<long int> LinuxParser::JiffiesInfos() {
       while (linestream >> key) {
         if (key == "cpu") {
           while (linestream >> stat) {
-            cpu_usages.push_back(stol(stat));
+            cpu_usages.emplace_back(stol(stat));
           }
         }
       }
     }
   }
+  filestream.close();
   return cpu_usages;
 }
 
@@ -165,8 +168,9 @@ vector<long int> LinuxParser::CpuUtilization() {
       while (linestream >> key) {
         if (key == "cpu") {
           while (linestream >> stat) {
-            cpu_usages.push_back(stol(stat));
+            cpu_usages.emplace_back(stol(stat));
           }
+          filestream.close();
           return cpu_usages;
         }
       }
@@ -195,7 +199,7 @@ int LinuxParser::TotalProcesses() {
         }
       }
     }
-
+    filestream.close();
     return processes;
   }
   return 0;
@@ -219,7 +223,7 @@ int LinuxParser::RunningProcesses() {
         }
       }
     }
-
+    filestream.close();
     return processes;
   }
   return 0;
