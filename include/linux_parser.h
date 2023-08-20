@@ -4,6 +4,7 @@
 #include <fstream>
 #include <regex>
 #include <string>
+#include <iostream>
 
 namespace LinuxParser {
 // Paths
@@ -45,6 +46,48 @@ long Jiffies();
 long ActiveJiffies();
 long ActiveJiffies(int pid);
 long IdleJiffies();
+
+// helper functions
+template <typename T>
+T getKeyValue(std::string const &keyIn, std::string const &file)
+{
+  std::string line, key;
+  T value;
+  std::ifstream stream(kProcDirectory + file);
+  if (stream.is_open()) 
+  {
+    while (std::getline(stream, line))
+    {
+      std::istringstream linestream(line);
+      while (linestream >> key >> value) 
+      {
+        if (key == keyIn) 
+        {
+          return value;
+        }
+      }
+    }
+
+  }
+  std::cout << "getKeyValue -- end of file reached without finding: " << keyIn << std::endl;
+  return value;
+}
+
+template <typename T>
+T getSingleValueFromFile(std::string const &file)
+{
+  std::string line;
+  T value;
+  std::ifstream stream(kProcDirectory + file);
+  if (stream.is_open())
+  {
+    std::getline(stream, line);
+    std::istringstream linestream(line);
+    linestream >> value;
+  }
+  std::cout << "getSingleValueFromFile -- value: " << value << std::endl;
+  return value;
+}
 
 // Processes
 std::string Command(int pid);

@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "linux_parser.h"
 
@@ -66,14 +67,28 @@ vector<int> LinuxParser::Pids() {
   return pids;
 }
 
-// TODO: Read and return the system memory utilization
-float LinuxParser::MemoryUtilization() { return 0.0; }
+// Read and return the system memory utilization
+float LinuxParser::MemoryUtilization() 
+{ 
+  std::string const kMemTotalKey = "MemTotal:";
+  std::string const kMemAvailKey = "MemAvailable:";
+  float mem_total = getKeyValue<float>(kMemTotalKey, kMeminfoFilename);
+  float mem_avail = getKeyValue<float>(kMemAvailKey, kMeminfoFilename);
 
-// TODO: Read and return the system uptime
-long LinuxParser::UpTime() { return 0; }
+  return (mem_total - mem_avail) / mem_total; 
+}
 
-// TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { return 0; }
+// Read and return the system uptime
+long LinuxParser::UpTime()
+{ 
+  return getSingleValueFromFile<long>(kUptimeFilename); 
+}
+
+// Read and return the number of jiffies for the system
+long LinuxParser::Jiffies() 
+{
+  return ActiveJiffies() + IdleJiffies();
+}
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
@@ -88,11 +103,19 @@ long LinuxParser::IdleJiffies() { return 0; }
 // TODO: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() { return {}; }
 
-// TODO: Read and return the total number of processes
-int LinuxParser::TotalProcesses() { return 0; }
+// Read and return the total number of processes
+int LinuxParser::TotalProcesses() 
+{
+  std::string const kProcesses = "processes";
+  return getKeyValue<int>(kProcesses, kStatFilename);
+}
 
-// TODO: Read and return the number of running processes
-int LinuxParser::RunningProcesses() { return 0; }
+// Read and return the number of running processes
+int LinuxParser::RunningProcesses() 
+{ 
+  std::string const kRunningProcesses = "procs_running";
+  return getKeyValue<int>(kRunningProcesses, kStatFilename);
+}
 
 // TODO: Read and return the command associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
