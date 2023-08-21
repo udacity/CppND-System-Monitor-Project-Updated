@@ -41,11 +41,11 @@ enum CPUStates {
   kGuest_,
   kGuestNice_
 };
-std::vector<float> CpuUtilization();
-float Jiffies();
-float ActiveJiffies();
+std::vector<long> CpuUtilization();
+long Jiffies();
+long ActiveJiffies();
 long ActiveJiffies(int pid);
-float IdleJiffies();
+long IdleJiffies();
 
 // helper functions
 template <typename T>
