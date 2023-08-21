@@ -12,5 +12,4 @@ float Processor::Utilization()
     prev_active_jiffies_ = active_jiffies;
     return active_delta / total_delta;
     
-   return 0;
 }
