@@ -41,11 +41,11 @@ enum CPUStates {
   kGuest_,
   kGuestNice_
 };
-std::vector<std::string> CpuUtilization();
-long Jiffies();
-long ActiveJiffies();
+std::vector<float> CpuUtilization();
+float Jiffies();
+float ActiveJiffies();
 long ActiveJiffies(int pid);
-long IdleJiffies();
+float IdleJiffies();
 
 // helper functions
 template <typename T>
@@ -69,7 +69,7 @@ T getKeyValue(std::string const &keyIn, std::string const &file)
     }
 
   }
-  std::cout << "getKeyValue -- end of file reached without finding: " << keyIn << std::endl;
+  //std::cout << "getKeyValue -- end of file reached without finding: " << keyIn << std::endl;
   return value;
 }
 
@@ -85,7 +85,7 @@ T getSingleValueFromFile(std::string const &file)
     std::istringstream linestream(line);
     linestream >> value;
   }
-  std::cout << "getSingleValueFromFile -- value: " << value << std::endl;
+  //std::cout << "getSingleValueFromFile -- value: " << value << std::endl;
   return value;
 }
 
