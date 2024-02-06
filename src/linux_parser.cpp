@@ -153,12 +153,37 @@ vector<string> LinuxParser::CpuUtilization() {
   std::string currentKey;
   std::string currentValue;
   vector<string> cpuUtilization;
+  double cpuUtilization0;
   while (getline(filestream, line)) {
+    // PrevIdle = previdle + previowait
+    // Idle = idle + iowait
+
+    // PrevNonIdle = prevuser + prevnice + prevsystem + previrq + prevsoftirq +
+    // prevsteal NonIdle = user + nice + system + irq + softirq + steal
+
+    // PrevTotal = PrevIdle + PrevNonIdle
+    // Total = Idle + NonIdle
+
+    // # differentiate: actual value minus the previous one
+    // totald = Total - PrevTotal
+    // idled = Idle - PrevIdle
+
+    // CPU_Percentage = (totald - idled)/totald
+
     std::istringstream iss(line);
     iss >> currentKey;
     if (currentKey == "cpu") {
-      while (iss >> currentValue) {
-        cpuUtilization.push_back(currentValue);
+      int user, nice, system, idle, iowait, irq, softirq, steal, guest,
+          guest_nice;
+
+      while (iss >> user >> nice >> system >> idle >> iowait >> irq >>
+             softirq >> steal >> guest >> guest_nice) {
+        int totalIdle = idle + iowait;
+        int totalNonIdle = user + nice + system + irq + softirq + steal;
+        int total = totalIdle + totalNonIdle;
+
+        cpuUtilization0 =
+            (total - totalIdle) / static_cast<double>(total) * 100.0;
       }
     }
   }
@@ -207,7 +232,6 @@ int LinuxParser::RunningProcesses() {
     if (currentKey == "procs_running") {
       runningProcesses = std::stoi(currentValue);
     }
-    break;
   }
 
   return runningProcesses;
