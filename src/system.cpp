@@ -25,15 +25,13 @@ vector<Process>& System::Processes() {
   for (std::vector<int>::iterator it = pids.begin(); it != pids.end(); it++) {
     int pidIndex = *it;
     std::string userVal = LinuxParser::User(pidIndex);
-    // LinuxParser::Command(pidIndex);
-    // LinuxParser::Ram(pidIndex);
+    std::string commandVal = LinuxParser::Command(pidIndex);
+    std::string ramVal = LinuxParser::Ram(pidIndex);
     long upTimeVal = LinuxParser::UpTime(pidIndex);
     std::string uidVal = LinuxParser::Uid(pidIndex);
-    // LinuxParser::CpuUtilization(pidIndex);
+    vector<string> cpuUtilVale = LinuxParser::CpuUtilization();
     Process process(pidIndex);      // create a process object
     processes_.push_back(process);  // add the process object to the vector
-    // processes_.push_back(process);  // add the process object to the vector
-
   };
 
   return processes_;
