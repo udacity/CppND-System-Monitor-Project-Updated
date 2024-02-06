@@ -30,8 +30,8 @@ vector<Process>& System::Processes() {
     long upTimeVal = LinuxParser::UpTime(pidIndex);
     std::string uidVal = LinuxParser::Uid(pidIndex);
     vector<string> cpuUtilVale = LinuxParser::CpuUtilization();
-    Process process(pidIndex);      // create a process object
-    processes_.push_back(process);  // add the process object to the vector
+    Process process(pidIndex);      
+    processes_.push_back(process); 
   };
 
   return processes_;
@@ -44,7 +44,6 @@ std::string System::Kernel() { return LinuxParser::Kernel(); }
 float System::MemoryUtilization() { return LinuxParser::MemoryUtilization(); }
 
 // DONE: Return the operating system name
-// std::string System::OperatingSystem() { return string(); }
 std::string System::OperatingSystem() { return LinuxParser::OperatingSystem(); }
 
 // DONE: Return the number of processes actively running on the system

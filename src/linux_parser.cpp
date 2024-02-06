@@ -309,7 +309,7 @@ string LinuxParser::User(int pid) {
     std::istringstream iss(line);
     iss >> user >> x >> id;
     if (id == uid) {
-      name = temp;
+      name = user;
       break;
     }
   }
