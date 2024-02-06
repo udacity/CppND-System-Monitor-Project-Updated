@@ -30,7 +30,11 @@ vector<Process>& System::Processes() {
     long upTimeVal = LinuxParser::UpTime(pidIndex);
     std::string uidVal = LinuxParser::Uid(pidIndex);
     vector<string> cpuUtilVale = LinuxParser::CpuUtilization();
-    Process process(pidIndex);      
+    Process process(pidIndex);   
+    std::string ramVal0 = process.Ram();   
+    std::string userVal0 = process.User(); 
+    std::string commandVal0 = process.Command();
+    float cpuUVal0 = process.CpuUtilization();
     processes_.push_back(process); 
   };
 

@@ -85,25 +85,20 @@ float LinuxParser::MemoryUtilization() {
   std::vector<float> memInfo;
   while (getline(filestream, line)) {
     std::istringstream iss(line);
-    // read info
     iss >> currentKey >> currentValue;
     if (currentKey == "MemTotal:") {
-      // convert from kb to mb
       float val = stof(currentValue) / 1024 / 1024;
       memInfo.push_back(val);
     }
     if (currentKey == "MemFree:") {
-      // convert from kb to mb
       float val = stof(currentValue) / 1024 / 1024;
       memInfo.push_back(val);
     }
     if (currentKey == "Buffers:") {
-      // convert from kb to mb
       float val = stof(currentValue) / 1024 / 1024;
       memInfo.push_back(val);
     }
     if (currentKey == "Cached:") {
-      // convert from kb to mb
       float val = stof(currentValue) / 1024 / 1024;
       memInfo.push_back(val);
     }
@@ -148,7 +143,7 @@ long LinuxParser::ActiveJiffies() { return 0; }
 long LinuxParser::IdleJiffies() { return 0; }
 
 // DONE: Read and return CPU utilization
-vector<string> LinuxParser::CpuUtilization() { 
+vector<string> LinuxParser::CpuUtilization() {
   std::ifstream filestream(kProcDirectory + kStatFilename);
   std::string line;
   if (!filestream.is_open()) {
@@ -168,7 +163,7 @@ vector<string> LinuxParser::CpuUtilization() {
     }
   }
   return cpuUtilization;
- }
+}
 
 // DONE: Read and return the total number of processes
 int LinuxParser::TotalProcesses() {
@@ -220,21 +215,14 @@ int LinuxParser::RunningProcesses() {
 
 // DONE: Read and return the command associated with a process
 string LinuxParser::Command(int pid) {
+  std::string command;
   std::ifstream filestream(kProcDirectory + std::to_string(pid) +
                            kCmdlineFilename);
-  std::string line;
-  if (!filestream.is_open()) {
-    std::cerr << "Failed to open file: "
-              << kProcDirectory + std::to_string(pid) + kCmdlineFilename
-              << std::endl;
+  if (filestream.is_open()) {
+    std::getline(filestream, command);
+    filestream.close();
   }
-  std::string command;
-  while (getline(filestream, line)) {
-    std::istringstream iss(line);
-    // read info
-    iss >> command;
-    break;
-  }
+
   return command;
 }
 
@@ -335,7 +323,7 @@ long LinuxParser::UpTime(int pid) {
   while (iss >> cuurentValue) {
     values.push_back(cuurentValue);
   }
-  
+
   try {
     starttime = stol(values[21]) / sysconf(_SC_CLK_TCK);
   } catch (...) {
