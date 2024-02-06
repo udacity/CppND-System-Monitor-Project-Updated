@@ -21,6 +21,7 @@ Processor& System::Cpu() { return cpu_; }
 
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() {
+  processes_.clear();
   vector<int> pids = LinuxParser::Pids();
   for (std::vector<int>::iterator it = pids.begin(); it != pids.end(); it++) {
     int pidIndex = *it;
@@ -30,12 +31,12 @@ vector<Process>& System::Processes() {
     long upTimeVal = LinuxParser::UpTime(pidIndex);
     std::string uidVal = LinuxParser::Uid(pidIndex);
     vector<string> cpuUtilVale = LinuxParser::CpuUtilization();
-    Process process(pidIndex);   
-    std::string ramVal0 = process.Ram();   
-    std::string userVal0 = process.User(); 
+    Process process(pidIndex);
+    std::string ramVal0 = process.Ram();
+    std::string userVal0 = process.User();
     std::string commandVal0 = process.Command();
     float cpuUVal0 = process.CpuUtilization();
-    processes_.push_back(process); 
+    processes_.push_back(process);
   };
 
   return processes_;

@@ -2,6 +2,7 @@
 
 #include <dirent.h>
 #include <unistd.h>
+#include <cmath>
 
 #include <iostream>
 #include <string>
@@ -267,7 +268,7 @@ string LinuxParser::Ram(int pid) {
     std::istringstream iss(line);
     while (iss >> currentKey >> currentValue) {
       if (currentKey == "VmSize:") {
-        ram = currentValue;
+        ram = to_string( (int) std::floor(stof(currentValue) / 1024));
       }
       break;
     }
