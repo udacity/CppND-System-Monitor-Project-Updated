@@ -160,6 +160,7 @@ vector<string> LinuxParser::CpuUtilization() {
       jiffies.push_back(value);
     }
   }
+  return jiffies;
 }
 
 
