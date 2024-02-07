@@ -35,7 +35,7 @@ vector<Process>& System::Processes() {
     std::string ramVal0 = process.Ram();
     std::string userVal0 = process.User();
     std::string commandVal0 = process.Command();
-    float cpuUVal0 = process.CpuUtilization();
+    //float cpuUVal0 = process.CpuUtilization();
     processes_.push_back(process);
   };
 

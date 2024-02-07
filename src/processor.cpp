@@ -7,7 +7,7 @@ float Processor::Utilization() {
     return 0.0;
   }
 
-  float user = std::stoi(currentUtilization[0]);
+  std::string user = currentUtilization[0];
   float nice = std::stoi(currentUtilization[1]);
   float system = std::stoi(currentUtilization[2]);
   float idle = std::stoi(currentUtilization[3]);
@@ -16,7 +16,7 @@ float Processor::Utilization() {
   float softirq = std::stoi(currentUtilization[6]);
   float steal = std::stoi(currentUtilization[7]);
 
-  float totalTime = user + nice + system + idle + iowait + irq + softirq + steal;
+  float totalTime = nice + system + idle + iowait + irq + softirq + steal;
   float idleTime = idle + iowait;
 
   float deltaTimeTotal = totalTime - prevTotal_;
