@@ -145,34 +145,23 @@ long LinuxParser::IdleJiffies() { return 0; }
 
 // DONE: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() {
+  vector<string> jiffies;
   std::ifstream filestream(kProcDirectory + kStatFilename);
-  std::string line;
   if (!filestream.is_open()) {
     std::cerr << "Failed to open file: " << kProcDirectory + kStatFilename
               << std::endl;
   }
-  std::string currentKey;
-  std::string currentValue;
-  vector<string> cpuUtilization;
-if (filestream.is_open()) {
-    std::string line;
+  std::string line, cpu, value;
+  if (filestream.is_open()) {
     std::getline(filestream, line);
-
     std::istringstream linestream(line);
-    std::string token;
-
-    // Skip the first token "cpu"
-    linestream >> token;
-
-    while (linestream >> token) {
-      cpuUtilization.push_back(token);
+    linestream >> cpu;
+    while (linestream >> value) {
+      jiffies.push_back(value);
     }
   }
-
-  filestream.close();
-
-  return cpuUtilization;
 }
+
 
 // DONE: Read and return the total number of processes
 int LinuxParser::TotalProcesses() {
@@ -314,47 +303,30 @@ string LinuxParser::User(int pid) {
 }
 
 // DONE: Read and return the uptime of a process
-// long LinuxParser::UpTime(int pid) {
-//   long starttime = 0;
-//   std::ifstream filestream(kProcDirectory + std::to_string(pid) +
-//                            kStatFilename);
-//   if (!filestream.is_open()) {
-//     std::cerr << "Failed to open file: "
-//               << kProcDirectory + std::to_string(pid) + kStatFilename
-//               << std::endl;
-//   }
-//   std::string line;
-//   std::string cuurentValue;
-//   vector<string> values;
-//   std::getline(filestream, line);
-//   std::istringstream iss(line);
-//   while (iss >> cuurentValue) {
-//     values.push_back(cuurentValue);
-//   }
-
-//   try {
-//     starttime = stol(values[21]) / sysconf(_SC_CLK_TCK);
-//   } catch (...) {
-//     starttime = 0;
-//   }
-//   return starttime;
-// }
 long LinuxParser::UpTime(int pid) {
-  string word;
-  string line;
-  std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
-  if (stream.is_open()) {
-    std::getline(stream, line);
-    std::istringstream linestream(line);
-    int count{1};
-    while (getline(linestream, word, ' ')) {
-      if (count == 22) {
-        long value = stol(word) / sysconf(_SC_CLK_TCK);
-        return value;
-      }
-      count++;
-    }
+  long starttime = 0;
+  std::ifstream filestream(kProcDirectory + std::to_string(pid) +
+                           kStatFilename);
+  if (!filestream.is_open()) {
+    std::cerr << "Failed to open file: "
+              << kProcDirectory + std::to_string(pid) + kStatFilename
+              << std::endl;
   }
+  std::string line;
+  std::string cuurentValue;
+  vector<string> values;
+  std::getline(filestream, line);
+  std::istringstream iss(line);
+  while (iss >> cuurentValue) {
+    values.push_back(cuurentValue);
+  }
+
+  try {
+    starttime = stol(values[21]) / sysconf(_SC_CLK_TCK);
+  } catch (...) {
+    starttime = 0;
+  }
+  return starttime;
 }
 
 
