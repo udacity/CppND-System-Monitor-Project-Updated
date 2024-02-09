@@ -15,7 +15,7 @@ using std::vector;
 int Process::Pid() { return pid_; }
 
 // TODO: Return this process's CPU utilization
-float Process::CpuUtilization() { return cpuUtilization_; }
+float Process::CpuUtilization() { return cpuUtilization_ = LinuxParser::cpuProcessUtilization(pid_); }
 
 // TODO: Return the command that generated this process
 string Process::Command() { return command_ = LinuxParser::Command(pid_); }
