@@ -131,28 +131,7 @@ long LinuxParser::UpTime() {
 }
 
 // TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() {
-  std::ifstream filestream(kProcDirectory + kStatFilename);
-  std::string line;
-  std::string key;
-  long total_jiffies = 0;
-  if (filestream.is_open()) {
-    while (std::getline(filestream, line)) {
-      std::istringstream linestream(line);
-      linestream >> key;
-      if (key == "cpu") {
-        long user, nice, system, idle, iowait, irq, softirq, steal, guest,
-            guest_nice;
-        linestream >> user >> nice >> system >> idle >> iowait >> irq >>
-            softirq >> steal >> guest >> guest_nice;
-        total_jiffies = user + nice + system + idle + iowait + irq + softirq +
-                        steal + guest + guest_nice;
-        break;
-      }
-    }
-  }
-  return total_jiffies;
-}
+long LinuxParser::Jiffies() { return 0.0;}
 
 // DONE: Read and return the number of active jiffies for a PID
 long LinuxParser::ActiveJiffies(int pid) {
@@ -193,51 +172,10 @@ float LinuxParser::cpuProcessUtilization(int pid) {
 }
 
 // TODO: Read and return the number of active jiffies for the system
-long LinuxParser::ActiveJiffies() {
-  long activeJiffies = 0;
-  std::ifstream filestream(kProcDirectory + kStatFilename);
-  if (filestream.is_open()) {
-    string line;
-    if (std::getline(filestream, line)) {
-      std::istringstream linestream(line);
-      string cpuLabel;
-      linestream >> cpuLabel;  // Skip the CPU label
-      long user, nice, system, idle, iowait, irq, softirq, steal, guest,
-          guest_nice;
-      linestream >> user >> nice >> system >> idle >> iowait >> irq >>
-          softirq >> steal >> guest >> guest_nice;
-      activeJiffies =
-          user + nice + system + irq + softirq + steal + guest + guest_nice;
-    }
-  }
-  filestream.close();
-  return activeJiffies;
-}
+long LinuxParser::ActiveJiffies() { return 0.0;}
 
 // TODO: Read and return the number of idle jiffies for the system
-long LinuxParser::IdleJiffies() {
-  std::ifstream filestream(kProcDirectory + kStatFilename);
-  std::string line;
-  std::string key;
-  long idle_jiffies = 0;
-
-  if (filestream.is_open()) {
-    while (std::getline(filestream, line)) {
-      std::istringstream linestream(line);
-      linestream >> key;
-      if (key == "cpu") {
-        long user, nice, system, idle, iowait, irq, softirq, steal, guest,
-            guest_nice;
-        linestream >> user >> nice >> system >> idle >> iowait >> irq >>
-            softirq >> steal >> guest >> guest_nice;
-        idle_jiffies = idle;
-        break;
-      }
-    }
-  }
-
-  return idle_jiffies;
-}
+long LinuxParser::IdleJiffies() { return 0.0;}
 
 // DONE: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() {
@@ -413,13 +351,7 @@ long LinuxParser::UpTime(int pid) {
   vector<string> values;
   std::getline(filestream, line);
   std::istringstream iss(line);
-  while (iss >> cuurentValue) {
-    values.push_back(cuurentValue);
-  }
-  try {
-    starttime = stol(values[21]) / sysconf(_SC_CLK_TCK);
-  } catch (...) {
-    starttime = 0;
-  }
+  while (iss >> cuurentValue) { values.push_back(cuurentValue);}
+  starttime = stol(values[21]) / sysconf(_SC_CLK_TCK);
   return starttime;
 }
