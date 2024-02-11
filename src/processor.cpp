@@ -11,13 +11,13 @@ float Processor::Utilization() {
   float nice = std::stoi(currentUtilization[1]);
   float system = std::stoi(currentUtilization[2]);
   float idle = std::stoi(currentUtilization[3]);
-  float iowait = std::stoi(currentUtilization[4]);
+  float iowait = 0.0; //std::stoi(currentUtilization[4]);
   float irq = std::stoi(currentUtilization[5]);
   float softirq = std::stoi(currentUtilization[6]);
   float steal = std::stoi(currentUtilization[7]);
 
   // try {
-  //   int num = std::stoi(str);
+  //   int num = std::stoi(iowait);
   // } catch (std::out_of_range& e) {
   //   std::cerr << "Number is out of range: " << e.what() << '\n';
   // }
