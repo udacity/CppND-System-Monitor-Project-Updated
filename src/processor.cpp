@@ -1,4 +1,5 @@
 #include "processor.h"
+
 #include "linux_parser.h"
 
 float Processor::Utilization() {
@@ -15,6 +16,12 @@ float Processor::Utilization() {
   float softirq = std::stoi(currentUtilization[6]);
   float steal = std::stoi(currentUtilization[7]);
 
+  // try {
+  //   int num = std::stoi(str);
+  // } catch (std::out_of_range& e) {
+  //   std::cerr << "Number is out of range: " << e.what() << '\n';
+  // }
+
   float totalTime = nice + system + idle + iowait + irq + softirq + steal;
   float idleTime = idle + iowait;
 
@@ -22,13 +29,10 @@ float Processor::Utilization() {
   float deltaTimeIdle = idleTime - prevIdle_;
 
   float cpuUtilization;
-  if (deltaTimeTotal != 0)
-  {
-      cpuUtilization = (float)(deltaTimeTotal - deltaTimeIdle) / deltaTimeTotal;
-  }
-  else
-  {
-      cpuUtilization = 0.0;
+  if (deltaTimeTotal != 0) {
+    cpuUtilization = (float)(deltaTimeTotal - deltaTimeIdle) / deltaTimeTotal;
+  } else {
+    cpuUtilization = 0.0;
   }
   prevTotal_ = totalTime;
   prevIdle_ = idleTime;

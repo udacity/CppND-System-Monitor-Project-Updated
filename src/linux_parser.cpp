@@ -60,8 +60,14 @@ vector<int> LinuxParser::Pids() {
       // Is every character of the name a digit?
       string filename(file->d_name);
       if (std::all_of(filename.begin(), filename.end(), isdigit)) {
-        int pid = stoi(filename);
-        pids.push_back(pid);
+        //int pid = stoi(filename);
+        try {
+          long long int pid = stoi(filename);
+        } catch (std::out_of_range& e) {
+          std::cerr << "Number is out of range: " << e.what() << '\n';
+        }
+        long long int pid0 = stoi(filename);
+        pids.push_back(pid0);
       }
     }
   }
@@ -76,8 +82,8 @@ float LinuxParser::MemoryUtilization() {
   std::ifstream filestream(kProcDirectory + kMeminfoFilename);
   std::string line;
   if (!filestream.is_open()) {
-    std::cerr << "Failed to open file MemoryUtilization: " << kProcDirectory + kMeminfoFilename
-              << std::endl;
+    std::cerr << "Failed to open file MemoryUtilization: "
+              << kProcDirectory + kMeminfoFilename << std::endl;
   }
   std::string currentKey;
   std::string currentValue;
@@ -115,8 +121,8 @@ long LinuxParser::UpTime() {
   std::ifstream filestream(kProcDirectory + kUptimeFilename);
   std::string line;
   if (!filestream.is_open()) {
-    std::cerr << "Failed to open file UpTime: " << kProcDirectory + kUptimeFilename
-              << std::endl;
+    std::cerr << "Failed to open file UpTime: "
+              << kProcDirectory + kUptimeFilename << std::endl;
   }
   long uptime;
   while (getline(filestream, line)) {
@@ -124,14 +130,19 @@ long LinuxParser::UpTime() {
     // read info
     std::string currentValue;
     iss >> currentValue;
-    uptime = std::stoi(currentValue);
+    // uptime = std::stoi(currentValue);
+    try {
+      uptime = std::stoi(currentValue);
+    } catch (std::out_of_range& e) {
+      std::cerr << "Number is out of range: " << e.what() << '\n';
+    }
     break;
   }
   return uptime;
 }
 
 // TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { return 0.0;}
+long LinuxParser::Jiffies() { return 0.0; }
 
 // DONE: Read and return the number of active jiffies for a PID
 long LinuxParser::ActiveJiffies(int pid) {
@@ -167,15 +178,15 @@ float LinuxParser::cpuProcessUtilization(int pid) {
   total_time = LinuxParser::ActiveJiffies(pid);
   seconds = uptime - starttimePerHz;
   // Next we get the total elapsed time in seconds since the process started:
-  cpuUsage = (float) 100 * (total_time / sysconf(_SC_CLK_TCK)) / seconds;
+  cpuUsage = (float)100 * (total_time / sysconf(_SC_CLK_TCK)) / seconds;
   return cpuUsage;
 }
 
 // TODO: Read and return the number of active jiffies for the system
-long LinuxParser::ActiveJiffies() { return 0.0;}
+long LinuxParser::ActiveJiffies() { return 0.0; }
 
 // TODO: Read and return the number of idle jiffies for the system
-long LinuxParser::IdleJiffies() { return 0.0;}
+long LinuxParser::IdleJiffies() { return 0.0; }
 
 // DONE: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() {
@@ -202,20 +213,26 @@ int LinuxParser::TotalProcesses() {
   std::ifstream filestream(kProcDirectory + kStatFilename);
   std::string line;
   if (!filestream.is_open()) {
-    std::cerr << "Failed to open file TotalProcesses: " << kProcDirectory + kStatFilename
-              << std::endl;
+    std::cerr << "Failed to open file TotalProcesses: "
+              << kProcDirectory + kStatFilename << std::endl;
   }
   std::string currentKey;
   std::string currentValue;
-  int totalProcesses;
+  long long int totalProcesses;
   while (getline(filestream, line)) {
     std::istringstream iss(line);
     // read info
     iss >> currentKey >> currentValue;
     if (currentKey == "processes") {
-      totalProcesses = std::stoi(currentValue);
+      // totalProcesses = std::stoi(currentValue);
+      try {
+        totalProcesses = std::stoi(currentValue);
+      } catch (std::out_of_range& e) {
+        std::cerr << "Number is out of range: " << e.what() << '\n';
+      }
+      break;
     }
-    break;
+    
   }
 
   return totalProcesses;
@@ -226,18 +243,23 @@ int LinuxParser::RunningProcesses() {
   std::ifstream filestream(kProcDirectory + kStatFilename);
   std::string line;
   if (!filestream.is_open()) {
-    std::cerr << "Failed to open file RunningProcesses: " << kProcDirectory + kStatFilename
-              << std::endl;
+    std::cerr << "Failed to open file RunningProcesses: "
+              << kProcDirectory + kStatFilename << std::endl;
   }
   std::string currentKey;
   std::string currentValue;
-  int runningProcesses;
+  long long int runningProcesses;
   while (getline(filestream, line)) {
     std::istringstream iss(line);
     // read info
     iss >> currentKey >> currentValue;
     if (currentKey == "procs_running") {
-      runningProcesses = std::stoi(currentValue);
+      // runningProcesses = std::stoi(currentValue);
+      try {
+        runningProcesses = std::stoi(currentValue);
+      } catch (std::out_of_range& e) {
+        std::cerr << "Number is out of range: " << e.what() << '\n';
+      }
     }
   }
 
@@ -351,7 +373,9 @@ long LinuxParser::UpTime(int pid) {
   vector<string> values;
   std::getline(filestream, line);
   std::istringstream iss(line);
-  while (iss >> cuurentValue) { values.push_back(cuurentValue);}
+  while (iss >> cuurentValue) {
+    values.push_back(cuurentValue);
+  }
   starttime = stol(values[21]) / sysconf(_SC_CLK_TCK);
   return starttime;
 }
