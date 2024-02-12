@@ -1,5 +1,11 @@
+CXXFLAGS    +=  -W -Wextra -Wall -Werror -ansi -pedantic
+CXXFLAGS    +=  -pthread --std=c++11 -Iincludes -Ilibs/c++ -I/usr/local/opt/ncurses/include
+LDFLAGS     +=  -lncurses -L/usr/local/opt/ncurses/lib
+
+# existing Makefile targets go here
+
 .PHONY: all
-all: format test build
+all: format build
 
 .PHONY: format
 format:
@@ -22,3 +28,4 @@ debug:
 .PHONY: clean
 clean:
 	rm -rf build
+

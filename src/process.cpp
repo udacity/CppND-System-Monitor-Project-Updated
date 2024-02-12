@@ -1,10 +1,12 @@
+#include "process.h"
+
 #include <unistd.h>
+
 #include <cctype>
 #include <sstream>
 #include <string>
 #include <vector>
 
-#include "process.h"
 #include "linux_parser.h"
 
 using std::string;
@@ -15,7 +17,9 @@ using std::vector;
 int Process::Pid() { return pid_; }
 
 // TODO: Return this process's CPU utilization
-float Process::CpuUtilization() { return cpuUtilization_ = LinuxParser::cpuProcessUtilization(pid_); }
+float Process::CpuUtilization() {
+  return cpuUtilization_ = LinuxParser::cpuProcessUtilization(pid_);
+}
 
 // TODO: Return the command that generated this process
 string Process::Command() { return command_ = LinuxParser::Command(pid_); }
@@ -31,4 +35,6 @@ long int Process::UpTime() { return upTime_ = LinuxParser::UpTime(pid_); }
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
-bool Process::operator<(Process const& a[[maybe_unused]]) const { return true; }
+bool Process::operator<(Process const& a [[maybe_unused]]) const {
+  return true;
+}

@@ -5,9 +5,9 @@
 
 #include <cmath>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
-
 using std::stof;
 using std::string;
 using std::to_string;
@@ -60,13 +60,12 @@ vector<int> LinuxParser::Pids() {
       // Is every character of the name a digit?
       string filename(file->d_name);
       if (std::all_of(filename.begin(), filename.end(), isdigit)) {
-        //int pid = stoi(filename);
+        long long int pid0;
         try {
-          long long int pid = stoi(filename);
+          pid0 = stoi(filename);
         } catch (std::out_of_range& e) {
           std::cerr << "Number is out of range: " << e.what() << '\n';
         }
-        long long int pid0 = stoi(filename);
         pids.push_back(pid0);
       }
     }
@@ -120,11 +119,12 @@ float LinuxParser::MemoryUtilization() {
 long LinuxParser::UpTime() {
   std::ifstream filestream(kProcDirectory + kUptimeFilename);
   std::string line;
+  long uptime = 0;
   if (!filestream.is_open()) {
     std::cerr << "Failed to open file UpTime: "
               << kProcDirectory + kUptimeFilename << std::endl;
-  }
-  long uptime;
+  } else {
+  
   while (getline(filestream, line)) {
     std::istringstream iss(line);
     // read info
@@ -138,6 +138,7 @@ long LinuxParser::UpTime() {
     }
     break;
   }
+  filestream.close();}
   return uptime;
 }
 
@@ -218,7 +219,7 @@ int LinuxParser::TotalProcesses() {
   }
   std::string currentKey;
   std::string currentValue;
-  long long int totalProcesses;
+  long long int totalProcesses = 0;
   while (getline(filestream, line)) {
     std::istringstream iss(line);
     // read info
@@ -232,7 +233,6 @@ int LinuxParser::TotalProcesses() {
       }
       break;
     }
-    
   }
 
   return totalProcesses;

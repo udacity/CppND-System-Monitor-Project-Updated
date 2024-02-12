@@ -11,7 +11,7 @@ float Processor::Utilization() {
   float nice = std::stoi(currentUtilization[1]);
   float system = std::stoi(currentUtilization[2]);
   float idle = std::stoi(currentUtilization[3]);
-  float iowait = 0.0; //std::stoi(currentUtilization[4]);
+  float iowait = 0.0;  // std::stoi(currentUtilization[4]);
   float irq = std::stoi(currentUtilization[5]);
   float softirq = std::stoi(currentUtilization[6]);
   float steal = std::stoi(currentUtilization[7]);
